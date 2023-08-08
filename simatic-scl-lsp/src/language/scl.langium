@@ -14,7 +14,8 @@ FunctionBlock:
 // 'FUNCTION_BLOCK' blockName=STRING 'VAR_INPUT' (vars+=Var)* 'END_VAR' 'VAR_OUTPUT' (vars+=Var)* 'END_VAR' 'VAR_IN_OUT' (vars+=Var)* 'END_VAR' 'VAR_TEMP' (vars+=Var)* 'END_VAR' 'END_FUNCTION_BLOCK';
 
 Vars:
-    VarInput | VarOutput | VarInOut | VarTemp;
+    VarInput | VarOutput | VarStatic | VarTemp;
+// VarInput | VarOutput | VarInOut | VarStatic | VarTemp;
 
 VarInput:
     'VAR_INPUT' (vars+=Var)* 'END_VAR';
