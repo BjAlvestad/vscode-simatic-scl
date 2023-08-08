@@ -77,10 +77,19 @@ terminal ID: /[_a-zA-Z][\w_]*/;
 terminal LOCAL_VAR: /#[_a-zA-Z][\w_]*/;
 terminal INT returns number: /[0-9]+/;
 terminal STRING: /"(\\.|[^"\\])*"|'(\\.|[^'\\])*'/;
-terminal ASSIGNMENT: /[:][=]/;
 terminal SEMICOLON: /;/;
 terminal COLON: /:/;
 terminal EQUALS: /=/;
+terminal BOOL: /true|false/;
+
+terminal ASSIGNMENT: /:=/;
+terminal EXPONENTIAL: /\*\*/;
+terminal BASIC_MATH_OPERATOR: /[+-*/]|MOD|DIV/;
+terminal BASIC_COMPARATIVE_OPERATOR: /<|>|<=|>=|=|<>/;
+terminal BASIC_LOGICAL_OPERATOR: /AND|&|XOR|OR/;
+// terminal fragment OPERATOR_MATH_EXPONENTIAL: /\\*\\*/;
+// terminal fragment OPERATOR_MATH_PLUS: /\\+/;
+
 
 // terminal IF: /if/;
 // terminal THEN: /then/;
