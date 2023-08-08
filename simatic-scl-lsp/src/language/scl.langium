@@ -47,7 +47,7 @@ While:
     'WHILE' condition=Expression 'DO' body=Body;
 
 Assignment:
-    '#' variable=[Var:ID] ':=' expression=Expression ';';
+    LocalVariable ':=' expression=Expression ';';
 
 Expression:
     If | Assignment | LocalVariable | NumberLiteral | StringLiteral;
