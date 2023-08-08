@@ -10,7 +10,7 @@ Greeting:
     'Hello' person=[Person:ID] '!';
 
 FunctionBlock:
-    'FUNCTION_BLOCK' blockName=STRING Vars 'BEGIN' Body 'END_FUNCTION_BLOCK';
+    'FUNCTION_BLOCK' blockName=STRING Vars* 'BEGIN' Body 'END_FUNCTION_BLOCK';
 // 'FUNCTION_BLOCK' blockName=STRING 'VAR_INPUT' (vars+=Var)* 'END_VAR' 'VAR_OUTPUT' (vars+=Var)* 'END_VAR' 'VAR_IN_OUT' (vars+=Var)* 'END_VAR' 'VAR_TEMP' (vars+=Var)* 'END_VAR' 'END_FUNCTION_BLOCK';
 
 Vars:
