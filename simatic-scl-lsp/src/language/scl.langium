@@ -51,10 +51,10 @@ Assignment:
     '#' variable=[Var:ID] ':=' expression=Expression ';';
 
 Expression:
-    If | Assignment | Variable | NumberLiteral | StringLiteral;
+    If | Assignment | LocalVariable | NumberLiteral | StringLiteral;
 
-Variable:
-    variable=[Var:ID];
+LocalVariable:
+    '#' variable=[Var:ID];
 
 NumberLiteral:
     number=INT;
