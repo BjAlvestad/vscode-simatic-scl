@@ -25,6 +25,9 @@ VarOutput:
 VarInOut:
     'VAR_IN_OUT' (vars+=Var)* 'END_VAR';
 
+VarStatic:
+    'VAR' (vars+=Var)* 'END_VAR';
+
 VarTemp:
     'VAR_TEMP' (vars+=Var)* 'END_VAR';
 
@@ -44,7 +47,7 @@ While:
     'WHILE' condition=Expression 'DO' body=Body;
 
 Assignment:
-    variable=[Var:ID] ':=' expression=Expression ';';
+    '#' variable=[Var:ID] ':=' expression=Expression ';';
 
 Expression:
     If | Assignment | Variable | NumberLiteral | StringLiteral;
