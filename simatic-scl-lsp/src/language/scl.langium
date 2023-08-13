@@ -40,7 +40,7 @@ Var_Real:
     name=ID ':' type='REAL' (':=' value=REAL_LITERAL)? ';';
 
 Var_Int:
-    name=ID ':' type='INT'|'DINT' (':=' value=INTEGER_LITERAL)? ';';
+    name=ID ':' type=('INT'|'DINT') (':=' value=INTEGER_LITERAL)? ';';
 
 // Declaration/assignment for complex data types
 // DATE_AND_TIME STRING ARRAY STRUCT
