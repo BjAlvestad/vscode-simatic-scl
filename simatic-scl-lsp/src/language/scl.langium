@@ -32,7 +32,7 @@ VarTemp:
     'VAR_TEMP' (vars+=Var)* 'END_VAR';
 
 Var:
-    Var_Real | Var_Int | Var_General;
+    Var_Real | Var_Int | VarArray | Var_General;
 
 // Declaration/assignment for elementary data types
 // BOOL CHAR INT TIME BYTE DINT DATE WORD REAL TIME_OF_DAY DWORD S5TIME
@@ -47,8 +47,14 @@ Var_Int:
 
 // Declaration/assignment for complex data types
 // DATE_AND_TIME STRING ARRAY STRUCT
+VarArray:
+    name=ID ':' ArrayDatatype;
+
 ArrayDatatype:
-    'ARRAY' '[' (INDEX '..' INDEX) (',' INDEX '..' INDEX)* ']' 'OF' elementType=ID;
+    type='ARRAY' ArrayIndexRange 'OF' elementType=(ElementaryTypes) ';';
+
+fragment ArrayIndexRange:
+    '[' (indexStart=INTEGER_LITERAL '..' indexEnd=INTEGER_LITERAL) (',' indexNStart+=INTEGER_LITERAL '..' indexNEnd+=INTEGER_LITERAL)* ']';
 
 // Declaration/assignment catch all
 Var_General:
@@ -111,8 +117,6 @@ terminal fragment DECIMAL_DIGIT: /([0-9](_[0-9])?)+/;
 terminal fragment EXPONENT: /[eE][+-]?/DECIMAL_DIGIT;
 terminal REAL_LITERAL: /[+-]?/((DECIMAL_DIGIT('.'DECIMAL_DIGIT)?EXPONENT)|(DECIMAL_DIGIT'.'DECIMAL_DIGIT));
 terminal INTEGER_LITERAL: /[+-]?/BINARY_DIGIT|OCTAL_DIGIT|HEX_DIGIT|DECIMAL_DIGIT;
-
-terminal INDEX: /\[\d+\]/;
 
 // terminal IF: /if/;
 // terminal THEN: /then/;

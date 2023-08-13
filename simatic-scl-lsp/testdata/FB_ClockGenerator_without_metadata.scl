@@ -38,6 +38,10 @@ FUNCTION_BLOCK "fb_ClockGenerator_V15.0.2"
       NumberExp6 : REAL := 0.3e11;
       NumberExp7 : REAL := 30.0E+9;
       NumberExp8 : REAL := 30e9;
+
+      array1 : ARRAY[1..10] OF REAL;
+      array2 : ARRAY[1..10] OF STRUCT innerNum1 : INT; innerNum2 : Real; END_STRUCT;
+      array3 : ARRAY[1..100, 1..10] OF REAL;
    END_VAR
 
 
