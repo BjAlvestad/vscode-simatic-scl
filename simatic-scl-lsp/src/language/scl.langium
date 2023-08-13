@@ -32,6 +32,15 @@ VarTemp:
     'VAR_TEMP' (vars+=Var)* 'END_VAR';
 
 Var:
+    Var_Real | Var_Int | Var_General;
+
+Var_Real:
+    name=ID ':' type='REAL' (':=' value=REAL_LITERAL)? ';';
+
+Var_Int:
+    name=ID ':' type='INT' (':=' value=INTEGER_LITERAL)? ';';
+
+Var_General:
     name=ID ':' type=ID (':=' value=Value)? ';';
 
 Body:
