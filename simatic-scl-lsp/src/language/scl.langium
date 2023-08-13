@@ -32,7 +32,7 @@ VarTemp:
     'VAR_TEMP' (vars+=Var)* 'END_VAR';
 
 Var:
-    name=ID ':' type=ID (':=' value=INT)? ';';
+    name=ID ':' type=ID (':=' value=Value)? ';';
 
 Body:
     (statements+=Statement)*;
@@ -50,16 +50,16 @@ Assignment:
     LocalVariable ':=' expression=Expression ';';
 
 Expression:
-    If | Assignment | LocalVariable | NumberLiteral | StringLiteral;
+    If | Assignment | LocalVariable | INTEGER | REAL | StringLiteral;
 
 LocalVariable:
     '#' variable=[Var:ID];
 
-NumberLiteral:
-    number=INT;
-
 StringLiteral:
     string=STRING;
+
+Value:
+    INTEGER | REAL | StringLiteral;
 
 // Assignment:
 //     assignment=ASSIGNMENT;
@@ -75,7 +75,6 @@ StringLiteral:
 hidden terminal WS: /\s+/;
 terminal ID: /[_a-zA-Z][\w_]*/;
 terminal LOCAL_VAR: /#[_a-zA-Z][\w_]*/;
-terminal INT returns number: /[0-9]+/;
 terminal STRING: /"(\\.|[^"\\])*"|'(\\.|[^'\\])*'/;
 terminal SEMICOLON: /;/;
 terminal COLON: /:/;
@@ -89,6 +88,14 @@ terminal BASIC_COMPARATIVE_OPERATOR: /<|>|<=|>=|=|<>/;
 terminal BASIC_LOGICAL_OPERATOR: /AND|&|XOR|OR/;
 // terminal fragment OPERATOR_MATH_EXPONENTIAL: /\\*\\*/;
 // terminal fragment OPERATOR_MATH_PLUS: /\\+/;
+
+terminal fragment BINARY_DIGIT: /2#([0-1](_[0-1])?)+/;
+terminal fragment OCTAL_DIGIT: /8#([0-7](_[0-7])?)+/;
+terminal fragment HEX_DIGIT: /16#([0-9a-fA-F](_[0-9a-fA-F])?)+/;
+terminal fragment DECIMAL_DIGIT: /([0-9](_[0-9])?)+/;
+terminal fragment EXPONENT: /[eE][+-]?/DECIMAL_DIGIT;
+terminal REAL: /[+-]?/((DECIMAL_DIGIT('.'DECIMAL_DIGIT)?EXPONENT)|(DECIMAL_DIGIT'.'DECIMAL_DIGIT));
+terminal INTEGER: /[+-]?/BINARY_DIGIT|OCTAL_DIGIT|HEX_DIGIT|DECIMAL_DIGIT;
 
 
 // terminal IF: /if/;
