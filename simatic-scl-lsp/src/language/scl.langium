@@ -36,6 +36,9 @@ Var:
 
 // Declaration/assignment for elementary data types
 // BOOL CHAR INT TIME BYTE DINT DATE WORD REAL TIME_OF_DAY DWORD S5TIME
+ElementaryTypes returns string:
+    'BOOL' | 'CHAR' | 'INT' | 'TIME' | 'BYTE' | 'DINT' | 'DATE' | 'WORD' | 'REAL' | 'TIME_OF_DAY' | 'DWORD' | 'S5TIME';
+
 Var_Real:
     name=ID ':' type='REAL' (':=' value=REAL_LITERAL)? ';';
 
@@ -49,7 +52,7 @@ ArrayDatatype:
 
 // Declaration/assignment catch all
 Var_General:
-    name=ID ':' type=ID (':=' value=Value)? ';';
+    name=ID ':' type=(ElementaryTypes | ID) (':=' value=Value)? ';';
 
 Body:
     (statements+=Statement)*;
