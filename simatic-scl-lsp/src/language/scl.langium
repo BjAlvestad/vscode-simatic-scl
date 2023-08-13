@@ -113,5 +113,5 @@ terminal INTEGER_LITERAL: /[+-]?/BINARY_DIGIT|OCTAL_DIGIT|HEX_DIGIT|DECIMAL_DIGI
 // terminal WHILE: /while/;
 // terminal DO: /do/;
 
-hidden terminal ML_COMMENT: /\/\*[\s\S]*?\*\//;
+hidden terminal ML_COMMENT: /\(\*[\s\S]*?\*\)/;
 hidden terminal SL_COMMENT: /\/\/[^\n\r]*/;
