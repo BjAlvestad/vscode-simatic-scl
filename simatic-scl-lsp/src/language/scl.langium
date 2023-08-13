@@ -1,52 +1,41 @@
 grammar Scl
 
 entry Model:
-    (functionBlocks+=FunctionBlock)*; // persons+=Person | greetings+=Greeting | | assignments+=Assignment | expressions+=Expression)*;
+    blockAttributes=BlockAttributes (declaratinSections+=DeclarationSection)* 'BEGIN' (statements+=Statement | localVars+=LocalVariable)* BlockEnd;
 
-Person:
-    'person' name=ID;
+// #########################
+// #### BlockAttributes ####
+// #########################
+BlockAttributes:
+    BlockTitle;
 
-Greeting:
-    'Hello' person=[Person:ID] '!';
+BlockTitle:
+    'FUNCTION_BLOCK' blockName=STRING;
 
-FunctionBlock:
-    'FUNCTION_BLOCK' blockName=STRING Vars* 'BEGIN' Body 'END_FUNCTION_BLOCK';
-// 'FUNCTION_BLOCK' blockName=STRING 'VAR_INPUT' (vars+=Var)* 'END_VAR' 'VAR_OUTPUT' (vars+=Var)* 'END_VAR' 'VAR_IN_OUT' (vars+=Var)* 'END_VAR' 'VAR_TEMP' (vars+=Var)* 'END_VAR' 'END_FUNCTION_BLOCK';
+BlockEnd returns string:
+    'END_FUNCTION_BLOCK';
 
-Vars:
-    VarInput | VarOutput | VarInOut | VarStatic | VarTemp;
+// #############################
+// #### Declaration section ####
+// #############################
 
-VarInput:
-    'VAR_INPUT' (vars+=Var)* 'END_VAR';
+DeclarationSection:
+    name=DeclarationSubSectionStart (vars+=Var)* 'END_VAR';
 
-VarOutput:
-    'VAR_OUTPUT' (vars+=Var)* 'END_VAR';
-
-VarInOut:
-    'VAR_IN_OUT' (vars+=Var)* 'END_VAR';
-
-VarStatic:
-    'VAR' (vars+=Var)* 'END_VAR';
-
-VarTemp:
-    'VAR_TEMP' (vars+=Var)* 'END_VAR';
+DeclarationSubSectionStart returns string:
+    'VAR_INPUT' | 'VAR_OUTPUT' | 'VAR_IN_OUT' | 'VAR' | 'VAR_TEMP' | 'CONST';
 
 Var:
-    Var_Real | Var_Int | VarArray | Var_General;
+    VarElementary | VarArray | Var_General;
 
 // Declaration/assignment for elementary data types
-// BOOL CHAR INT TIME BYTE DINT DATE WORD REAL TIME_OF_DAY DWORD S5TIME
 ElementaryTypes returns string:
     'BOOL' | 'CHAR' | 'INT' | 'TIME' | 'BYTE' | 'DINT' | 'DATE' | 'WORD' | 'REAL' | 'TIME_OF_DAY' | 'DWORD' | 'S5TIME';
 
-Var_Real:
-    name=ID ':' type='REAL' (':=' value=REAL_LITERAL)? ';';
-
-Var_Int:
-    name=ID ':' type=('INT'|'DINT') (':=' value=INTEGER_LITERAL)? ';';
+VarElementary:
+    name=ID ':' type=(ElementaryTypes) (':=' value=Value)? ';';
 
 // Declaration/assignment for complex data types
-// DATE_AND_TIME STRING ARRAY STRUCT
 VarArray:
     name=ID ':' ArrayDatatype;
 
@@ -56,9 +45,20 @@ ArrayDatatype:
 fragment ArrayIndexRange:
     '[' (indexStart=INTEGER_LITERAL '..' indexEnd=INTEGER_LITERAL) (',' indexNStart+=INTEGER_LITERAL '..' indexNEnd+=INTEGER_LITERAL)* ']';
 
+//TODO: Define Struct
+
+//TODO: Define String
+
+//TODO: Define DATE_AND_TIME
+
 // Declaration/assignment catch all
 Var_General:
-    name=ID ':' type=(ElementaryTypes | ID) (':=' value=Value)? ';';
+    name=ID ':' type=(ID) (':=' value=Value)? ';';
+
+
+// ######################
+// #### Code section ####
+// ######################
 
 Body:
     (statements+=Statement)*;
@@ -67,7 +67,7 @@ Statement:
     If | While | Assignment | Expression;
 
 If:
-    'IF' condition=Expression 'THEN' then=Expression 'ELSE' else=Expression;
+    'IF' condition=Expression 'THEN' then=Expression ('ELSE' else=Expression)? 'END_IF';
 
 While:
     'WHILE' condition=Expression 'DO' body=Body;
@@ -76,16 +76,20 @@ Assignment:
     LocalVariable ':=' expression=Expression ';';
 
 Expression:
-    If | Assignment | LocalVariable | INTEGER_LITERAL | REAL_LITERAL | StringLiteral;
+    If | Assignment | LocalVariable | Value;
 
 LocalVariable:
     '#' variable=[Var:ID];
+
+// #################
+// #### General ####
+// #################
 
 StringLiteral:
     string=STRING;
 
 Value:
-    INTEGER_LITERAL | REAL_LITERAL | StringLiteral;
+    REAL_LITERAL | INTEGER_LITERAL | StringLiteral;
 
 // Assignment:
 //     assignment=ASSIGNMENT;
@@ -118,6 +122,8 @@ terminal fragment EXPONENT: /[eE][+-]?/DECIMAL_DIGIT;
 terminal REAL_LITERAL: /[+-]?/((DECIMAL_DIGIT('.'DECIMAL_DIGIT)?EXPONENT)|(DECIMAL_DIGIT'.'DECIMAL_DIGIT));
 terminal INTEGER_LITERAL: /[+-]?/BINARY_DIGIT|OCTAL_DIGIT|HEX_DIGIT|DECIMAL_DIGIT;
 
+// terminal NUMBERISH: /(\\+|-)?10/;//\\d[-+0-9.eE_#a-fA-F]*/;
+
 // terminal IF: /if/;
 // terminal THEN: /then/;
 // terminal ELSE: /else/;
@@ -126,3 +132,9 @@ terminal INTEGER_LITERAL: /[+-]?/BINARY_DIGIT|OCTAL_DIGIT|HEX_DIGIT|DECIMAL_DIGI
 
 hidden terminal ML_COMMENT: /\(\*[\s\S]*?\*\)/;
 hidden terminal SL_COMMENT: /\/\/[^\n\r]*/;
+
+//TODO: Delete this
+Person:
+    'person' name=ID;
+Greeting:
+    'Hello' person=[Person:ID] '!';
