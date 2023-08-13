@@ -50,7 +50,7 @@ Assignment:
     LocalVariable ':=' expression=Expression ';';
 
 Expression:
-    If | Assignment | LocalVariable | INTEGER | REAL | StringLiteral;
+    If | Assignment | LocalVariable | INTEGER_LITERAL | REAL_LITERAL | StringLiteral;
 
 LocalVariable:
     '#' variable=[Var:ID];
@@ -59,7 +59,7 @@ StringLiteral:
     string=STRING;
 
 Value:
-    INTEGER | REAL | StringLiteral;
+    INTEGER_LITERAL | REAL_LITERAL | StringLiteral;
 
 // Assignment:
 //     assignment=ASSIGNMENT;
@@ -94,8 +94,8 @@ terminal fragment OCTAL_DIGIT: /8#([0-7](_[0-7])?)+/;
 terminal fragment HEX_DIGIT: /16#([0-9a-fA-F](_[0-9a-fA-F])?)+/;
 terminal fragment DECIMAL_DIGIT: /([0-9](_[0-9])?)+/;
 terminal fragment EXPONENT: /[eE][+-]?/DECIMAL_DIGIT;
-terminal REAL: /[+-]?/((DECIMAL_DIGIT('.'DECIMAL_DIGIT)?EXPONENT)|(DECIMAL_DIGIT'.'DECIMAL_DIGIT));
-terminal INTEGER: /[+-]?/BINARY_DIGIT|OCTAL_DIGIT|HEX_DIGIT|DECIMAL_DIGIT;
+terminal REAL_LITERAL: /[+-]?/((DECIMAL_DIGIT('.'DECIMAL_DIGIT)?EXPONENT)|(DECIMAL_DIGIT'.'DECIMAL_DIGIT));
+terminal INTEGER_LITERAL: /[+-]?/BINARY_DIGIT|OCTAL_DIGIT|HEX_DIGIT|DECIMAL_DIGIT;
 
 
 // terminal IF: /if/;
