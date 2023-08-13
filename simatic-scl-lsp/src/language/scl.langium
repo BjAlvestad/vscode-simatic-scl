@@ -44,6 +44,8 @@ Var_Int:
 
 // Declaration/assignment for complex data types
 // DATE_AND_TIME STRING ARRAY STRUCT
+ArrayDatatype:
+    'ARRAY' '[' (INDEX '..' INDEX) (',' INDEX '..' INDEX)* ']' 'OF' elementType=ID;
 
 // Declaration/assignment catch all
 Var_General:
@@ -112,6 +114,7 @@ terminal fragment EXPONENT: /[eE][+-]?/DECIMAL_DIGIT;
 terminal REAL_LITERAL: /[+-]?/((DECIMAL_DIGIT('.'DECIMAL_DIGIT)?EXPONENT)|(DECIMAL_DIGIT'.'DECIMAL_DIGIT));
 terminal INTEGER_LITERAL: /[+-]?/BINARY_DIGIT|OCTAL_DIGIT|HEX_DIGIT|DECIMAL_DIGIT;
 
+terminal INDEX: /\[\d+\]/;
 
 // terminal IF: /if/;
 // terminal THEN: /then/;
