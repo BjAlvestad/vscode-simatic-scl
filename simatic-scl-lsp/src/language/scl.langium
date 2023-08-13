@@ -38,7 +38,7 @@ Var_Real:
     name=ID ':' type='REAL' (':=' value=REAL_LITERAL)? ';';
 
 Var_Int:
-    name=ID ':' type='INT' (':=' value=INTEGER_LITERAL)? ';';
+    name=ID ':' type='INT'|'DINT' (':=' value=INTEGER_LITERAL)? ';';
 
 Var_General:
     name=ID ':' type=ID (':=' value=Value)? ';';
