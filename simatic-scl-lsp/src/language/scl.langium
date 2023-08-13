@@ -34,12 +34,18 @@ VarTemp:
 Var:
     Var_Real | Var_Int | Var_General;
 
+// Declaration/assignment for elementary data types
+// BOOL CHAR INT TIME BYTE DINT DATE WORD REAL TIME_OF_DAY DWORD S5TIME
 Var_Real:
     name=ID ':' type='REAL' (':=' value=REAL_LITERAL)? ';';
 
 Var_Int:
     name=ID ':' type='INT'|'DINT' (':=' value=INTEGER_LITERAL)? ';';
 
+// Declaration/assignment for complex data types
+// DATE_AND_TIME STRING ARRAY STRUCT
+
+// Declaration/assignment catch all
 Var_General:
     name=ID ':' type=ID (':=' value=Value)? ';';
 
