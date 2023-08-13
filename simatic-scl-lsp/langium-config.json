@@ -4,6 +4,7 @@
         "id": "scl",
         "grammar": "src/language/scl.langium",
         "fileExtensions": [".scl", ".db", ".udt"],
+        "caseInsensitive": true,
         "textMate": {
             "out": "syntaxes/scl.tmLanguage.json"
         }
