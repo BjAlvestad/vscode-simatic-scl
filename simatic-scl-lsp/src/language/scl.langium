@@ -91,12 +91,7 @@ Value:
 
 hidden terminal WS: /\s+/;
 terminal ID: /[_a-zA-Z][\w_]*/;
-terminal LOCAL_VAR: /#[_a-zA-Z][\w_]*/;
 terminal STRING: /"(\\.|[^"\\])*"|'(\\.|[^'\\])*'/;
-terminal SEMICOLON: /;/;
-terminal COLON: /:/;
-terminal EQUALS: /=/;
-terminal BOOL: /true|false/;
 
 terminal ASSIGNMENT: /:=/;
 terminal EXPONENTIAL: /\*\*/;
