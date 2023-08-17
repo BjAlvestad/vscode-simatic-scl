@@ -26,7 +26,7 @@ DeclarationSubSectionStart returns string:
     'VAR_INPUT' | 'VAR_OUTPUT' | 'VAR_IN_OUT' | 'VAR' | 'VAR_TEMP' | 'CONST';
 
 Var:
-    VarElementary | VarArray | Var_General;
+    VarElementary | VarComplex | Var_General;
 
 // Declaration/assignment for elementary data types
 ElementaryTypes returns string:
@@ -36,6 +36,9 @@ VarElementary:
     name=ID ':' type=(ElementaryTypes) (':=' value=Value)? ';';
 
 // Declaration/assignment for complex data types
+VarComplex:
+    StructureDatatype | VarArray;
+
 VarArray:
     name=ID ':' ArrayDatatype;
 
@@ -45,7 +48,8 @@ ArrayDatatype:
 fragment ArrayIndexRange:
     '[' (indexStart=INTEGER_LITERAL '..' indexEnd=INTEGER_LITERAL) (',' indexNStart+=INTEGER_LITERAL '..' indexNEnd+=INTEGER_LITERAL)* ']';
 
-//TODO: Define Struct
+StructureDatatype:
+    type='STRUCT' (vars+=Var)* 'END_STRUCT';
 
 //TODO: Define String
 
