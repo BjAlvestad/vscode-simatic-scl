@@ -99,7 +99,7 @@ Lit:
     val=REAL_LITERAL | INTEGER_LITERAL;
 // cross-reference to a parameter
 Ref:
-    '#' variable=[Var:ID];
+    LocalVariable;
 // grouped expression with parentheses
 Group:
     '(' ge=MathExpr ')';
