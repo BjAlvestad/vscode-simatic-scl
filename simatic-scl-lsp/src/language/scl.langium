@@ -77,10 +77,35 @@ Assignment:
     LocalVariable ':=' expression=Expression ';';
 
 Expression:
-    If | Assignment | LocalVariable | Value;
+    If | Assignment | LocalVariable | Value | MathExpr;
 
 LocalVariable:
     '#' variable=[Var:ID];
+
+MathExpr:
+    Add;
+
+Add infers MathExpr:
+    Mult ({infer BinExpr.e1=current} op=('+'|'-') e2=Mult)*;
+
+Mult infers MathExpr:
+    PrimExpr ({infer BinExpr.e1=current} op=('*'|'/') e2=PrimExpr)*;
+
+PrimExpr:
+    Lit | Ref | Group | NegExpr;
+
+// literal int
+Lit:
+    val=REAL_LITERAL | INTEGER_LITERAL;
+// cross-reference to a parameter
+Ref:
+    '#' variable=[Var:ID];
+// grouped expression with parentheses
+Group:
+    '(' ge=MathExpr ')';
+// negated expression
+NegExpr:
+    '-' ne=MathExpr;
 
 // #################
 // #### General ####
