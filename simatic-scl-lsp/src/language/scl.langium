@@ -1,7 +1,7 @@
 grammar Scl
 
 entry Model:
-    blockAttributes=BlockAttributes (declaratinSections+=DeclarationSection)* 'BEGIN' (statements+=Statement | localVars+=LocalVariable)* BlockEnd;
+    blockAttributes=BlockAttributes (name=DeclarationSubSectionStart (vars+=Var)* 'END_VAR')* 'BEGIN' (statements+=Statement | localVars+=LocalVariable)* BlockEnd;
 
 // #########################
 // #### BlockAttributes ####
@@ -18,9 +18,6 @@ BlockEnd returns string:
 // #############################
 // #### Declaration section ####
 // #############################
-
-DeclarationSection:
-    name=DeclarationSubSectionStart (vars+=Var)* 'END_VAR';
 
 DeclarationSubSectionStart returns string:
     'VAR_INPUT' | 'VAR_OUTPUT' | 'VAR_IN_OUT' | 'VAR' | 'VAR_TEMP' | 'CONST';
