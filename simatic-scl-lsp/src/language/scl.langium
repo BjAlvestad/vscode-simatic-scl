@@ -77,7 +77,7 @@ Assignment:
     LocalVariable ':=' expression=Expression ';';
 
 Expression:
-    If | Assignment | LocalVariable | Value | MathExpr;
+    If | Assignment | LocalVariable | Value | MathExpr | StandardFunction;
 
 LocalVariable:
     '#' variable=[Var:ID];
@@ -106,6 +106,24 @@ Group:
 // negated expression
 NegExpr:
     '-' ne=MathExpr;
+
+StandardFunction:
+    StandardFunctionSingleInput | BitStringStandardFunction;
+
+StandardFunctionSingleInput:
+    (TypeConversionStandardFunctionA | TypeConversionStandardFunctionB | NumericStandardFunction) '(' MathExpr ')' ';';
+
+TypeConversionStandardFunctionA returns string:
+    'BOOL_TO_BYTE' | 'BOOL_TO_DWORD' | 'BOOL_TO_WORD' | 'BYTE_TO_DWORD' | 'BYTE_TO_WORD' | 'CHAR_TO_STRING' | 'DINT_TO_REAL' | 'INT_TO_DINT' | 'INT_TO_REAL' | 'WORD_TO_DWORD';
+
+TypeConversionStandardFunctionB returns string:
+    'BYTE_TO_BOOL' | 'BYTE_TO_CHAR' | 'CHAR_TO_BYTE' | 'CHAR_TO_INT' | 'DATE_TO_DINT' | 'DINT_TO_DATE' | 'DINT_TO_DWORD' | 'DINT_TO_INT' | 'DINT_TO_TIME' | 'DINT_TO_TOD' | 'DWORD_TO_BOOL' | 'DWORD_TO_BYTE' | 'DWORD_TO_DINT' | 'DWORD_TO_REAL' | 'DWORD_TO_WORD' | 'INT_TO_CHAR' | 'INT_TO_WORD' | 'REAL_TO_DINT' | 'REAL_TO_DWORD' | 'REAL_TO_INT' | 'STRING_TO_CHAR' | 'TIME_TO_DINT' | 'TOD_TO_DINT' | 'WORD_TO_BOOL' | 'WORD_TO_BYTE' | 'WORD_TO_INT' | 'WORD_TO_BLOCK_DB' | 'BLOCK_DB_TO_WORD';
+
+NumericStandardFunction returns string:
+    'ABS' | 'SQR' | 'SQRT' | 'EXP' | 'EXPD' | 'LN' | 'LOG' | 'ACOS' | 'ASIN' | 'ATAN' | 'COS' | 'SIN' | 'TAN';
+
+BitStringStandardFunction:
+    ('ROL' | 'ROR' | 'SHL' | 'SHR') '(' 'IN' ':=' in=(INTEGER_LITERAL | LocalVariable) ',' 'N' ':=' n=(INTEGER_LITERAL | LocalVariable)')' ';';
 
 // #################
 // #### General ####
