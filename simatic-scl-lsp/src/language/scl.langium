@@ -25,7 +25,7 @@ BlockAttribute:
 ;
 
 BlockStart:
-    'FUNCTION_BLOCK' blockName=STRING;
+    'FUNCTION_BLOCK' blockName=DOUBLE_QUOTE_STRING;
 
 BlockEnd returns string:
     'END_FUNCTION_BLOCK';
@@ -184,7 +184,7 @@ UnaryExpression:
 NumberExpression:
     value=NUMBER;
 StringExpression:
-    value=STRING;
+    value=SINGLE_QUOTE_STRING;
 BooleanExpression:
     value?='true' | 'false';
 
@@ -312,7 +312,7 @@ TiaPortalStandardFunctions returns string:
 hidden terminal WS: /\s+/;
 terminal NUMBER returns number: /([BW]#)?((16#[0-9a-fA-F_]+)|(((2|8)#)?[0-9_]+(\.[0-9eE_]+)?))/;
 terminal ID: /[_a-zA-Z][\w_]*/;
-terminal STRING: /"(\\.|[^"\\])*"/;
+terminal DOUBLE_QUOTE_STRING: /"(\\.|[^"\\])*"/;
 terminal SINGLE_QUOTE_STRING: /'(\\.|[^'\\])*'/;
 
 terminal ASSIGNMENT: /:=/;
