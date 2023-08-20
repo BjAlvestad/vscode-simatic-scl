@@ -98,7 +98,7 @@ WhileStatement:
 ;
 
 ForStatement:
-    'for' '(' counter=VariableDeclaration? ';' condition=Expression? ';' execution=Expression? ')' block=ExpressionBlock
+    'FOR' indexVariable=[NamedElement:ID] ':=' initialValue=Expression 'TO' finalValue=Expression ('BY' execution=Expression)? 'DO' block=ExpressionBlock 'END_FOR' ';'
 ;
 
 ReturnStatement:
