@@ -42,7 +42,7 @@ ConstantDeclaration:
 ;
 
 VariableDeclaration:
-    name=ID ':' type=TypeReference (assignment?=':=' value=Expression)? ';'
+    name=ID ('AT' refName=[VariableDeclaration:ID])? ':' type=TypeReference (assignment?=':=' value=Expression)? ';'
 ;
 
 // VariableDeclaration returns NamedElement:
