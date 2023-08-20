@@ -178,7 +178,7 @@ FeatureCall infers Expression:
 	')')?;
 
 UnaryExpression:
-    operator=('!' | '-' | '+') value=Expression
+    operator=('NOT' | '-' | '+') value=Expression
 ;
 
 NumberExpression:
