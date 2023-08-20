@@ -1,15 +1,24 @@
 grammar Scl
 
 entry Model:
-    blockAttributes=BlockAttributes (name=DeclarationSubSectionStart vars+=VariableDeclaration* 'END_VAR')* 'BEGIN' elements+=SclElement* BlockEnd;
+    compilerDirectives+=CompilerDirective* blockStart=BlockStart blockAttributes+=BlockAttribute* (name=DeclarationSubSectionStart vars+=VariableDeclaration* 'END_VAR')* 'BEGIN' elements+=SclElement* BlockEnd;
 
 // #########################
 // #### BlockAttributes ####
 // #########################
-BlockAttributes:
-    BlockTitle;
+CompilerDirective:
+    '{'name=ID ':=' value=SINGLE_QUOTE_STRING '}';
 
-BlockTitle:
+BlockAttribute:
+    'TITLE' '=' value=SINGLE_QUOTE_STRING
+    | 'Version' ':' value=SINGLE_QUOTE_STRING
+    | 'KNOW_HOW_PROTECT'
+    | 'AUTHOR' ':' value=ID
+    | 'NAME' ':' value=ID
+    | 'FAMILY' ':' value=ID
+;
+
+BlockStart:
     'FUNCTION_BLOCK' blockName=STRING;
 
 BlockEnd returns string:
@@ -282,7 +291,8 @@ TiaPortalStandardFunctions returns string:
 
 hidden terminal WS: /\s+/;
 terminal ID: /[_a-zA-Z][\w_]*/;
-terminal STRING: /"(\\.|[^"\\])*"|'(\\.|[^'\\])*'/;
+terminal STRING: /"(\\.|[^"\\])*"/;
+terminal SINGLE_QUOTE_STRING: /'(\\.|[^'\\])*'/;
 
 terminal ASSIGNMENT: /:=/;
 terminal EXPONENTIAL: /\*\*/;
