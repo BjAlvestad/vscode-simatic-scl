@@ -61,7 +61,7 @@ ElementaryType returns string:
     'BOOL' | 'CHAR' | 'INT' | 'TIME' | 'BYTE' | 'DINT' | 'DATE' | 'WORD' | 'REAL' | 'TIME_OF_DAY' | 'DWORD' | 'S5TIME';
 
 ArrayType:
-    type='ARRAY' ArrayIndexRange 'OF' elementType=(ElementaryType) ';';
+    type='ARRAY' ArrayIndexRange 'OF' elementType=(ElementaryType);
 
 fragment ArrayIndexRange:
     '[' (indexStart+=NUMBER '..' indexEnd+=NUMBER) (',' indexStart+=NUMBER '..' indexEnd+=NUMBER)* ']';
