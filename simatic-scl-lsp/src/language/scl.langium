@@ -65,7 +65,7 @@ ArrayType:
     type='ARRAY' ArrayIndexRange 'OF' elementType=(ElementaryType);
 
 fragment ArrayIndexRange:
-    '[' (indexStart+=NUMBER '..' indexEnd+=NUMBER) (',' indexStart+=NUMBER '..' indexEnd+=NUMBER)* ']';
+    '[' (indexStart+=Expression '..' indexEnd+=Expression) (',' indexStart+=Expression '..' indexEnd+=Expression)* ']';
 
 StructureType:
     type='STRUCT' (vars+=VariableDeclaration)* 'END_STRUCT';
