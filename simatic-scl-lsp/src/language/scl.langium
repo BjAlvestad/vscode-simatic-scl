@@ -177,6 +177,7 @@ BooleanExpression:
 
 type NamedElement = 
     VariableDeclaration
+    | ConstantDeclaration
 // | Parameter
 // | FunctionDeclaration
 // | MethodMember
@@ -296,6 +297,7 @@ TiaPortalStandardFunctions returns string:
 // 'IF' condition=Expression 'then' then=Expression 'ELSE' else=Expression;
 
 hidden terminal WS: /\s+/;
+terminal NUMBER returns number: /([BW]#)?((16#[0-9a-fA-F_]+)|(((2|8)#)?[0-9_]+(\.[0-9eE_]+)?))/;
 terminal ID: /[_a-zA-Z][\w_]*/;
 terminal STRING: /"(\\.|[^"\\])*"/;
 terminal SINGLE_QUOTE_STRING: /'(\\.|[^'\\])*'/;
@@ -307,18 +309,6 @@ terminal BASIC_MATH_OPERATOR: /[+-*/]|MOD|DIV/;
 terminal BASIC_LOGICAL_OPERATOR: /AND|&|XOR|OR/;
 // terminal fragment OPERATOR_MATH_EXPONENTIAL: /\\*\\*/;
 // terminal fragment OPERATOR_MATH_PLUS: /\\+/;
-
-// terminal fragment BINARY_DIGIT: /2#([0-1](_[0-1])?)+/;
-// terminal fragment OCTAL_DIGIT: /8#([0-7](_[0-7])?)+/;
-// terminal fragment HEX_DIGIT: /16#([0-9a-fA-F](_[0-9a-fA-F])?)+/;
-// terminal fragment DECIMAL_DIGIT: /([0-9](_[0-9])?)+/;
-// terminal fragment EXPONENT: /[eE][+-]?/DECIMAL_DIGIT;
-// terminal REAL_LITERAL: /[+-]?/((DECIMAL_DIGIT('.'DECIMAL_DIGIT)?EXPONENT)|(DECIMAL_DIGIT'.'DECIMAL_DIGIT));
-// terminal INTEGER_LITERAL: /[+-]?/BINARY_DIGIT|OCTAL_DIGIT|HEX_DIGIT|DECIMAL_DIGIT;
-terminal NUMBER returns number: /[0-9]+(\.[0-9]+)?/;
-
-
-// terminal NUMBERISH: /(\\+|-)?10/;//\\d[-+0-9.eE_#a-fA-F]*/;
 
 // terminal IF: /if/;
 // terminal THEN: /then/;
