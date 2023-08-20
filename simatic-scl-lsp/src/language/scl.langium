@@ -87,8 +87,10 @@ SclElement:
 ;
 
 IfStatement:
-    'if' '(' condition=Expression ')' block=ExpressionBlock
-    ('else' elseBlock=ExpressionBlock)?
+    'IF' condition=Expression 'THEN' block=ExpressionBlock
+    ('ELSIF' condition=Expression 'THEN' elseIfBlocks+=ExpressionBlock)*
+    ('ELSE' elseBlock=ExpressionBlock)?
+    'END_IF' ';'
 ;
 
 WhileStatement:
