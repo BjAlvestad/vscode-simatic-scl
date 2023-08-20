@@ -80,6 +80,7 @@ StructureType:
 
 SclElement:
     IfStatement |
+    CaseStatement |
     ForStatement |
     WhileStatement |
     ReturnStatement ';' | 
@@ -91,6 +92,16 @@ IfStatement:
     ('ELSIF' condition=Expression 'THEN' elseIfBlocks+=ExpressionBlock)*
     ('ELSE' elseBlock=ExpressionBlock)?
     'END_IF' ';'
+;
+
+CaseStatement:  //BUG: Second number in cases errors out on the `:`. Using `ELSE :` works fine.
+    'CASE' variable=[NamedElement:ID] 'OF' 
+    (
+        (NUMBER ('..' NUMBER)? (',' NUMBER ('..' NUMBER)?)*) ':'
+        blocks+=ExpressionBlock
+    )+
+    ('ELSE' ':'? defaultBlock=ExpressionBlock)?
+    'END_CASE' ';'
 ;
 
 ForStatement:
