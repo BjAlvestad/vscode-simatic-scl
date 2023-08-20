@@ -1,7 +1,13 @@
 grammar Scl
 
 entry Model:
-    compilerDirectives+=CompilerDirective* blockStart=BlockStart blockAttributes+=BlockAttribute* (name=DeclarationSubSectionStart vars+=VariableDeclaration* 'END_VAR')* 'BEGIN' elements+=SclElement* BlockEnd;
+    compilerDirectives+=CompilerDirective* blockStart=BlockStart blockAttributes+=BlockAttribute* 
+    (
+    (
+        'CONST' consts+=ConstantDeclaration* 'END_CONST') |
+        (name=DeclarationSubSectionStart vars+=VariableDeclaration* 'END_VAR')
+    )* 
+    'BEGIN' elements+=SclElement* BlockEnd;
 
 // #########################
 // #### BlockAttributes ####
@@ -30,6 +36,10 @@ BlockEnd returns string:
 
 DeclarationSubSectionStart returns string:
     'VAR_INPUT' | 'VAR_OUTPUT' | 'VAR_IN_OUT' | 'VAR' | 'VAR_TEMP' | 'CONST';
+
+ConstantDeclaration:
+    name=ID assignment?=':=' value=Expression ';'
+;
 
 VariableDeclaration:
     name=ID ':' type=TypeReference (assignment?=':=' value=Expression)? ';'
