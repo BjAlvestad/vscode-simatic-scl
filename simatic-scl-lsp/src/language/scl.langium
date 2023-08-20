@@ -80,8 +80,8 @@ StructureType:
 
 SclElement:
     IfStatement |
-    WhileStatement |
     ForStatement |
+    WhileStatement |
     ReturnStatement ';' | 
     Expression ';'
 ;
@@ -93,12 +93,12 @@ IfStatement:
     'END_IF' ';'
 ;
 
-WhileStatement:
-    'while' '(' condition=Expression ')' block=ExpressionBlock
-;
-
 ForStatement:
     'FOR' indexVariable=[NamedElement:ID] ':=' initialValue=Expression 'TO' finalValue=Expression ('BY' execution=Expression)? 'DO' block=ExpressionBlock 'END_FOR' ';'
+;
+
+WhileStatement:
+    'WHILE' condition=Expression 'DO' block=ExpressionBlock 'END_WHILE' ';'
 ;
 
 ReturnStatement:
