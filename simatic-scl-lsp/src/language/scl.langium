@@ -53,7 +53,8 @@ TypeReference:
     elementary=ElementaryType
     | complex=(ArrayType | StructureType)
     //TODO: Allow other FBs as types | reference=[Class:ID]
-    | catchAll=Var_General
+    | 'ANY'
+    | catchAll=ID
 ;
 
 // Declaration/assignment for elementary data types
@@ -72,11 +73,6 @@ StructureType:
 //TODO: Define String
 
 //TODO: Define DATE_AND_TIME
-
-// Declaration/assignment catch all
-Var_General:
-    name=ID ':' type=(ID) (':=' value=Expression)? ';';
-
 
 // ######################
 // #### Code section ####
