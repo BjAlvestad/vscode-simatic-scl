@@ -54,6 +54,7 @@ TypeReference:
     | complex=(ArrayType | StructureType)
     //TODO: Allow other FBs as types | reference=[Class:ID]
     | 'ANY'
+    | (CustomType | '"' CustomType '"')
     | catchAll=ID
 ;
 
@@ -73,6 +74,10 @@ StructureType:
 //TODO: Define String
 
 //TODO: Define DATE_AND_TIME
+
+CustomType:
+    type=[BlockStart:ID]
+;
 
 // ######################
 // #### Code section ####
