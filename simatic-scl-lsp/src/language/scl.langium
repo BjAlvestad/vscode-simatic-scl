@@ -25,7 +25,7 @@ BlockAttribute:
 ;
 
 BlockStart:
-    'FUNCTION_BLOCK' blockName=DOUBLE_QUOTE_STRING;
+    'FUNCTION_BLOCK' ('"'blockName=ID'"'|blockName=ID);
 
 BlockEnd returns string:
     'END_FUNCTION_BLOCK';
