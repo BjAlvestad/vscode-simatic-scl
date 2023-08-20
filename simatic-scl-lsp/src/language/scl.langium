@@ -77,7 +77,7 @@ Assignment:
     LocalVariable ':=' expression=Expression ';';
 
 Expression:
-    If | Assignment | LocalVariable | Value | MathExpr | StandardFunction;
+    If | Assignment | LocalVariable | Value | MathExpr | StandardFunction | GeneralFunction;
 
 LocalVariable:
     '#' variable=[Var:ID];
@@ -124,6 +124,9 @@ NumericStandardFunction returns string:
 
 BitStringStandardFunction:
     ('ROL' | 'ROR' | 'SHL' | 'SHR') '(' 'IN' ':=' in=(INTEGER_LITERAL | LocalVariable) ',' 'N' ':=' n=(INTEGER_LITERAL | LocalVariable)')' ';';
+
+GeneralFunction:
+    name=(ID | LocalVariable) '(' paramName1=ID ':=' value1=(MathExpr | ID) (',' paramNames+=ID ':=' values+=(MathExpr | ID))* ')' ';';
 
 // #################
 // #### General ####
