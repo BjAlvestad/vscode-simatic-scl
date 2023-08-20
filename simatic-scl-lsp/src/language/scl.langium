@@ -107,7 +107,7 @@ Logical infers Expression:
     Comparison ({infer BinaryExpression.left=current} operator=('and' | 'or') right=Comparison)*;
 
 Comparison infers Expression:
-    MemberCall ({infer BinaryExpression.left=current} operator=('<' | '<=' | '>' | '>=' | '==' | '!=') right=MemberCall)*;
+    MemberCall ({infer BinaryExpression.left=current} operator=('<' | '<=' | '>' | '>=' | '=' | '<>') right=MemberCall)*;
 
 MemberCall infers Expression:
     Primary
@@ -287,7 +287,7 @@ terminal STRING: /"(\\.|[^"\\])*"|'(\\.|[^'\\])*'/;
 terminal ASSIGNMENT: /:=/;
 terminal EXPONENTIAL: /\*\*/;
 terminal BASIC_MATH_OPERATOR: /[+-*/]|MOD|DIV/;
-terminal BASIC_COMPARATIVE_OPERATOR: /<|>|<=|>=|=|<>/;
+
 terminal BASIC_LOGICAL_OPERATOR: /AND|&|XOR|OR/;
 // terminal fragment OPERATOR_MATH_EXPONENTIAL: /\\*\\*/;
 // terminal fragment OPERATOR_MATH_PLUS: /\\+/;
