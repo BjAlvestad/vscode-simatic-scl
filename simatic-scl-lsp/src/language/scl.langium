@@ -57,7 +57,6 @@ VariableDeclaration:
 TypeReference:
     elementary=ElementaryType
     | complex=(ArrayType | StructureType)
-    //TODO: Allow other FBs as types | reference=[Class:ID]
     | 'ANY'
     | (CustomType | '"' CustomType '"')
     | catchAll=ID
