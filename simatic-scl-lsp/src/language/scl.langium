@@ -1,7 +1,9 @@
 grammar Scl
 
 entry Model:
-    compilerDirectives+=CompilerDirective* blockStart=BlockStart blockAttributes+=BlockAttribute* 
+    compilerDirectives+=CompilerDirective*
+    blockStart=BlockStart
+    blockAttributes+=BlockAttribute* 
     (
     (
         'CONST' consts+=ConstantDeclaration* 'END_CONST') |
