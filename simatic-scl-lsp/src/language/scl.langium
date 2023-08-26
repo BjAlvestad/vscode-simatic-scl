@@ -323,6 +323,7 @@ BitStringStandardFunction returns string:
 TiaPortalStandardFunctions returns string:
     'UDINT_TO_TIME'
     | 'REAL_TO_UDINT'
+    | 'CONCAT'
 ;
 
 // BitStringStandardFunction:
