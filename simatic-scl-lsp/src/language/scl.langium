@@ -172,6 +172,7 @@ Primary infers Expression:
     StringExpression |
     BooleanExpression |
     NumberExpression |
+    TimeExpression |
     FeatureCall |
     BuiltInFeatureCall;
 
@@ -197,6 +198,13 @@ StringExpression:
     value=SINGLE_QUOTE_STRING;
 BooleanExpression:
     value?='true' | 'false';
+TimeExpression:
+    value=(
+        TIME_LITERAL |
+        DATE_LITERAL |
+        TIME_OF_DAY_LITERAL |
+        DATE_AND_TIME_LITERAL
+    );
 
 type NamedElement = 
     VariableDeclaration
@@ -321,6 +329,10 @@ TiaPortalStandardFunctions returns string:
 
 hidden terminal WS: /\s+/;
 terminal NUMBER returns number: /([BW]#)?((16#[0-9a-fA-F_]+)|(((2|8)#)?[0-9_]+(\.[0-9eE_]+)?))/;
+terminal TIME_LITERAL: /T#[0-9DdHhMmSs_]+/;
+terminal DATE_LITERAL: /D#[0-9-]+/;
+terminal TIME_OF_DAY_LITERAL: /TOD#[0-9:\.]+/;
+terminal DATE_AND_TIME_LITERAL: /(DT|DATE_AND_TIME)#[0-9-]-[0-9:\.]/;
 terminal ID: /[_a-zA-Z][\w_]*/;
 terminal DOUBLE_QUOTE_STRING: /"(\\.|[^"\\])*"/;
 terminal SINGLE_QUOTE_STRING: /'(\\.|[^'\\])*'/;
