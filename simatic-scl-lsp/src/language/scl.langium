@@ -21,9 +21,9 @@ BlockAttribute:
     'TITLE' '=' value=SINGLE_QUOTE_STRING
     | 'Version' ':' value=SINGLE_QUOTE_STRING
     | 'KNOW_HOW_PROTECT'
-    | 'AUTHOR' ':' value=ID
-    | 'NAME' ':' value=ID
-    | 'FAMILY' ':' value=ID
+    | 'AUTHOR' ':' value=(ID | SINGLE_QUOTE_STRING)
+    | 'NAME' ':' value=(ID | SINGLE_QUOTE_STRING)
+    | 'FAMILY' ':' value=(ID | SINGLE_QUOTE_STRING)
 ;
 
 BlockStart:
