@@ -172,6 +172,7 @@ Primary infers Expression:
     BooleanExpression |
     NumberExpression |
     TimeExpression |
+    GlobalReference |
     FeatureCall |
     BuiltInFeatureCall;
 
@@ -204,6 +205,9 @@ TimeExpression:
         TIME_OF_DAY_LITERAL |
         DATE_AND_TIME_LITERAL
     );
+
+GlobalReference:
+    '"' name=ID '"';  //TODO: Implement as cross reference insted
 
 type NamedElement = 
     VariableDeclaration
