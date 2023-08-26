@@ -359,8 +359,9 @@ terminal TIME_LITERAL: /T#[0-9DdHhMmSs_]+/;
 terminal DATE_LITERAL: /D#[0-9-]+/;
 terminal TIME_OF_DAY_LITERAL: /TOD#[0-9:\.]+/;
 terminal DATE_AND_TIME_LITERAL: /(DT|DATE_AND_TIME)#[0-9-]-[0-9:\.]/;
-terminal ID: /[_a-zA-Z][\w_]*/;
-terminal DOUBLE_QUOTE_STRING: /"(\\.|[^"\\])*"/;
+terminal ID: ID_CHARACTERS | DOUBLE_QUOTE_STRING;
+terminal fragment ID_CHARACTERS: /[_a-zA-Z][\w_]*/;
+terminal fragment DOUBLE_QUOTE_STRING: /"(\\.|[^"\\])*"/;
 terminal SINGLE_QUOTE_STRING: /'(\\.|[^'\\])*'/;
 
 terminal ASSIGNMENT: /:=/;
