@@ -30,10 +30,20 @@ BlockAttribute:
 ;
 
 BlockStart:
-    'FUNCTION_BLOCK' ('"'name=ID'"' | name=ID);
+    (
+        'FUNCTION_BLOCK' |
+        'FUNCTION' |
+        'TYPE' |
+        'DATA_BLOCK' |
+        'ORGANIZATION_BLOCK'
+    ) ('"'name=ID'"' | name=ID) (':' type=(TypeReference | 'Void'))?;
 
 BlockEnd returns string:
-    'END_FUNCTION_BLOCK';
+    'END_FUNCTION_BLOCK' |
+    'END_FUNCTION' |
+    'END_TYPE' |
+    'END_DATA_BLOCK' |
+    'END_ORGANIZATION_BLOCK';
 
 // #############################
 // #### Declaration section ####
