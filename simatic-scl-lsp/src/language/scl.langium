@@ -43,8 +43,11 @@ ConstantDeclaration:
     name=ID assignment?=':=' value=Expression ';'
 ;
 
+VariableAttribute:
+    '{' (name=ID ':=' value=SINGLE_QUOTE_STRING ';'?)+ '}';
+
 VariableDeclaration:
-    name=ID ('AT' refName=[VariableDeclaration:ID])? ':' type=TypeReference (assignment?=':=' value=Expression)? ';'
+    name=ID ('AT' refName=[VariableDeclaration:ID])? attributes+=VariableAttribute? ':' type=TypeReference (assignment?=':=' value=Expression)? ';'
 ;
 
 // VariableDeclaration returns NamedElement:
