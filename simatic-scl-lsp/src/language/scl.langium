@@ -3,6 +3,7 @@ grammar Scl
 entry Model:
     compilerDirectives+=CompilerDirective*
     blockStart=BlockStart
+    compilerDirectives+=CompilerDirective*
     blockAttributes+=BlockAttribute* 
     (
     (
