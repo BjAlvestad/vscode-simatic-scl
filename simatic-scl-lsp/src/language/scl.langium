@@ -9,7 +9,9 @@ entry Model:
         'CONST' consts+=ConstantDeclaration* 'END_CONST') |
         (name=DeclarationSubSectionStart vars+=VariableDeclaration* 'END_VAR')
     )* 
-    'BEGIN' elements+=SclElement* BlockEnd;
+    'BEGIN'
+    elements+=SclElement*
+    BlockEnd;
 
 // #########################
 // #### BlockAttributes ####
