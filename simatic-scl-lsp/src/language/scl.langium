@@ -22,7 +22,7 @@ CompilerDirective:
 
 BlockAttribute:
     'TITLE' '=' value=SINGLE_QUOTE_STRING
-    | 'Version' ':' value=SINGLE_QUOTE_STRING
+    | 'Version' ':' value=(SINGLE_QUOTE_STRING | NUMBER)
     | 'KNOW_HOW_PROTECT'
     | 'AUTHOR' ':' value=(ID | SINGLE_QUOTE_STRING)
     | 'NAME' ':' value=(ID | SINGLE_QUOTE_STRING)
