@@ -7,6 +7,7 @@ entry Model:
     (
     (
         'CONST' consts+=ConstantDeclaration* 'END_CONST') |
+        'STRUCT' vars+=VariableDeclaration* 'END_STRUCT' ';'? |
         (name=DeclarationSubSectionStart vars+=VariableDeclaration* 'END_VAR')
     )* 
     'BEGIN'?
