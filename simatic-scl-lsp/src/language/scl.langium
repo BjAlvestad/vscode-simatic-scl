@@ -70,7 +70,11 @@ VariableDeclaration:
 
 TypeReference:
     elementary=ElementaryType
-    | complex=(ArrayType | StructureType)
+    | complex=(
+        ArrayType |
+        StructureType |
+        StringType
+    )
     | 'ANY'
     | (CustomType | '"' CustomType '"')
     | catchAll=ID
@@ -89,7 +93,8 @@ fragment ArrayIndexRange:
 StructureType:
     type='STRUCT' (vars+=VariableDeclaration)* 'END_STRUCT';
 
-//TODO: Define String
+StringType:
+    'String' ('[' value=Expression ']')?;
 
 //TODO: Define DATE_AND_TIME
 
