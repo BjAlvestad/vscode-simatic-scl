@@ -28,6 +28,7 @@ BlockAttribute:
     | 'AUTHOR' ':' value=(ID | SINGLE_QUOTE_STRING)
     | 'NAME' ':' value=(ID | SINGLE_QUOTE_STRING)
     | 'FAMILY' ':' value=(ID | SINGLE_QUOTE_STRING)
+    | 'NON_RETAIN'
 ;
 
 BlockStart:
@@ -51,7 +52,9 @@ BlockEnd returns string:
 // #############################
 
 DeclarationSubSectionStart returns string:
-    'VAR_INPUT' | 'VAR_OUTPUT' | 'VAR_IN_OUT' | 'VAR' | 'VAR_TEMP' | 'CONST';
+    'VAR_INPUT' | 'VAR_OUTPUT' | 'VAR_IN_OUT' | 'VAR' | 'VAR_TEMP' | 'CONST' |
+    'VAR' 'CONSTANT' | 'VAR' 'RETAIN'
+;
 
 ConstantDeclaration:
     name=ID assignment?=':=' value=Expression ';'
