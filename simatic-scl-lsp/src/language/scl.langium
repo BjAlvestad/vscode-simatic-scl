@@ -88,7 +88,7 @@ ElementaryType returns string:
     'BOOL' | 'CHAR' | 'INT' | 'TIME' | 'BYTE' | 'DINT' | 'DATE' | 'WORD' | 'REAL' | 'TIME_OF_DAY' | 'DWORD' | 'S5TIME';
 
 ArrayType:
-    type='ARRAY' ArrayIndexRange 'OF' elementType=(ElementaryType|StructureType);
+    type='ARRAY' ArrayIndexRange 'OF' elementType=TypeReference;
 
 fragment ArrayIndexRange:
     '[' (indexStart+=Expression '..' indexEnd+=Expression) (',' indexStart+=Expression '..' indexEnd+=Expression)* ']';
