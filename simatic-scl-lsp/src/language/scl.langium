@@ -130,7 +130,7 @@ IfStatement:
 ;
 
 CaseStatement:  //BUG: Second number in cases errors out on the `:`. Using `ELSE :` works fine.
-    'CASE' variable=[NamedElement:ID] 'OF' 
+    'CASE' '#'? variable=[NamedElement:ID] 'OF' 
     (
         (NUMBER ('..' NUMBER)? (',' NUMBER ('..' NUMBER)?)*) ':'
         blocks+=ExpressionBlock
@@ -140,7 +140,7 @@ CaseStatement:  //BUG: Second number in cases errors out on the `:`. Using `ELSE
 ;
 
 ForStatement:
-    'FOR' indexVariable=[NamedElement:ID] ':=' initialValue=Expression 'TO' finalValue=Expression ('BY' execution=Expression)? 'DO' block=ExpressionBlock 'END_FOR' ';'
+    'FOR' '#'? indexVariable=[NamedElement:ID] ':=' initialValue=Expression 'TO' finalValue=Expression ('BY' execution=Expression)? 'DO' block=ExpressionBlock 'END_FOR' ';'
 ;
 
 WhileStatement:
@@ -176,7 +176,7 @@ MemberCall infers Expression:
     Primary
 	({infer MemberCall.previous=current} 
     // Member call with function call
-        ("." element=[NamedElement:ID] (
+        ("." '#'? element=[NamedElement:ID] (
 		explicitOperationCall?='('
 		(
 		    arguments+=Expression (',' arguments+=Expression)*
