@@ -119,7 +119,8 @@ SclElement:
     ForStatement |
     WhileStatement |
     ReturnStatement ';' | 
-    Expression ';'
+    Expression ';' |
+    ';'
 ;
 
 IfStatement:
