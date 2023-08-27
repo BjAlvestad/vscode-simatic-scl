@@ -391,7 +391,7 @@ terminal DATE_AND_TIME_LITERAL: /(([Dd][Tt])|DATE_AND_TIME)#[0-9-]-[0-9:\.]/;
 terminal ID: ID_CHARACTERS | DOUBLE_QUOTE_STRING;
 terminal fragment ID_CHARACTERS: /[_a-zA-Z][\w_]*/;
 terminal fragment DOUBLE_QUOTE_STRING: /"(\\.|[^"\\])*"/;
-terminal SINGLE_QUOTE_STRING: /'(\\.|[^'\\])*'/;
+terminal SINGLE_QUOTE_STRING: /'([^'])*'/;
 
 hidden terminal ML_COMMENT: /\(\*[\s\S]*?\*\)/;
 hidden terminal SL_COMMENT: /\/\/[^\n\r]*/;
