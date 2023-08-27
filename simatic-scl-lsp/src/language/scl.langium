@@ -20,7 +20,7 @@ entry Model:
 // #### BlockAttributes ####
 // #########################
 CompilerDirective:
-    '{'name=ID ':=' value=SINGLE_QUOTE_STRING '}';
+    '{'name+=ID ':=' value+=SINGLE_QUOTE_STRING (';' name+=ID ':=' value+=SINGLE_QUOTE_STRING)* ';'? '}';
 
 BlockAttribute:
     'TITLE' '=' value=SINGLE_QUOTE_STRING
