@@ -216,7 +216,7 @@ UnaryExpression:
 ;
 
 NumberExpression:
-    value=NUMBER;
+    (type=ElementaryType '#')? value=NUMBER;
 StringExpression:
     value=SINGLE_QUOTE_STRING;
 BooleanExpression:
