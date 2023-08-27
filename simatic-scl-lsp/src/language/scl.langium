@@ -65,7 +65,7 @@ VariableAttribute:
     '{' (name=ID ':=' value=SINGLE_QUOTE_STRING ';'?)+ '}';
 
 VariableDeclaration:
-    name=ID ('AT' refName=[VariableDeclaration:ID])? attributes+=VariableAttribute? ':' type=TypeReference (assignment?=':=' value=Expression)? ';'
+    name=ID ('AT' refName=[VariableDeclaration:ID])? attributes+=VariableAttribute? ':' 'REF_TO'? type=TypeReference (assignment?=':=' value=Expression)? ';'
 ;
 
 // VariableDeclaration returns NamedElement:
@@ -130,7 +130,7 @@ IfStatement:
 ;
 
 CaseStatement:  //BUG: Second number in cases errors out on the `:`. Using `ELSE :` works fine.
-    'CASE' '#'? variable=[NamedElement:ID] 'OF' 
+    'CASE' '#'? variable=[NamedElement:ID] '^'? 'OF' 
     (
         (NUMBER ('..' NUMBER)? (',' NUMBER ('..' NUMBER)?)*) ':'
         blocks+=ExpressionBlock
@@ -140,7 +140,7 @@ CaseStatement:  //BUG: Second number in cases errors out on the `:`. Using `ELSE
 ;
 
 ForStatement:
-    'FOR' '#'? indexVariable=[NamedElement:ID] ':=' initialValue=Expression 'TO' finalValue=Expression ('BY' execution=Expression)? 'DO' block=ExpressionBlock 'END_FOR' ';'
+    'FOR' '#'? indexVariable=[NamedElement:ID] '^'? ':=' initialValue=Expression 'TO' finalValue=Expression ('BY' execution=Expression)? 'DO' block=ExpressionBlock 'END_FOR' ';'
 ;
 
 WhileStatement:
@@ -158,7 +158,7 @@ Expression:
     Assignment;
 
 Assignment infers Expression:
-    Addition ({infer BinaryExpression.left=current} operator=(':=' | '=>') right=Addition)*;
+    Addition ({infer BinaryExpression.left=current} operator=(':=' | '=>' | '?=') right=Addition)*;
 
 Addition infers Expression:
     Multiplication ({infer BinaryExpression.left=current} operator=('+' | '-') right=Multiplication)*;
@@ -176,7 +176,7 @@ MemberCall infers Expression:
     Primary
 	({infer MemberCall.previous=current} 
     // Member call with function call
-        ("." '#'? element=[NamedElement:ID] (
+        ("." '#'? element=[NamedElement:ID] '^'? (
 		explicitOperationCall?='('
 		(
 		    arguments+=Expression (',' arguments+=Expression)*
@@ -209,12 +209,13 @@ Primary infers Expression:
     GlobalReference |
     ArrayAccess |
     FeatureCall |
+    Referencing |
     BuiltInFeatureCall;
 
 ArrayAccess infers Expression:
     {infer MemberCall}
 	(
-        '#'? element=[NamedElement:ID]
+        '#'? element=[NamedElement:ID] '^'?
     )
     (explicitOperationCall?='['
 	(
@@ -225,7 +226,7 @@ ArrayAccess infers Expression:
 FeatureCall infers Expression:
     {infer MemberCall}
 	(
-        '#'? element=[NamedElement:ID]
+        '#'? element=[NamedElement:ID] '^'?
     )
     // Optional function call after referencing an element
     (explicitOperationCall?='('
@@ -263,6 +264,9 @@ type NamedElement =
 // | MethodMember
 // | FieldMember
 ;
+
+Referencing:
+    'REF' '(' '#'? element=[NamedElement:ID] '^'? ')';
 
 BuiltInFeatureCall infers expression:
     (
