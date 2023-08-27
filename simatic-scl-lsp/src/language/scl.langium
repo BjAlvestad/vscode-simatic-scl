@@ -92,7 +92,10 @@ ArrayType:
     type='ARRAY' ArrayIndexRange 'OF' elementType=TypeReference;
 
 fragment ArrayIndexRange:
-    '[' (indexStart+=Expression '..' indexEnd+=Expression) (',' indexStart+=Expression '..' indexEnd+=Expression)* ']';
+    '[' ArrayIndexRangeElement (',' ArrayIndexRangeElement)* ']';
+
+fragment ArrayIndexRangeElement:
+    (indexStart+=Expression '..' indexEnd+=Expression) | '*';
 
 StructureType:
     type='STRUCT' (vars+=VariableDeclaration)* 'END_STRUCT';
