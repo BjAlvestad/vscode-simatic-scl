@@ -65,7 +65,7 @@ VariableAttribute:
     '{' (name=ID ':=' value=SINGLE_QUOTE_STRING ';'?)+ '}';
 
 VariableDeclaration:
-    name=ID ('AT' refName=[VariableDeclaration:ID])? attributes+=VariableAttribute? ':' 'REF_TO'? type=TypeReference (assignment?=':=' value=Expression)? ';'
+    name=ID attributes+=VariableAttribute? ('AT' refName=[VariableDeclaration:ID])? ':' 'REF_TO'? type=TypeReference (assignment?=':=' value=Expression)? ';'
 ;
 
 // VariableDeclaration returns NamedElement:
