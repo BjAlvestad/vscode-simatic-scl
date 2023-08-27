@@ -181,7 +181,14 @@ MemberCall infers Expression:
 		(
 		    arguments+=Expression (',' arguments+=Expression)*
 		)?
-		')')? 
+		')')?
+    // Array access on member
+        | (
+		explicitOperationCall?='['
+		(
+		    arguments+=Expression (',' arguments+=Expression)*
+		)?
+		']') 
     // Chained function call
         | (
 		explicitOperationCall?='('
@@ -199,8 +206,20 @@ Primary infers Expression:
     NumberExpression |
     TimeExpression |
     GlobalReference |
+    ArrayAccess |
     FeatureCall |
     BuiltInFeatureCall;
+
+ArrayAccess infers Expression:
+    {infer MemberCall}
+	(
+        '#'? element=[NamedElement:ID]
+    )
+    (explicitOperationCall?='['
+	(
+	    arguments+=Expression (',' arguments+=Expression)*
+	)?
+	']');
 
 FeatureCall infers Expression:
     {infer MemberCall}
