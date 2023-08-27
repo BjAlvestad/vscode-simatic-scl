@@ -167,7 +167,7 @@ Multiplication infers Expression:
     Logical ({infer BinaryExpression.left=current} operator=('*' | '/') right=Logical)*;
 
 Logical infers Expression:
-    Comparison ({infer BinaryExpression.left=current} operator=('and' | 'or') right=Comparison)*;
+    Comparison ({infer BinaryExpression.left=current} operator=('AND' | '&' | 'OR' | 'XOR') right=Comparison)*;
 
 Comparison infers Expression:
     MemberCall ({infer BinaryExpression.left=current} operator=('<' | '<=' | '>' | '>=' | '=' | '<>') right=MemberCall)*;
