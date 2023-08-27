@@ -199,7 +199,8 @@ MemberCall infers Expression:
     )*;
 
 Primary infers Expression:
-    '(' Expression ')' |
+    '(' Expression? (',' Expression)* ')' |
+    '[' Expression (',' Expression)*']' |
     UnaryExpression |
     StringExpression |
     BooleanExpression |
