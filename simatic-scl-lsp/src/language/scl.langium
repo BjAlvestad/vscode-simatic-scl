@@ -368,20 +368,6 @@ terminal fragment ID_CHARACTERS: /[_a-zA-Z][\w_]*/;
 terminal fragment DOUBLE_QUOTE_STRING: /"(\\.|[^"\\])*"/;
 terminal SINGLE_QUOTE_STRING: /'(\\.|[^'\\])*'/;
 
-terminal ASSIGNMENT: /:=/;
-terminal EXPONENTIAL: /\*\*/;
-terminal BASIC_MATH_OPERATOR: /[+-*/]|MOD|DIV/;
-
-terminal BASIC_LOGICAL_OPERATOR: /AND|&|XOR|OR/;
-// terminal fragment OPERATOR_MATH_EXPONENTIAL: /\\*\\*/;
-// terminal fragment OPERATOR_MATH_PLUS: /\\+/;
-
-// terminal IF: /if/;
-// terminal THEN: /then/;
-// terminal ELSE: /else/;
-// terminal WHILE: /while/;
-// terminal DO: /do/;
-
 hidden terminal ML_COMMENT: /\(\*[\s\S]*?\*\)/;
 hidden terminal SL_COMMENT: /\/\/[^\n\r]*/;
 
