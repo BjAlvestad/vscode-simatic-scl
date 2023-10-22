@@ -118,8 +118,12 @@ SclElement:
     CaseStatement |
     ForStatement |
     WhileStatement |
+    RepeatStatement |
+    ContinueStatemen |
     ReturnStatement ';' | 
-    JumpLabel |
+    ExitStatement |
+    ProgramJump |
+    JumpLabel ':' |
     Expression ';' |
     ';'
 ;
@@ -148,15 +152,31 @@ WhileStatement:
     'WHILE' condition=Expression 'DO' block=ExpressionBlock 'END_WHILE' ';'
 ;
 
+RepeatStatement:
+    'REPEAT' block=ExpressionBlock 'UNTIL' condition=Expression 'END_REPEAT' ';'
+;
+
+ContinueStatemen returns string:
+    'CONTINUE' ';'
+;
+
 ReturnStatement:
     'return' value=Expression?;
+
+ExitStatement returns string:
+    'EXIT' ';'
+;
+
+ProgramJump:
+    'GOTO' jumpLabel=[JumpLabel:ID] ';'
+;
 
 ExpressionBlock:
     elements+=SclElement*
 ;
 
 JumpLabel:
-    jumpLabel=NUMBER ('..' NUMBER)? (',' NUMBER ('..' NUMBER)?)* ':';
+    jumpLabel=ID | (NUMBER ('..' NUMBER)? (',' NUMBER ('..' NUMBER)?)*);
 
 Expression:
     Assignment;
