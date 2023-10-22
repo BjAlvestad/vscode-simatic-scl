@@ -126,6 +126,7 @@ SclElement:
     ExitStatement |
     ProgramJump |
     JumpLabel ':' |
+    CaseLabel ':' |
     Expression ';' |
     ';'
 ;
@@ -138,7 +139,7 @@ IfStatement:
 ;
 
 CaseStatement:
-    'CASE' '#'? variable=[NamedElement:ID] '^'? 'OF' 
+    'CASE' MemberCall 'OF' 
     (
         blocks+=ExpressionBlock
     )+
@@ -178,7 +179,10 @@ ExpressionBlock:
 ;
 
 JumpLabel:
-    jumpLabel=ID | '#'? element=[NamedElement:ID] | (NUMBER ('..' NUMBER)? (',' NUMBER ('..' NUMBER)?)*);
+    element=ID;
+
+CaseLabel:
+    element+=MemberCall ('..' element+=MemberCall)? (',' MemberCall ('..' element+=MemberCall)?)*;
 
 Expression:
     Assignment;
