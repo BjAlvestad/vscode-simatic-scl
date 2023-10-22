@@ -186,7 +186,7 @@ JumpLabel:
     element=ID;
 
 CaseLabel:
-    element+=MemberCall ('..' element+=MemberCall)? (',' MemberCall ('..' element+=MemberCall)?)*;
+    element+=MemberCall ('..' element+=MemberCall)? (',' MemberCall ('..' element+=MemberCall)?)* | element = TypeReference;
 
 Expression:
     Assignment;
