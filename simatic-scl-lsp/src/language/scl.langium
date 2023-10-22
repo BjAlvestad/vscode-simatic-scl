@@ -176,7 +176,7 @@ ExpressionBlock:
 ;
 
 JumpLabel:
-    jumpLabel=ID | (NUMBER ('..' NUMBER)? (',' NUMBER ('..' NUMBER)?)*);
+    jumpLabel=ID | '#'? element=[NamedElement:ID] | (NUMBER ('..' NUMBER)? (',' NUMBER ('..' NUMBER)?)*);
 
 Expression:
     Assignment;
