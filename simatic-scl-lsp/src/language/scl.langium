@@ -229,7 +229,9 @@ MemberCall infers Expression:
 		(
 		    arguments+=Expression (',' arguments+=Expression)*
 		)?
-		')'))
+		')')
+        | ("." memoryArea=MEMORY_AREA)
+        )
     )*;
 
 Primary infers Expression:
@@ -426,6 +428,7 @@ terminal ID: ID_CHARACTERS | DOUBLE_QUOTE_STRING;
 terminal fragment ID_CHARACTERS: /[_a-zA-Z][\w_]*/;
 terminal fragment DOUBLE_QUOTE_STRING: /"(\\.|[^"\\])*"/;
 terminal SINGLE_QUOTE_STRING: /'([^'])*'/;
+terminal MEMORY_AREA: /%[XBWD]\d+/;
 
 hidden terminal ML_COMMENT: /\(\*[\s\S]*?\*\)/;
 hidden terminal SL_COMMENT: /\/\/[^\n\r]*/;
