@@ -1,0 +1,7 @@
+TYPE "U_TitleTest"
+TITLE = 'Object data interface'
+VERSION : 0.1
+   STRUCT
+      myNum : INT;
+   END_STRUCT;
+END_TYPE
