@@ -244,7 +244,8 @@ Primary infers Expression:
     ArrayAccess |
     FeatureCall |
     Referencing |
-    BuiltInFeatureCall;
+    BuiltInFeatureCall |
+    TypeReference;
 
 ArrayAccess infers Expression:
     {infer MemberCall}
