@@ -77,7 +77,8 @@ TypeReference:
     | complex=(
         ArrayType |
         StructureType |
-        StringType
+        StringType |
+        DateAndTime
     )
     | 'ANY'
     | (CustomType | '"' CustomType '"')
@@ -103,7 +104,8 @@ StructureType:
 StringType:
     'String' ('[' value=Expression ']')?;
 
-//TODO: Define DATE_AND_TIME
+DateAndTime:
+    type='DATE_AND_TIME';
 
 CustomType:
     type=[BlockStart:ID]
@@ -410,7 +412,7 @@ terminal NUMBER returns number: /([Dd]?[BbWw]#)?((16#[0-9a-fA-F_]+)|(((2|8)#)?[0
 terminal TIME_LITERAL: /[Ll]?[Tt]#[0-9DdHhMmSs_]+/;
 terminal DATE_LITERAL: /[Dd]#[0-9-]+/;
 terminal TIME_OF_DAY_LITERAL: /[Ll]?[Tt][Oo][Dd]#[0-9:\.]+/;
-terminal DATE_AND_TIME_LITERAL: /(([Dd][Tt])|DATE_AND_TIME)#[0-9-]-[0-9:\.]/;
+terminal DATE_AND_TIME_LITERAL: /(([Dd][Tt])|DATE_AND_TIME)#[0-9-]*[0-9:\.]*/;
 terminal ID: ID_CHARACTERS | DOUBLE_QUOTE_STRING;
 terminal fragment ID_CHARACTERS: /[_a-zA-Z][\w_]*/;
 terminal fragment DOUBLE_QUOTE_STRING: /"(\\.|[^"\\])*"/;

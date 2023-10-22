@@ -1,0 +1,10 @@
+TYPE "U_DeclarationTest"
+VERSION : 0.1
+   STRUCT
+      myNum1 : INT;
+      myNum2 : INT := 22;
+      myNum3 : DINT := 33;
+      myNum3 : DINT := 33;
+      myDateTime : DATE_AND_TIME := DT#1990-01-01-00:00:00;   // Initial date and time
+   END_STRUCT;
+END_TYPE
