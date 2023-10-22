@@ -184,7 +184,7 @@ Expression:
     Assignment;
 
 Assignment infers Expression:
-    Addition ({infer BinaryExpression.left=current} operator=(':=' | '=>' | '?=') right=Addition)*;
+    Addition ({infer BinaryExpression.left=current} operator=(':=' | '=>' | '?=' | '+=' | '-=' | '*=' | '/=' | '**=') right=Addition)*;
 
 Addition infers Expression:
     Multiplication ({infer BinaryExpression.left=current} operator=('+' | '-') right=Multiplication)*;
