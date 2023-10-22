@@ -10,7 +10,7 @@ entry Model:
         udtRef=[BlockStart:ID] |
         'CONST' consts+=ConstantDeclaration* 'END_CONST') |
         'STRUCT' vars+=VariableDeclaration* 'END_STRUCT' ';'? |
-        (name=DeclarationSubSectionStart vars+=VariableDeclaration* 'END_VAR')
+        (name=DeclarationSubSectionStart attribute=DeclarationSubSectionAttribute? vars+=VariableDeclaration* 'END_VAR')
     )* 
     'BEGIN'?
     elements+=SclElement*
@@ -54,7 +54,11 @@ BlockEnd returns string:
 
 DeclarationSubSectionStart returns string:
     'VAR_INPUT' | 'VAR_OUTPUT' | 'VAR_IN_OUT' | 'VAR' | 'VAR_TEMP' | 'CONST' |
-    'VAR' 'CONSTANT' | 'VAR' 'RETAIN'
+    'VAR' 'CONSTANT'
+;
+
+DeclarationSubSectionAttribute returns string:
+    'RETAIN' | 'NON_RETAIN' | 'DB_SPECIFIC'
 ;
 
 ConstantDeclaration:
