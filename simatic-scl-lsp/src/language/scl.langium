@@ -119,6 +119,7 @@ SclElement:
     ForStatement |
     WhileStatement |
     ReturnStatement ';' | 
+    JumpLabel |
     Expression ';' |
     ';'
 ;
@@ -130,10 +131,9 @@ IfStatement:
     'END_IF' ';'
 ;
 
-CaseStatement:  //BUG: Second number in cases errors out on the `:`. Using `ELSE :` works fine.
+CaseStatement:
     'CASE' '#'? variable=[NamedElement:ID] '^'? 'OF' 
     (
-        (NUMBER ('..' NUMBER)? (',' NUMBER ('..' NUMBER)?)*) ':'
         blocks+=ExpressionBlock
     )+
     ('ELSE' ':'? defaultBlock=ExpressionBlock)?
@@ -154,6 +154,9 @@ ReturnStatement:
 ExpressionBlock:
     elements+=SclElement*
 ;
+
+JumpLabel:
+    jumpLabel=NUMBER ('..' NUMBER)? (',' NUMBER ('..' NUMBER)?)* ':';
 
 Expression:
     Assignment;
