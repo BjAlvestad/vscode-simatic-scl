@@ -91,7 +91,14 @@ TypeReference:
 
 // Declaration/assignment for elementary data types
 ElementaryType returns string:
-    'BOOL' | 'CHAR' | 'INT' | 'TIME' | 'BYTE' | 'DINT' | 'DATE' | 'WORD' | 'REAL' | 'TIME_OF_DAY' | 'DWORD' | 'S5TIME';
+    'BOOL'
+    | 'BYTE' | 'WORD' | 'DWORD' | 'LWORD'  // LWORD is not not supported by S7-300
+    | 'SINT' | 'INT' | 'DINT' | 'LINT' | 'USINT' | 'UINT' | 'UDINT' | 'ULINT'  // Only INT and DINT are supported by S7-300
+    | 'REAL' | 'LREAL'
+    | 'S5TIME' | 'TIME' | 'LTIME'
+    | 'DATE'   | 'TIME_OF_DAY' | 'TOD' | 'LTOD' | 'LTIME_OF_DAY'
+    | 'CHAR'  | 'WCHAR'
+;
 
 ArrayType:
     type='ARRAY' ArrayIndexRange 'OF' elementType=TypeReference;
@@ -106,10 +113,11 @@ StructureType:
     type='STRUCT' (vars+=VariableDeclaration)* 'END_STRUCT';
 
 StringType:
-    'String' ('[' value=Expression ']')?;
+    ('WSTRING' | 'STRING') ('[' value=Expression ']')?;
 
 DateAndTime:
-    type='DATE_AND_TIME';
+    type = 'DT' | 'DATE_AND_TIME' | 'LDT' | 'DATE_AND_LTIME' | 'DTL'
+;
 
 CustomType:
     type=[BlockStart:ID]
@@ -419,7 +427,7 @@ TiaPortalStandardFunctions returns string:
 // 'IF' condition=Expression 'then' then=Expression 'ELSE' else=Expression;
 
 hidden terminal WS: /\s+/;
-terminal NUMBER returns number: /([Dd]?[BbWwLl]#)?((16#[0-9a-fA-F_]+)|(((2|8)#)?[0-9-][0-9_]*(\.[0-9eE_]+)?))/;
+terminal NUMBER returns number: /([DdLl]?[BbWwLl]#)?((16#[0-9a-fA-F_]+)|(((2|8)#)?[0-9-][0-9_]*(\.[0-9eE_]+)?))/;
 terminal TIME_LITERAL: /[Ll]?[Tt]#[0-9DdHhMmSs_]+/;
 terminal DATE_LITERAL: /[Dd]#[0-9-]+/;
 terminal TIME_OF_DAY_LITERAL: /[Ll]?[Tt][Oo][Dd]#[0-9:\.]+/;
