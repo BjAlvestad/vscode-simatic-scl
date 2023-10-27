@@ -1,7 +1,7 @@
 import { DefaultScopeProvider, EMPTY_SCOPE, getContainerOfType, LangiumServices, ReferenceInfo, Scope } from "langium";
-import { Class, isClass, MemberCall } from "./generated/ast";
-import { isClassType } from "./type-system/descriptions";
-import { getClassChain, inferType } from "./type-system/infer";
+import { BlockStart, isBlockStart, MemberCall } from "./generated/ast";
+import { isBlockStartType } from "./type-system/descriptions";
+import { getBlockStartChain, inferType } from "./type-system/infer";
 
 export class SclScopeProvider extends DefaultScopeProvider {
 
@@ -14,9 +14,9 @@ export class SclScopeProvider extends DefaultScopeProvider {
         if (context.property === 'element') {
             // for now, `this` and `super` simply target the container class type
             if (context.reference.$refText === 'this' || context.reference.$refText === 'super') {
-                const classItem = getContainerOfType(context.container, isClass);
-                if (classItem) {
-                    return this.scopeClassMembers(classItem);
+                const blockItem = getContainerOfType(context.container, isBlockStart);
+                if (blockItem) {
+                    return this.scopeBlockStartMembers(blockItem);
                 } else {
                     return EMPTY_SCOPE;
                 }
@@ -27,16 +27,16 @@ export class SclScopeProvider extends DefaultScopeProvider {
                 return super.getScope(context);
             }
             const previousType = inferType(previous, new Map());
-            if (isClassType(previousType)) {
-                return this.scopeClassMembers(previousType.literal);
+            if (isBlockStartType(previousType)) {
+                return this.scopeBlockStartMembers(previousType.literal);
             }
             return EMPTY_SCOPE;
         }
         return super.getScope(context);
     }
 
-    private scopeClassMembers(classItem: Class): Scope {
-        const allMembers = getClassChain(classItem).flatMap(e => e.members);
+    private scopeBlockStartMembers(blockItem: BlockStart): Scope {
+        const allMembers = getBlockStartChain(blockItem).flatMap(e => e.members);
         return this.createScopeForNodes(allMembers);
     }
 }
