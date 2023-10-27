@@ -1,24 +1,42 @@
-import type { AstNode, AstNodeDescription, LangiumDocument, LangiumServices, Module, PartialLangiumServices, PrecomputedScopes } from 'langium';
-// import type { DomainModelServices } from './domain-model-module.js';
-// import type { QualifiedNameProvider } from './domain-model-naming.js';
-// import type { Domainmodel, PackageDeclaration } from './generated/ast.js';
-import { DefaultScopeComputation, interruptAndCheck, MultiMap, streamAllContents } from 'langium';
-// import { CancellationToken } from 'vscode-jsonrpc';
-import { SclAddedServices, SclServices } from './scl-module';
-// import { isType, isPackageDeclaration } from './generated/ast.js';
+import { DefaultScopeProvider, EMPTY_SCOPE, getContainerOfType, LangiumServices, ReferenceInfo, Scope } from "langium";
+import { Class, isClass, MemberCall } from "./generated/ast";
+import { isClassType } from "./type-system/descriptions";
+import { getClassChain, inferType } from "./type-system/infer";
 
-// Scope computation for our C++-like language
-export class SclScopeComputation extends DefaultScopeComputation {
+export class SclScopeProvider extends DefaultScopeProvider {
 
     constructor(services: LangiumServices) {
         super(services);
     }
-}
 
-// Services module for overriding the scope computation
-// Your language module is usually placed in your `<dsl-name>-module.ts` file
-export const SclModule: Module<SclServices, PartialLangiumServices & SclAddedServices> = {
-    references: {
-        ScopeComputation: (services) => new SclScopeComputation(services)
+    override getScope(context: ReferenceInfo): Scope {
+        // target element of member calls
+        if (context.property === 'element') {
+            // for now, `this` and `super` simply target the container class type
+            if (context.reference.$refText === 'this' || context.reference.$refText === 'super') {
+                const classItem = getContainerOfType(context.container, isClass);
+                if (classItem) {
+                    return this.scopeClassMembers(classItem);
+                } else {
+                    return EMPTY_SCOPE;
+                }
+            }
+            const memberCall = context.container as MemberCall;
+            const previous = memberCall.previous;
+            if (!previous) {
+                return super.getScope(context);
+            }
+            const previousType = inferType(previous, new Map());
+            if (isClassType(previousType)) {
+                return this.scopeClassMembers(previousType.literal);
+            }
+            return EMPTY_SCOPE;
+        }
+        return super.getScope(context);
+    }
+
+    private scopeClassMembers(classItem: Class): Scope {
+        const allMembers = getClassChain(classItem).flatMap(e => e.members);
+        return this.createScopeForNodes(allMembers);
     }
 }
