@@ -217,7 +217,7 @@ Comparison infers Expression:
 Primary infers Expression:
     '(' Expression ')' |
     QualifiedName '(' Expression? (',' Expression)* ')' |
-    QualifiedName '[' Expression (',' Expression)*']' |
+    QualifiedName '[' Expression (',' Expression)*']' ('.' QualifiedName '[' Expression (',' Expression)*']')* |
     QualifiedName |
     UnaryExpression |
     StringExpression |
@@ -232,7 +232,7 @@ Primary infers Expression:
     TypeReference;
 
 QualifiedName:
-    '#'? (ID|GlobalReference) ('.' (ID|GlobalReference) ('[' ArrayIndexRange ']')?)* '^'?
+    '#'? (ID|GlobalReference) ('.' (ID|GlobalReference))* '^'?
     ("." memoryArea=MEMORY_AREA)?
 ;
 
