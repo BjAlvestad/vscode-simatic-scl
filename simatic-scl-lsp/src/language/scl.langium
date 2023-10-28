@@ -212,13 +212,39 @@ Logical infers Expression:
     Comparison ({infer BinaryExpression.left=current} operator=('AND' | '&' | 'OR' | 'XOR') right=Comparison)*;
 
 Comparison infers Expression:
-    Primary ({infer BinaryExpression.left=current} operator=('<' | '<=' | '>' | '>=' | '=' | '<>') right=Primary)*;
+    MemberCall ({infer BinaryExpression.left=current} operator=('<' | '<=' | '>' | '>=' | '=' | '<>') right=MemberCall)*;
+
+MemberCall infers Expression:
+    Primary
+	({infer MemberCall.previous=current} 
+    // Member call with function call
+        ("." '#'? element=[NamedElement:ID] '^'? (
+		explicitOperationCall?='('
+		(
+		    arguments+=Expression (',' arguments+=Expression)*
+		)?
+		')')?
+    // Array access on member
+        | (
+		explicitOperationCall?='['
+		(
+		    arguments+=Expression (',' arguments+=Expression)*
+		)?
+		']') 
+    // Chained function call
+        | (
+		explicitOperationCall?='('
+		(
+		    arguments+=Expression (',' arguments+=Expression)*
+		)?
+		')')
+        | ("." memoryArea=MEMORY_AREA)
+        )
+    )*;
 
 Primary infers Expression:
-    '(' Expression ')' |
-    QualifiedName '(' Expression? (',' Expression)* ')' |
-    QualifiedName '[' Expression (',' Expression)*']' ('.' QualifiedName '[' Expression (',' Expression)*']')* |
-    QualifiedName |
+    '(' Expression? (',' Expression)* ')' |
+    '[' Expression (',' Expression)*']' |
     UnaryExpression |
     StringExpression |
     BooleanExpression |
