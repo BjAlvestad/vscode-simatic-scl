@@ -215,8 +215,8 @@ Comparison infers Expression:
     Primary ({infer BinaryExpression.left=current} operator=('<' | '<=' | '>' | '>=' | '=' | '<>') right=Primary)*;
 
 Primary infers Expression:
-    '(' Expression? (',' Expression)* ')' |
-    '[' Expression (',' Expression)*']' |
+    QualifiedName '(' Expression? (',' Expression)* ')' |
+    QualifiedName '[' Expression (',' Expression)*']' |
     QualifiedName |
     UnaryExpression |
     StringExpression |
@@ -225,36 +225,24 @@ Primary infers Expression:
     TimeExpression |
     GlobalReference |
     // ArrayAccess |
-    // FeatureCall |
+    // FunctionCall |
     Referencing |
     BuiltInFeatureCall |
     TypeReference;
 
-QualifiedName returns string:
-    '#'? ID ('.' ID)* '^'?;// ("." memoryArea=MEMORY_AREA);
+QualifiedName:
+    '#'? (ID|GlobalReference) ('.' (ID|GlobalReference))* '^'?
+    ("." memoryArea=MEMORY_AREA)?
+;
 
-// ArrayAccess infers Expression:
-//     {infer QualifiedName}
-// 	(
-//         '#'? element=[NamedElement:ID] '^'?
-//     )
-//     (explicitOperationCall?='['
-// 	(
-// 	    arguments+=Expression (',' arguments+=Expression)*
-// 	)?
-// 	']');
+// ArrayAccess:// infers Expression:
+//     QualifiedName ArrayIndexRange
+//     ("." memoryArea=MEMORY_AREA)?
+// ;
 
-// FeatureCall infers Expression:
-//     {infer QualifiedName}
-// 	(
-//         '#'? element=[NamedElement:ID] '^'?
-//     )
-//     // Optional function call after referencing an element
-//     (explicitOperationCall?='('
-// 	(
-// 	    arguments+=Expression (',' arguments+=Expression)*
-// 	)?
-// 	')')?;
+FunctionCall:// infers Expression:
+    QualifiedName '(' arguments+=Expression? (',' arguments+=Expression)* ')'
+;
 
 UnaryExpression:
     operator=('NOT' | '-' | '+') value=Expression
