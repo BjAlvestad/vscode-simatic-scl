@@ -151,7 +151,7 @@ IfStatement:
 ;
 
 CaseStatement:
-    'CASE' MemberCall 'OF' 
+    'CASE' QualifiedName 'OF' 
     (
         blocks+=ExpressionBlock
     )+
@@ -194,7 +194,7 @@ JumpLabel:
     element=ID;
 
 CaseLabel:
-    element+=MemberCall ('..' element+=MemberCall)? (',' MemberCall ('..' element+=MemberCall)?)* | element = TypeReference;
+    element+=QualifiedName ('..' element+=QualifiedName)? (',' QualifiedName ('..' element+=QualifiedName)?)* | element = TypeReference;
 
 Expression:
     Assignment;
@@ -212,39 +212,12 @@ Logical infers Expression:
     Comparison ({infer BinaryExpression.left=current} operator=('AND' | '&' | 'OR' | 'XOR') right=Comparison)*;
 
 Comparison infers Expression:
-    MemberCall ({infer BinaryExpression.left=current} operator=('<' | '<=' | '>' | '>=' | '=' | '<>') right=MemberCall)*;
-
-MemberCall infers Expression:
-    Primary
-	({infer MemberCall.previous=current} 
-    // Member call with function call
-        ("." '#'? element=[NamedElement:ID] '^'? (
-		explicitOperationCall?='('
-		(
-		    arguments+=Expression (',' arguments+=Expression)*
-		)?
-		')')?
-    // Array access on member
-        | (
-		explicitOperationCall?='['
-		(
-		    arguments+=Expression (',' arguments+=Expression)*
-		)?
-		']') 
-    // Chained function call
-        | (
-		explicitOperationCall?='('
-		(
-		    arguments+=Expression (',' arguments+=Expression)*
-		)?
-		')')
-        | ("." memoryArea=MEMORY_AREA)
-        )
-    )*;
+    Primary ({infer BinaryExpression.left=current} operator=('<' | '<=' | '>' | '>=' | '=' | '<>') right=Primary)*;
 
 Primary infers Expression:
     '(' Expression? (',' Expression)* ')' |
     '[' Expression (',' Expression)*']' |
+    QualifiedName |
     UnaryExpression |
     StringExpression |
     BooleanExpression |
@@ -257,8 +230,11 @@ Primary infers Expression:
     BuiltInFeatureCall |
     TypeReference;
 
+QualifiedName returns string:
+    '#'? ID ('.' ID)* '^'?;// ("." memoryArea=MEMORY_AREA);
+
 ArrayAccess infers Expression:
-    {infer MemberCall}
+    {infer QualifiedName}
 	(
         '#'? element=[NamedElement:ID] '^'?
     )
@@ -269,7 +245,7 @@ ArrayAccess infers Expression:
 	']');
 
 FeatureCall infers Expression:
-    {infer MemberCall}
+    {infer QualifiedName}
 	(
         '#'? element=[NamedElement:ID] '^'?
     )
