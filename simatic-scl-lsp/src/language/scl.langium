@@ -101,10 +101,10 @@ ElementaryType returns string:
 ;
 
 ArrayType:
-    type='ARRAY' ArrayIndexRange 'OF' elementType=TypeReference;
+    type='ARRAY' '[' ArrayIndexRange ']' 'OF' elementType=TypeReference;
 
 fragment ArrayIndexRange:
-    '[' ArrayIndexRangeElement (',' ArrayIndexRangeElement)* ']';
+    ArrayIndexRangeElement (',' ArrayIndexRangeElement)*;
 
 fragment ArrayIndexRangeElement:
     (indexStart+=Expression '..' indexEnd+=Expression) | '*';
@@ -215,6 +215,7 @@ Comparison infers Expression:
     Primary ({infer BinaryExpression.left=current} operator=('<' | '<=' | '>' | '>=' | '=' | '<>') right=Primary)*;
 
 Primary infers Expression:
+    '(' Expression ')' |
     QualifiedName '(' Expression? (',' Expression)* ')' |
     QualifiedName '[' Expression (',' Expression)*']' |
     QualifiedName |
@@ -231,7 +232,7 @@ Primary infers Expression:
     TypeReference;
 
 QualifiedName:
-    '#'? (ID|GlobalReference) ('.' (ID|GlobalReference))* '^'?
+    '#'? (ID|GlobalReference) ('.' (ID|GlobalReference) ('[' ArrayIndexRange ']')?)* '^'?
     ("." memoryArea=MEMORY_AREA)?
 ;
 
