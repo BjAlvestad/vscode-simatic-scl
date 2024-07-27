@@ -1,6 +1,6 @@
 {
     "name": "simatic-scl-lsp",
-    "description": "Please enter a brief description here",
+    "description": "TIA Portal SCL language support",
     "version": "0.0.1",
     "files": [
         "out",
