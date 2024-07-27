@@ -1,0 +1,71 @@
+{
+    "name": "simatic-scl-lsp",
+    "description": "Please enter a brief description here",
+    "version": "0.0.1",
+    "files": [
+        "out",
+        "src"
+    ],
+    "type": "module",
+    "scripts": {
+        "build": "tsc -b tsconfig.src.json && node esbuild.mjs",
+        "watch": "concurrently -n tsc,esbuild -c blue,yellow \"tsc -b tsconfig.src.json --watch\" \"node esbuild.mjs --watch\"",
+        "lint": "eslint src --ext ts",
+        "langium:generate": "langium generate",
+        "langium:watch": "langium generate --watch",
+        "vscode:prepublish": "npm run build && npm run lint",
+        "test": "vitest run"
+    },
+    "dependencies": {
+        "langium": "~3.1.0",
+        "vscode-languageclient": "~9.0.1",
+        "vscode-languageserver": "~9.0.1"
+    },
+    "devDependencies": {
+        "@types/node": "^18.0.0",
+        "@typescript-eslint/parser": "~7.3.1",
+        "@typescript-eslint/eslint-plugin": "~7.3.1",
+        "eslint": "~8.57.0",
+        "langium-cli": "~3.1.0",
+        "typescript": "~5.1.6",
+        "@types/vscode": "~1.67.0",
+        "concurrently": "~8.2.1",
+        "esbuild": "~0.20.2",
+        "vitest": "~1.4.0"
+    },
+    "volta": {
+        "node": "18.19.1",
+        "npm": "10.2.4"
+    },
+    "displayName": "simatic-scl-lsp",
+    "engines": {
+        "vscode": "^1.67.0"
+    },
+    "categories": [
+        "Programming Languages"
+    ],
+    "contributes": {
+        "languages": [
+            {
+                "id": "scl",
+                "aliases": [
+                    "SCL",
+                    "scl"
+                ],
+                "extensions": [".scl", ".db", ".udt"],
+                "configuration": "./language-configuration.json"
+            }
+        ],
+        "grammars": [
+            {
+                "language": "scl",
+                "scopeName": "source.scl",
+                "path": "syntaxes/scl.tmLanguage.json"
+            }
+        ]
+    },
+    "activationEvents": [
+        "onLanguage:scl"
+    ],
+    "main": "./out/extension/main.cjs"
+}

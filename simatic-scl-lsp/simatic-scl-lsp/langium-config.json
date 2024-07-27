@@ -1,0 +1,12 @@
+{
+    "projectName": "Scl",
+    "languages": [{
+        "id": "scl",
+        "grammar": "src/language/scl.langium",
+        "fileExtensions": [".scl", ".db", ".udt"],
+        "textMate": {
+            "out": "syntaxes/scl.tmLanguage.json"
+        }
+    }],
+    "out": "src/language/generated"
+}
