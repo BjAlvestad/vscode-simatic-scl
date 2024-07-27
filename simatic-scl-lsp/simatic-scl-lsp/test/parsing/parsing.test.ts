@@ -91,19 +91,25 @@ describe('Parsing tests', () => {
                 myStruct : STRUCT
                     myIntenal1 : DINT;
                     myIntenal2 : BOOL;
+                    myIntenal3 : DINT;
                 END_STRUCT;
             END_VAR
 
             BEGIN
-                #myVar1 := 11;
-                #myVar2 := 22;
-                #internal2 := 22;
+                #myInt := 11;
+                #myStruct.myIntenal1 := 22;
             END_FUNCTION
         `);
 
         // check for absensce of parser errors the classic way:
         //  deacivated, find a much more human readable way below!
         // expect(document.parseResult.parserErrors).toHaveLength(0);
+        
+        const model = document.parseResult.value;
+        expect(model.vars).toHaveLength(1)
+        expect(model.structs).toHaveLength(1)
+        expect(model.structs[0].name).toBe("myStruct")
+        expect(model.structs[0].internal).toHaveLength(3)
 
         expect(
             // here we use a (tagged) template expression to create a human readable representation
@@ -111,24 +117,27 @@ describe('Parsing tests', () => {
             // prior to the tagged template expression we check for validity of the parsed document object
             //  by means of the reusable function 'checkDocumentValid()' to sort out (critical) typos first;
             checkDocumentValid(document) || s`
-                Top level declarations:
+                Top level vars:
                   ${document.parseResult.value?.vars?.map(p => p.name)?.join('\n  ')}
+                Top level structs:
+                  ${document.parseResult.value?.structs?.map(p => p.name)?.join('\n  ')}
                 Inside myStruct:
-                  ${document.parseResult.value?.vars?.map(p => p.name)?.join('\n  ')}
+                  ${document.parseResult.value?.structs?.map(p => p.internal)?.join('\n  ')}
                 Var usages in assignments:
                   ${document.parseResult.value?.assignment?.map(g => g.var.$refText)?.join('\n  ')}
             `
         ).toBe(s`
-            Top level declarations::
+            Top level vars:
               myInt
+            Top level structs:
                 myStruct
             Inside myStruct:
                 myIntenal1
                   myIntenal2
+                  myIntenal3
             Var usages in assignments:
-              myVar1
-                myVar2
-                internal2
+              myInt
+                myStruct.myIntenal1
         `);
     });
 });

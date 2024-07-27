@@ -4,7 +4,7 @@ entry Model:
     blockStart+=BlockStart
     (compilerDirective+=CompilerDirective)*
     (blockAttribute+=BlockAttribute)*
-    (declarationSubSection+=DeclarationSubSection | vars+=VariableDeclaration)*
+    (declarationSubSection+=DeclarationSubSection | structs+=StructDeclaration | vars+=VariableDeclaration)*
     'BEGIN'
     (assignment+=Assignment)*
     BlockEnd;
@@ -52,7 +52,7 @@ TypeReference:
     elementary=ElementaryType
     | complex=(
         ArrayType
-        | StructureType
+        // | StructureType
         | StringType
         | DateAndTime
     )
@@ -83,6 +83,14 @@ fragment ArrayIndexRangeElement:
 
 StructureType:
     type='STRUCT' (vars+=VariableDeclaration)* 'END_STRUCT';
+
+StructDeclaration:
+    name=ID attributes+=VariableAttribute? ('AT' refName=[VariableDeclaration:ID])? ':' 'STRUCT'
+        internal+=VariableDeclaration*
+        nestedStruct+=StructDeclaration*
+    'END_STRUCT' ';'
+;
+
 
 StringType:
     ('WSTRING' | 'STRING') ('[' value=Expression ']')?;
