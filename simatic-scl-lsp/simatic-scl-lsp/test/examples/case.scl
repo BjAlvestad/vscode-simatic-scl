@@ -1,0 +1,55 @@
+FUNCTION "MyCaseBlock" : Void
+{ S7_Optimized_Access := 'true' }
+AUTHOR : Myself
+FAMILY : SomeFam
+
+   VAR_INPUT 
+      myCaseSelectorInputVar : DINT;
+   END_VAR
+
+   VAR 
+      myStruct : STRUCT
+        intenal1 : DINT;
+        intenal2 : DINT;
+        intenal3 : DINT;
+        intenal4 : DINT;
+        intenal5 : DINT;
+      END_STRUCT;
+   END_VAR
+
+   VAR_TEMP 
+      myVar1 : DINT;   // Comment for my variable 1
+      myVar2 : DINT;   // Comment for my variable 2
+      myVar3 : DINT;   // Comment for my variable 3
+      myVar4 : DINT;   // Comment for my variable 4
+   END_VAR
+
+BEGIN
+	
+	CASE #myCaseSelectorInputVar OF
+	    1:
+	        #myVar1 := 11;
+	    2:
+	        #myVar2 := 22;
+	    3:
+	        #myVar2 := 23;
+	        #myVar3 := 33;;
+	    4:
+	        #myVar4 := 44;
+	END_CASE;
+	
+	CASE #myStruct.internal1 OF
+	    #myStruct.internal2:
+	        #myVar2 := 23;
+	        #myVar3 := 33;;
+	    #myStruct.internal3:
+	        #myVar4 := 44;
+	    #myStruct.internal4,
+	    #myStruct.internal5:
+	        #myVar4 := 4444;
+	    3:
+	        #myVar3 := 333;
+	    4:
+	        #myVar4 := 444;
+	END_CASE;
+END_FUNCTION

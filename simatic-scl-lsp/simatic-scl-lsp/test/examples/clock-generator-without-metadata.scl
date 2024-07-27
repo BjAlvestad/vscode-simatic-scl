@@ -1,0 +1,56 @@
+FUNCTION_BLOCK "fb_ClockGenerator_V15.0.2"
+   VAR_INPUT 
+      ir_PulsePauseLengthSeconds : Real;   // Puls Pause Länge in Sekunden
+      ir_PulsePauseRatioPercent : Real := 50.0;   // Pulse Pause Ratio in Prozent
+      ib_Start : Bool;
+   END_VAR
+
+   VAR_OUTPUT 
+      ob_Clock : Bool;
+   END_VAR
+
+   VAR 
+      (*Multi line 
+      comment*)
+      instTofTimePulse : TOF_TIME;   // -
+      // single line comment
+      instTofTimePause : TOF_TIME;   // -
+      (*(*Nestet multi line comment*) with some in outer nesting*)
+      statTimePulse : Time;   // -
+      statTimePause : Time;   // -
+   END_VAR
+
+   VAR_TEMP 
+      tempPulseRate : Real;   // -
+      // Integer literals
+      NUMBER1 : INT := 10 ;
+      NUMBER2 : INT := 2#1010 ;
+      NUMBER3 : INT := 16#1A2B ;
+      // Real number literals
+      NUMBER4 : REAL := -3.4 ;
+      NUMBER5 : REAL := 4e2 ;
+      NUMBER6 : REAL := 40_123E10;
+      NumberExp1 : REAL := 3.0E+10;
+      NumberExp2 : REAL := 3.0E10;
+      NumberExp3 : REAL := 3e+10;
+      NumberExp4 : REAL := 3E10;
+      NumberExp5 : REAL := 0.3E+11;
+      NumberExp6 : REAL := 0.3e11;
+      NumberExp7 : REAL := 30.0E+9;
+      NumberExp8 : REAL := 30e9;
+
+      array1 : ARRAY[1..10] OF REAL;
+      array2 : ARRAY[1..10] OF STRUCT innerNum1 : INT; innerNum2 : Real; END_STRUCT;
+      array3 : ARRAY[1..100, 1..10] OF REAL;
+   END_VAR
+
+
+BEGIN
+	#tempPulseRate := #ir_PulsePauseRatioPercent / 100;
+	#statTimePulse := UDINT_TO_TIME(REAL_TO_UDINT(1000.0 * #ir_PulsePauseLengthSeconds * #tempPulseRate));    
+	#statTimePause := UDINT_TO_TIME(REAL_TO_UDINT(1000.0 * #ir_PulsePauseLengthSeconds * (1-#tempPulseRate)));
+	#instTofTimePulse(IN := NOT #instTofTimePause.Q,PT := #statTimePulse);
+	#instTofTimePause(IN := #instTofTimePulse.Q, PT := #statTimePause);
+	IF #ib_Start THEN #ob_Clock := #instTofTimePulse.Q;
+	ELSE #ob_Clock := FALSE; END_IF;
+END_FUNCTION_BLOCK
