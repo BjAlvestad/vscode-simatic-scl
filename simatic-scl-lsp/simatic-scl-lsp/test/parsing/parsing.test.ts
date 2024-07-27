@@ -3,7 +3,7 @@ import { EmptyFileSystem, type LangiumDocument } from "langium";
 import { expandToString as s } from "langium/generate";
 import { parseHelper } from "langium/test";
 import { createSclServices } from "../../src/language/scl-module.js";
-import { Model, isModel } from "../../src/language/generated/ast.js";
+import { Model, StructDeclaration, isModel } from "../../src/language/generated/ast.js";
 
 let services: ReturnType<typeof createSclServices>;
 let parse:    ReturnType<typeof parseHelper<Model>>;
@@ -106,10 +106,10 @@ describe('Parsing tests', () => {
         // expect(document.parseResult.parserErrors).toHaveLength(0);
         
         const model = document.parseResult.value;
-        expect(model.vars).toHaveLength(1)
-        expect(model.structs).toHaveLength(1)
-        expect(model.structs[0].name).toBe("myStruct")
-        expect(model.structs[0].internal).toHaveLength(3)
+        expect(model.vars).toHaveLength(2)
+        // expect((model.vars[0].structure as TypeReference).).toEqual("dsa")
+        expect(model.vars[1].structure.$type).toEqual("StructDeclaration")
+        expect((model.vars[1].structure as StructDeclaration).internal).toHaveLength(3)
 
         expect(
             // here we use a (tagged) template expression to create a human readable representation
@@ -117,27 +117,90 @@ describe('Parsing tests', () => {
             // prior to the tagged template expression we check for validity of the parsed document object
             //  by means of the reusable function 'checkDocumentValid()' to sort out (critical) typos first;
             checkDocumentValid(document) || s`
-                Top level vars:
-                  ${document.parseResult.value?.vars?.map(p => p.name)?.join('\n  ')}
-                Top level structs:
-                  ${document.parseResult.value?.structs?.map(p => p.name)?.join('\n  ')}
-                Inside myStruct:
-                  ${document.parseResult.value?.structs?.map(p => p.internal)?.join('\n  ')}
-                Var usages in assignments:
-                  ${document.parseResult.value?.assignment?.map(g => g.var.$refText)?.join('\n  ')}
+                ** Top level vars: **
+                  ${document.parseResult.value?.vars?.map(p => p.name)?.join('\n')}
+                ** Inside myStruct: **
+                  ${(document.parseResult.value?.vars[1].structure as StructDeclaration).internal?.map(p => p.name)?.join('\n')}
+                ** Var usages in assignments: **
+                  ${document.parseResult.value?.assignment?.map(g => g.var.$refText)?.join('\n')}
             `
         ).toBe(s`
-            Top level vars:
+            ** Top level vars: **
               myInt
-            Top level structs:
-                myStruct
-            Inside myStruct:
-                myIntenal1
-                  myIntenal2
-                  myIntenal3
-            Var usages in assignments:
+              myStruct
+            ** Inside myStruct: **
+              myIntenal1
+              myIntenal2
+              myIntenal3
+            ** Var usages in assignments: **
               myInt
-                myStruct.myIntenal1
+              myStruct.myIntenal1
+        `);
+    });
+
+    test('parse nested struct in FB', async () => {
+        document = await parse(`
+            FUNCTION_BLOCK "FB_MyFunctionBlock"
+            { S7_Optimized_Access := 'TRUE' }
+            AUTHOR : Someone
+            FAMILY : SomeFamily
+            VERSION : 0.1
+
+            VAR 
+                myInt : DINT;
+                myStruct : STRUCT
+                    myIntenal1 : DINT;
+                    myIntenal2 : BOOL;
+                    myInnerStruct : STRUCT
+                        myIntenal1 : DINT;
+                        myIntenal2 : BOOL;
+                        myIntenal3 : DINT;
+                    END_STRUCT;
+                    myIntenal3 : DINT;
+                END_STRUCT;
+            END_VAR
+
+            BEGIN
+                #myInt := 11;
+                #myStruct.myIntenal1 := 22;
+            END_FUNCTION
+        `);
+
+        // check for absensce of parser errors the classic way:
+        //  deacivated, find a much more human readable way below!
+        // expect(document.parseResult.parserErrors).toHaveLength(0);
+        
+        const model = document.parseResult.value;
+        expect(model.vars).toHaveLength(2)
+        // expect((model.vars[0].structure as TypeReference).).toEqual("dsa")
+        expect(model.vars[1].structure.$type).toEqual("StructDeclaration")
+        expect((model.vars[1].structure as StructDeclaration).internal).toHaveLength(4)
+
+        expect(
+            // here we use a (tagged) template expression to create a human readable representation
+            //  of the AST part we are interested in and that is to be compared to our expectation;
+            // prior to the tagged template expression we check for validity of the parsed document object
+            //  by means of the reusable function 'checkDocumentValid()' to sort out (critical) typos first;
+            checkDocumentValid(document) || s`
+                ** Top level vars: **
+                  ${document.parseResult.value?.vars?.map(p => p.name)?.join('\n')}
+                ** Inside myStruct: **
+                  ${(document.parseResult.value?.vars[1].structure as StructDeclaration).internal?.map(p => p.name)?.join('\n')}
+                ** Var usages in assignments: **
+                  ${document.parseResult.value?.assignment?.map(g => g.var.$refText)?.join('\n')}
+            `
+        ).toBe(s`
+            ** Top level vars: **
+              myInt
+              myStruct
+            ** Inside myStruct: **
+              myIntenal1
+              myIntenal2
+              myInnerStruct
+              myIntenal3
+            ** Var usages in assignments: **
+              myInt
+              myStruct.myIntenal1
         `);
     });
 });

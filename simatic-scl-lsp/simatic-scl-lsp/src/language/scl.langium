@@ -4,8 +4,9 @@ entry Model:
     blockStart+=BlockStart
     (compilerDirective+=CompilerDirective)*
     (blockAttribute+=BlockAttribute)*
-    (declarationSubSection+=DeclarationSubSection | structs+=StructDeclaration | vars+=VariableDeclaration)*
+    (declarationSubSection+=DeclarationSubSection | vars+=VariableDeclaration)*
     'BEGIN'
+    // (assignment+=AssignmentToStruct)*
     (assignment+=Assignment)*
     BlockEnd;
 
@@ -50,9 +51,9 @@ DeclarationSubSection returns string:
 
 TypeReference:
     elementary=ElementaryType
+    // | struct=StructDeclaration
     | complex=(
         ArrayType
-        // | StructureType
         | StringType
         | DateAndTime
     )
@@ -81,14 +82,10 @@ fragment ArrayIndexRange:
 fragment ArrayIndexRangeElement:
     (indexStart+=Expression '..' indexEnd+=Expression) | '*';
 
-StructureType:
-    type='STRUCT' (vars+=VariableDeclaration)* 'END_STRUCT';
-
 StructDeclaration:
-    name=ID attributes+=VariableAttribute? ('AT' refName=[VariableDeclaration:ID])? ':' 'STRUCT'
+    'STRUCT'
         internal+=VariableDeclaration*
-        nestedStruct+=StructDeclaration*
-    'END_STRUCT' ';'
+    'END_STRUCT'
 ;
 
 
@@ -100,7 +97,7 @@ DateAndTime:
 ;
 
 VariableDeclaration:
-    name=ID attributes+=VariableAttribute? ('AT' refName=[VariableDeclaration:ID])? ':' 'REF_TO'? type=TypeReference (assignment?=':=' value=Expression)? ';'
+    name=ID attributes+=VariableAttribute? ('AT' refName=[VariableDeclaration:ID])? ':' 'REF_TO'? structure=(TypeReference|StructDeclaration) (assignment?=':=' value=Expression)? ';'
 ;
 
 VariableAttribute:
@@ -110,9 +107,24 @@ Expression returns number:
     NUMBER
 ;
 
+// VariableCall:
+//     '#' var=[VariableDeclaration:ID]
+
+// StructCall:
+//     '#' var=[StructDeclaration:ID]
+
+// AssignmentToStruct:
+//     '#' var=[StructDeclaration:ID] '.' internal=ID ':=' Expression ';'
+// ;
+
 Assignment:
-    '#' var=[VariableDeclaration:ID] ':=' Expression ';'
+    '#' var=[VariableDeclaration:QualifiedName] ':=' Expression ';'
 ;
+
+QualifiedName returns string:
+    ID ('.' ID)*
+;
+
 
 BlockEnd returns string:
     'END_FUNCTION_BLOCK' |
