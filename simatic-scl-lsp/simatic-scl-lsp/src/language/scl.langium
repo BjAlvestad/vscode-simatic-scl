@@ -17,7 +17,7 @@ Greeting:
 
 hidden terminal WS: /\s+/;
 terminal ID: /[_a-zA-Z][\w_]*/;
-terminal STRING: /"(\\.|[^"\\])*"|'(\\.|[^'\\])*'/;
+terminal DOUBLE_QUOTE_STRING: /"(\\.|[^"\\])*"/;
 terminal SINGLE_QUOTE_STRING: /'([^'])*'/;
 terminal NUMBER returns number: /([DdLl]?[BbWwLl]#)?((16#[0-9a-fA-F_]+)|(((2|8)#)?[0-9-][0-9_]*(\.[0-9eE_]+)?))/;
 
@@ -50,12 +50,12 @@ DeclarationSubSection returns string:
 
 TypeReference:
     elementary=ElementaryType
-    // | complex=(
-    //     ArrayType |
-    //     StructureType |
-    //     StringType |
-    //     DateAndTime
-    // )
+    | complex=(
+        ArrayType
+        | StructureType
+        | StringType
+        | DateAndTime
+    )
     | 'ANY'
     // | (CustomType | '"' CustomType '"')
     | catchAll=ID
@@ -71,6 +71,21 @@ ElementaryType returns string:
     | 'DATE'   | 'TIME_OF_DAY' | 'TOD' | 'LTOD' | 'LTIME_OF_DAY'
     | 'CHAR'  | 'WCHAR'
 ;
+
+ArrayType:
+    type='ARRAY' ArrayIndexRange 'OF' elementType=TypeReference;
+
+fragment ArrayIndexRange:
+    '[' ArrayIndexRangeElement (',' ArrayIndexRangeElement)* ']';
+
+fragment ArrayIndexRangeElement:
+    (indexStart+=Expression '..' indexEnd+=Expression) | '*';
+
+StructureType:
+    type='STRUCT' (vars+=VariableDeclaration)* 'END_STRUCT';
+
+StringType:
+    ('WSTRING' | 'STRING') ('[' value=Expression ']')?;
 
 DateAndTime:
     type = 'DT' | 'DATE_AND_TIME' | 'LDT' | 'DATE_AND_LTIME' | 'DTL'
