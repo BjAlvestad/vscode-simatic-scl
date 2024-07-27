@@ -25,8 +25,31 @@ describe('Linking tests', () => {
 
     test('linking of greetings', async () => {
         document = await parse(`
-            person Langium
-            Hello Langium!
+            FUNCTION_BLOCK "FB_MyFunctionBlock"
+            { S7_Optimized_Access := 'TRUE' }
+            AUTHOR : Someone
+            FAMILY : SomeFamily
+            VERSION : 0.1
+
+            VAR_INPUT 
+                myCaseSelectorInputVar : DINT;
+            END_VAR
+
+            VAR 
+                internal1 : DINT;
+                internal2 : DINT;
+            END_VAR
+
+            VAR_TEMP 
+                myVar1 : DINT;   // Comment for my variable 1
+                myVar2 : DINT;   // Comment for my variable 2
+            END_VAR
+
+            BEGIN
+                #myVar1 := 11;
+                #myVar2 := 22;
+                #internal2 := 22;
+            END_FUNCTION
         `);
 
         expect(
@@ -35,9 +58,11 @@ describe('Linking tests', () => {
             // and then evaluate the cross references we're interested in by checking
             //  the referenced AST element as well as for a potential error message;
             checkDocumentValid(document)
-                || document.parseResult.value.greetings.map(g => g.person.ref?.name || g.person.error?.message).join('\n')
+                || document.parseResult.value.assignment.map(g => g.var.ref?.name || g.var.error?.message).join('\n')
         ).toBe(s`
-            Langium
+            myVar1
+            myVar2
+            internal2
         `);
     });
 });

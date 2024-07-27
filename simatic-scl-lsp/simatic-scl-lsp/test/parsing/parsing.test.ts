@@ -21,8 +21,31 @@ describe('Parsing tests', () => {
 
     test('parse simple model', async () => {
         document = await parse(`
-            person Langium
-            Hello Langium!
+            FUNCTION_BLOCK "FB_MyFunctionBlock"
+            { S7_Optimized_Access := 'TRUE' }
+            AUTHOR : Someone
+            FAMILY : SomeFamily
+            VERSION : 0.1
+
+            VAR_INPUT 
+                myCaseSelectorInputVar : DINT;
+            END_VAR
+
+            VAR 
+                internal1 : DINT;
+                internal2 : DINT;
+            END_VAR
+
+            VAR_TEMP 
+                myVar1 : DINT;   // Comment for my variable 1
+                myVar2 : DINT;   // Comment for my variable 2
+            END_VAR
+
+            BEGIN
+                #myVar1 := 11;
+                #myVar2 := 22;
+                #internal2 := 22;
+            END_FUNCTION
         `);
 
         // check for absensce of parser errors the classic way:
@@ -35,17 +58,24 @@ describe('Parsing tests', () => {
             // prior to the tagged template expression we check for validity of the parsed document object
             //  by means of the reusable function 'checkDocumentValid()' to sort out (critical) typos first;
             checkDocumentValid(document) || s`
-                Persons:
-                  ${document.parseResult.value?.persons?.map(p => p.name)?.join('\n  ')}
-                Greetings to:
-                  ${document.parseResult.value?.greetings?.map(g => g.person.$refText)?.join('\n  ')}
+                Declarations:
+                  ${document.parseResult.value?.vars?.map(p => p.name)?.join('\n  ')}
+                Var usages in assignments:
+                  ${document.parseResult.value?.assignment?.map(g => g.var.$refText)?.join('\n  ')}
             `
         ).toBe(s`
-            Persons:
-              Langium
-            Greetings to:
-              Langium
+            Declarations:
+              myCaseSelectorInputVar
+                internal1
+                internal2
+                myVar1
+                myVar2
+            Var usages in assignments:
+              myVar1
+                myVar2
+                internal2
         `);
+        //TODO: Find out why the variables below original get en extra intendation in expected. Should probably have been alligned.
     });
 });
 
