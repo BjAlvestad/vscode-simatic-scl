@@ -43,18 +43,6 @@ BlockStart:
         'ORGANIZATION_BLOCK'
     ) ('"'name=ID'"' | name=ID) (':' type=(DataType | 'Void'))?;
 
-ArrayType:
-    type='ARRAY' ArrayIndexRange 'OF' elementType=DataType;
-
-fragment ArrayIndexRange:
-    '[' ArrayIndexRangeElement (',' ArrayIndexRangeElement)* ']';
-
-fragment ArrayIndexRangeElement:
-    (indexStart+=Expression '..' indexEnd+=Expression) | '*';
-
-StringType:
-    ('WSTRING' | 'STRING') ('[' value=Expression ']')?;
-
 VariableDeclaration:
     name=ID attributes+=VariableAttribute? ('AT' refName=[VariableDeclaration:ID])? ':' 'REF_TO'? dataType=DataType ((children+=VariableDeclaration)* 'END_STRUCT')? (assignment?=':=' value=Expression)? ';'
 ;
