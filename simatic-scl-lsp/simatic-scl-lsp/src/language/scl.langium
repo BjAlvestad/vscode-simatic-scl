@@ -48,6 +48,7 @@ VariableDeclaration:
     attributes+=VariableAttribute?
     ('AT' refName=[VariableDeclaration:ID])?
     ':'
+    (isArray?='ARRAY' '[' arrayRange=ArrayRange ']' 'OF')?
     'REF_TO'? dataType=DataType ((children+=VariableDeclaration)* 'END_STRUCT')?
     (assignment?=':=' value=Expression)?
     ';'
@@ -75,6 +76,10 @@ Operator returns string:
     | 'AND' | '&' | 'OR' | 'XOR'
     // Comparison
     | '<' | '<=' | '>' | '>=' | '=' | '<>'
+;
+
+ArrayRange:
+    start+=Expression ('..' end+=Expression)? (',' start+=Expression ('..' end+=Expression)?)*
 ;
 
 Expression:

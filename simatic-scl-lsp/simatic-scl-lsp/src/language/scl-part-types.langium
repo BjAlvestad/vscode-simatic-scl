@@ -18,8 +18,6 @@ DataType returns string:
     | 'STRUCT'
     // Complex - Data and time
     | 'DT' | 'DATE_AND_TIME' | 'LDT' | 'DATE_AND_LTIME' | 'DTL'
-    // Complex Array
-    | 'ARRAY'
     // String
     | 'WSTRING' | 'STRING'
 ;
