@@ -50,14 +50,18 @@ VariableDeclaration:
 VariableAttribute:
     '{' (name=ID ':=' value=SINGLE_QUOTE_STRING ';'?)+ '}';
 
+QualifiedName returns string:
+    ID ('.' ID)*
+;
+
+// ***********************
+// ****  Expressions  ****
+// ***********************
+
 Expression returns number:
     NUMBER
 ;
 
 Assignment:
     '#' var=[VariableDeclaration:QualifiedName] ':=' Expression ';'
-;
-
-QualifiedName returns string:
-    ID ('.' ID)*
 ;
