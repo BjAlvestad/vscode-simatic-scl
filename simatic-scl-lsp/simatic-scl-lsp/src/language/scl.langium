@@ -10,6 +10,7 @@ entry Model:
     (
         assignment+=Assignment
         | functionCalls+=FunctionCall
+        | statementBlocks+=Statements
     )*
     BlockEnd;
 
@@ -95,4 +96,51 @@ FunctionCall:
 
 Assignment:
     '#' var=[VariableDeclaration:QualifiedName] ':=' Expression ';'
+;
+
+Statements:
+    IfStatement
+    | ForStatement
+    | WhileStatement
+    | RepeatStatement
+    | ContinueStatemen
+    // | ReturnStatement  // Errors out with "Max call stack size exceeded" for unknown reason
+    | ExitStatement
+;
+
+ExpressionBlock:
+    Expression ';'
+;
+
+IfStatement:
+    (('IF' | 'ELSIF') condition=Expression 'THEN')
+    | 'ELSE'
+    | ('END_IF' ';')
+;
+
+ForStatement:
+    ('FOR' '#'? indexVariable=[VariableDeclaration:ID] '^'? ':=' initialValue=Expression 'TO' finalValue=Expression ('BY' execution=Expression)? 'DO')
+    | ('END_FOR' ';')
+;
+
+WhileStatement:
+    'WHILE' condition=Expression 'DO' |
+    ('END_WHILE' ';')
+;
+
+RepeatStatement:
+    'REPEAT' 
+    | ('UNTIL' condition=Expression 'END_REPEAT' ';')
+;
+
+ContinueStatemen returns string:
+    'CONTINUE' ';'
+;
+
+ReturnStatement:
+    'return' value=Expression? ';'
+;
+
+ExitStatement returns string:
+    'EXIT' ';'
 ;
