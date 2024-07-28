@@ -108,7 +108,7 @@ describe('Parsing tests', () => {
         const model = document.parseResult.value;
         expect(model.vars).toHaveLength(2)
         // expect((model.vars[0].structure as TypeReference).).toEqual("dsa")
-        expect(model.vars[1].structure.$type).toEqual("TypeReference")
+        expect(model.vars[1].dataType).toEqual("STRUCT")
         expect(model.vars[1].children.length).equal(3)
 
         expect(
@@ -172,11 +172,15 @@ describe('Parsing tests', () => {
         
         const model = document.parseResult.value;
         // console.log(model.vars)
-        // console.log(model.vars.map(dec => dec.children ? `Children in ${dec.name}:\n ${dec.children.map(child => child.name)}` : `No children in ${dec.name}...`))
+        //console.log(model.vars.map(dec => dec.children ? `Children in ${dec.name}:\n ${dec.children.map(child => child.name)}` : `No children in ${dec.name}...`))
+        // console.log(model.vars[0].dataType)
+        // console.log(model.vars[1].dataType)
+
 
         expect(model.vars).toHaveLength(2)
         // expect((model.vars[0].structure as TypeReference).).toEqual("dsa")
-        expect(model.vars[1].structure.$type).toEqual("TypeReference")
+        expect(model.vars[0].dataType).toEqual("DINT")
+        expect(model.vars[1].dataType).toEqual("STRUCT")
         expect(model.vars[1].children.length).equal(4)
 
         expect(

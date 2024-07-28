@@ -42,24 +42,10 @@ BlockStart:
         'TYPE' |
         'DATA_BLOCK' |
         'ORGANIZATION_BLOCK'
-    ) ('"'name=ID'"' | name=ID) (':' type=(TypeReference | 'Void'))?;
-
-
-TypeReference:
-    elementary=ElementaryType
-    | 'STRUCT'
-    | complex=(
-        ArrayType
-        | StringType
-        | DateAndTime
-    )
-    | 'ANY'
-    // | (CustomType | '"' CustomType '"')
-    | catchAll=ID
-;
+    ) ('"'name=ID'"' | name=ID) (':' type=(DataType | 'Void'))?;
 
 ArrayType:
-    type='ARRAY' ArrayIndexRange 'OF' elementType=TypeReference;
+    type='ARRAY' ArrayIndexRange 'OF' elementType=DataType;
 
 fragment ArrayIndexRange:
     '[' ArrayIndexRangeElement (',' ArrayIndexRangeElement)* ']';
@@ -71,7 +57,7 @@ StringType:
     ('WSTRING' | 'STRING') ('[' value=Expression ']')?;
 
 VariableDeclaration:
-    name=ID attributes+=VariableAttribute? ('AT' refName=[VariableDeclaration:ID])? ':' 'REF_TO'? structure=TypeReference ((children+=VariableDeclaration)* 'END_STRUCT')? (assignment?=':=' value=Expression)? ';'
+    name=ID attributes+=VariableAttribute? ('AT' refName=[VariableDeclaration:ID])? ':' 'REF_TO'? dataType=DataType ((children+=VariableDeclaration)* 'END_STRUCT')? (assignment?=':=' value=Expression)? ';'
 ;
 
 VariableAttribute:

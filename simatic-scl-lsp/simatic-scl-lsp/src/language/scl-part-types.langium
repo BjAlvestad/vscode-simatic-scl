@@ -5,8 +5,27 @@ DeclarationSubSection returns string:
     'END_VAR'
 ;
 
+DataType returns string:
+    // Elementary types
+    'BOOL'
+    | 'BYTE' | 'WORD' | 'DWORD' | 'LWORD'  // LWORD is not not supported by S7-300
+    | 'SINT' | 'INT' | 'DINT' | 'LINT' | 'USINT' | 'UINT' | 'UDINT' | 'ULINT'  // Only INT and DINT are supported by S7-300
+    | 'REAL' | 'LREAL'
+    | 'S5TIME' | 'TIME' | 'LTIME'
+    | 'DATE'   | 'TIME_OF_DAY' | 'TOD' | 'LTOD' | 'LTIME_OF_DAY'
+    | 'CHAR'  | 'WCHAR'
+    // Complex - Struct
+    | 'STRUCT'
+    // Complex - Data and time
+    | 'DT' | 'DATE_AND_TIME' | 'LDT' | 'DATE_AND_LTIME' | 'DTL'
+    // Complex Array
+    | 'ARRAY'
+    // String
+    | 'WSTRING' | 'STRING'
+;
+
 // Declaration/assignment for elementary data types
-ElementaryType returns string:
+fragment ElementaryType returns string:
     'BOOL'
     | 'BYTE' | 'WORD' | 'DWORD' | 'LWORD'  // LWORD is not not supported by S7-300
     | 'SINT' | 'INT' | 'DINT' | 'LINT' | 'USINT' | 'UINT' | 'UDINT' | 'ULINT'  // Only INT and DINT are supported by S7-300
@@ -16,8 +35,8 @@ ElementaryType returns string:
     | 'CHAR'  | 'WCHAR'
 ;
 
-DateAndTime:
-    type = 'DT' | 'DATE_AND_TIME' | 'LDT' | 'DATE_AND_LTIME' | 'DTL'
+fragment DateAndTime returns string:
+    'DT' | 'DATE_AND_TIME' | 'LDT' | 'DATE_AND_LTIME' | 'DTL'
 ;
 
 BlockEnd returns string:
