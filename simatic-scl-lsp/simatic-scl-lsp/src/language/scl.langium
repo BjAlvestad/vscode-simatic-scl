@@ -47,7 +47,7 @@ BlockStart:
 
 TypeReference:
     elementary=ElementaryType
-    // | struct=StructDeclaration
+    | 'STRUCT'
     | complex=(
         ArrayType
         | StringType
@@ -67,17 +67,11 @@ fragment ArrayIndexRange:
 fragment ArrayIndexRangeElement:
     (indexStart+=Expression '..' indexEnd+=Expression) | '*';
 
-StructDeclaration:
-    'STRUCT'
-        internal+=VariableDeclaration*
-    'END_STRUCT'
-;
-
 StringType:
     ('WSTRING' | 'STRING') ('[' value=Expression ']')?;
 
 VariableDeclaration:
-    name=ID attributes+=VariableAttribute? ('AT' refName=[VariableDeclaration:ID])? ':' 'REF_TO'? structure=(TypeReference|StructDeclaration) (assignment?=':=' value=Expression)? ';'
+    name=ID attributes+=VariableAttribute? ('AT' refName=[VariableDeclaration:ID])? ':' 'REF_TO'? structure=TypeReference ((children+=VariableDeclaration)* 'END_STRUCT')? (assignment?=':=' value=Expression)? ';'
 ;
 
 VariableAttribute:

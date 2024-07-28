@@ -3,7 +3,7 @@ import { EmptyFileSystem, type LangiumDocument } from "langium";
 import { expandToString as s } from "langium/generate";
 import { parseHelper } from "langium/test";
 import { createSclServices } from "../../src/language/scl-module.js";
-import { Model, StructDeclaration, isModel } from "../../src/language/generated/ast.js";
+import { Model, isModel } from "../../src/language/generated/ast.js";
 
 let services: ReturnType<typeof createSclServices>;
 let parse:    ReturnType<typeof parseHelper<Model>>;
@@ -108,8 +108,8 @@ describe('Parsing tests', () => {
         const model = document.parseResult.value;
         expect(model.vars).toHaveLength(2)
         // expect((model.vars[0].structure as TypeReference).).toEqual("dsa")
-        expect(model.vars[1].structure.$type).toEqual("StructDeclaration")
-        expect((model.vars[1].structure as StructDeclaration).internal).toHaveLength(3)
+        expect(model.vars[1].structure.$type).toEqual("TypeReference")
+        expect(model.vars[1].children.length).equal(3)
 
         expect(
             // here we use a (tagged) template expression to create a human readable representation
@@ -120,7 +120,7 @@ describe('Parsing tests', () => {
                 ** Top level vars: **
                   ${document.parseResult.value?.vars?.map(p => p.name)?.join('\n')}
                 ** Inside myStruct: **
-                  ${(document.parseResult.value?.vars[1].structure as StructDeclaration).internal?.map(p => p.name)?.join('\n')}
+                  ${document.parseResult.value?.vars[1].children.map(p => p.name)?.join('\n')}
                 ** Var usages in assignments: **
                   ${document.parseResult.value?.assignment?.map(g => g.var.$refText)?.join('\n')}
             `
@@ -152,9 +152,9 @@ describe('Parsing tests', () => {
                     myIntenal1 : DINT;
                     myIntenal2 : BOOL;
                     myInnerStruct : STRUCT
-                        myIntenal1 : DINT;
-                        myIntenal2 : BOOL;
-                        myIntenal3 : DINT;
+                        myInnerInternal1 : DINT;
+                        myInnerInternal2 : BOOL;
+                        myInnerInternal3 : DINT;
                     END_STRUCT;
                     myIntenal3 : DINT;
                 END_STRUCT;
@@ -171,10 +171,13 @@ describe('Parsing tests', () => {
         // expect(document.parseResult.parserErrors).toHaveLength(0);
         
         const model = document.parseResult.value;
+        // console.log(model.vars)
+        // console.log(model.vars.map(dec => dec.children ? `Children in ${dec.name}:\n ${dec.children.map(child => child.name)}` : `No children in ${dec.name}...`))
+
         expect(model.vars).toHaveLength(2)
         // expect((model.vars[0].structure as TypeReference).).toEqual("dsa")
-        expect(model.vars[1].structure.$type).toEqual("StructDeclaration")
-        expect((model.vars[1].structure as StructDeclaration).internal).toHaveLength(4)
+        expect(model.vars[1].structure.$type).toEqual("TypeReference")
+        expect(model.vars[1].children.length).equal(4)
 
         expect(
             // here we use a (tagged) template expression to create a human readable representation
@@ -185,7 +188,7 @@ describe('Parsing tests', () => {
                 ** Top level vars: **
                   ${document.parseResult.value?.vars?.map(p => p.name)?.join('\n')}
                 ** Inside myStruct: **
-                  ${(document.parseResult.value?.vars[1].structure as StructDeclaration).internal?.map(p => p.name)?.join('\n')}
+                  ${document.parseResult.value?.vars[1].children.map(p => p.name)?.join('\n')}
                 ** Var usages in assignments: **
                   ${document.parseResult.value?.assignment?.map(g => g.var.$refText)?.join('\n')}
             `
