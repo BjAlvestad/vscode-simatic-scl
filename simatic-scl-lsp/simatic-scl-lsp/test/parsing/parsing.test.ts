@@ -75,7 +75,6 @@ describe('Parsing tests', () => {
                 myVar2
                 internal2
         `);
-        //TODO: Find out why the variables below original get en extra intendation in expected. Should probably have been alligned.
     });
 
     test('parse struct in FB', async () => {
@@ -89,20 +88,20 @@ describe('Parsing tests', () => {
             VAR 
                 myInt : DINT;
                 myStruct : STRUCT
-                    myIntenal1 : DINT;
-                    myIntenal2 : BOOL;
-                    myIntenal3 : DINT;
+                    myInternal1 : DINT;
+                    myInternal2 : BOOL;
+                    myInternal3 : DINT;
                 END_STRUCT;
             END_VAR
 
             BEGIN
                 #myInt := 11;
-                #myStruct.myIntenal1 := 22;
+                #myStruct.myInternal1 := 22;
             END_FUNCTION
         `);
 
-        // check for absensce of parser errors the classic way:
-        //  deacivated, find a much more human readable way below!
+        // check for absence of parser errors the classic way:
+        //  deactivated, find a much more human readable way below!
         // expect(document.parseResult.parserErrors).toHaveLength(0);
         
         const model = document.parseResult.value;
@@ -129,12 +128,12 @@ describe('Parsing tests', () => {
               myInt
               myStruct
             ** Inside myStruct: **
-              myIntenal1
-              myIntenal2
-              myIntenal3
+              myInternal1
+              myInternal2
+              myInternal3
             ** Var usages in assignments: **
               myInt
-              myStruct.myIntenal1
+              myStruct.myInternal1
         `);
     });
 
@@ -149,20 +148,20 @@ describe('Parsing tests', () => {
             VAR 
                 myInt : DINT;
                 myStruct : STRUCT
-                    myIntenal1 : DINT;
-                    myIntenal2 : BOOL;
+                    myInternal1 : DINT;
+                    myInternal2 : BOOL;
                     myInnerStruct : STRUCT
                         myInnerInternal1 : DINT;
                         myInnerInternal2 : BOOL;
                         myInnerInternal3 : DINT;
                     END_STRUCT;
-                    myIntenal3 : DINT;
+                    myInternal3 : DINT;
                 END_STRUCT;
             END_VAR
 
             BEGIN
                 #myInt := 11;
-                #myStruct.myIntenal1 := 22;
+                #myStruct.myInternal1 := 22;
             END_FUNCTION
         `);
 
@@ -201,13 +200,13 @@ describe('Parsing tests', () => {
               myInt
               myStruct
             ** Inside myStruct: **
-              myIntenal1
-              myIntenal2
+              myInternal1
+              myInternal2
               myInnerStruct
-              myIntenal3
+              myInternal3
             ** Var usages in assignments: **
               myInt
-              myStruct.myIntenal1
+              myStruct.myInternal1
         `);
     });
 });

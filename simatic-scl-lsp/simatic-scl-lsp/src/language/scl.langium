@@ -7,7 +7,6 @@ entry Model:
     (blockAttribute+=BlockAttribute)*
     (declarationSubSection+=DeclarationSubSection | vars+=VariableDeclaration)*
     'BEGIN'
-    // (assignment+=AssignmentToStruct)*
     (assignment+=Assignment)*
     BlockEnd;
 
@@ -66,16 +65,6 @@ VariableAttribute:
 Expression returns number:
     NUMBER
 ;
-
-// VariableCall:
-//     '#' var=[VariableDeclaration:ID]
-
-// StructCall:
-//     '#' var=[StructDeclaration:ID]
-
-// AssignmentToStruct:
-//     '#' var=[StructDeclaration:ID] '.' internal=ID ':=' Expression ';'
-// ;
 
 Assignment:
     '#' var=[VariableDeclaration:QualifiedName] ':=' Expression ';'
