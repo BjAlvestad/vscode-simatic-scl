@@ -72,7 +72,7 @@ Operator returns string:
 ;
 
 Expression:
-    ((value+=NUMBER)* ('#' ref+=[VariableDeclaration:QualifiedName])* (operator+=Operator)* ('(' args+=Expression (',' args+=Expression) ')')*)*
+    ((value+=NUMBER)* ('#' ref+=[VariableDeclaration:QualifiedName])* (looseRef+=QualifiedName)* (operator+=Operator)* ('(' args+=Expression (',' args+=Expression) ')')*)*
 ;
 
 Assignment:
