@@ -4,6 +4,7 @@ import { expandToString as s } from "langium/generate";
 import { clearDocuments, parseHelper } from "langium/test";
 import { createSclServices } from "../../src/language/scl-module.js";
 import { Model, isModel } from "../../src/language/generated/ast.js";
+import { EOL } from "os";
 
 let services: ReturnType<typeof createSclServices>;
 let parse:    ReturnType<typeof parseHelper<Model>>;
@@ -58,7 +59,7 @@ describe('Linking tests', () => {
             // and then evaluate the cross references we're interested in by checking
             //  the referenced AST element as well as for a potential error message;
             checkDocumentValid(document)
-                || document.parseResult.value.assignment.map(g => g.var.ref?.name || g.var.error?.message).join('\n')
+                || document.parseResult.value.assignment.map(g => g.var.ref?.name || g.var.error?.message).join(EOL)
         ).toBe(s`
             myVar1
             myVar2
