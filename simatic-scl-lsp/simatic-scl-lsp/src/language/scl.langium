@@ -7,7 +7,10 @@ entry Model:
     (blockAttribute+=BlockAttribute)*
     (declarationSubSection+=DeclarationSubSection | vars+=VariableDeclaration)*
     'BEGIN'
-    (assignment+=Assignment)*
+    (
+        assignment+=Assignment
+        | functionCalls+=FunctionCall
+    )*
     BlockEnd;
 
 Person:
@@ -84,6 +87,10 @@ ArrayRange:
 
 Expression:
     ((value+=NUMBER)* ('#' ref+=[VariableDeclaration:QualifiedName])* (looseRef+=QualifiedName)* (operator+=Operator)* ('(' args+=Expression (',' args+=Expression)* ')')*)*
+;
+
+FunctionCall:
+    '#' var=[VariableDeclaration:QualifiedName] '(' args+=Expression (',' args+=Expression)* ')' ';'
 ;
 
 Assignment:
