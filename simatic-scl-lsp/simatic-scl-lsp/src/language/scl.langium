@@ -44,7 +44,13 @@ BlockStart:
     ) ('"'name=ID'"' | name=ID) (':' type=(DataType | 'Void'))?;
 
 VariableDeclaration:
-    name=ID attributes+=VariableAttribute? ('AT' refName=[VariableDeclaration:ID])? ':' 'REF_TO'? dataType=DataType ((children+=VariableDeclaration)* 'END_STRUCT')? (assignment?=':=' value=Expression)? ';'
+    name=ID
+    attributes+=VariableAttribute?
+    ('AT' refName=[VariableDeclaration:ID])?
+    ':'
+    'REF_TO'? dataType=DataType ((children+=VariableDeclaration)* 'END_STRUCT')?
+    (assignment?=':=' value=Expression)?
+    ';'
 ;
 
 VariableAttribute:
