@@ -45,7 +45,7 @@ BlockStart:
         'TYPE' |
         'DATA_BLOCK' |
         'ORGANIZATION_BLOCK'
-    ) ('"'name=ID'"' | name=ID) (':' type=(DataType | 'Void'))?;
+    ) ( name=DOUBLE_QUOTE_STRING | name=ID) (':' type=(DataType | 'Void'))?;
 
 VariableDeclaration:
     name=ID
