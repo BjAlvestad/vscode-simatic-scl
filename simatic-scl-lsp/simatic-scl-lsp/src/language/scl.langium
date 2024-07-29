@@ -108,6 +108,8 @@ Statements:
     | ExitStatement
     | JumpLabel
     | ProgramJump
+    | CaseLabel
+    | CaseStatement
 ;
 
 ExpressionBlock:
@@ -153,4 +155,16 @@ JumpLabel:
 
 ProgramJump:
     'GOTO' jumpLabel=[JumpLabel:ID] ';'
+;
+
+CaseLabel:
+    (('#' var+=[VariableDeclaration:QualifiedName]) | start+=NUMBER ('..' end+=NUMBER)?)
+    (',' (('#' var+=[VariableDeclaration:QualifiedName]) | start+=NUMBER ('..' end+=NUMBER)?))*
+    ':'
+;
+
+CaseStatement:
+    'CASE' '#' var=[VariableDeclaration:QualifiedName] 'OF'
+    | 'ELSE'
+    | 'END_CASE' ';'
 ;
