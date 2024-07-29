@@ -6,12 +6,12 @@ entry Model:
     (compilerDirective+=CompilerDirective)*
     (blockAttribute+=BlockAttribute)*
     (declarationSubSection+=DeclarationSubSection | vars+=VariableDeclaration)*
-    'BEGIN'
+    ('BEGIN'
     (
         assignment+=Assignment
         | functionCalls+=FunctionCall
         | statementBlocks+=Statements
-    )*
+    )*)?
     BlockEnd;
 
 Person:

@@ -1,8 +1,10 @@
 
 DeclarationSubSection returns string:
-    'VAR_INPUT' | 'VAR_OUTPUT' | 'VAR_IN_OUT' | 'VAR' | 'VAR_TEMP' | 'CONST' |
-    'VAR' 'CONSTANT' |
-    'END_VAR'
+    'VAR_INPUT' | 'VAR_OUTPUT' | 'VAR_IN_OUT' | 'VAR' | 'VAR_TEMP' | 'CONST'
+     | 'VAR' 'CONSTANT'
+     | 'END_VAR'
+     | 'STRUCT'
+     | 'END_STRUCT' ';'
 ;
 
 DataType returns string:
