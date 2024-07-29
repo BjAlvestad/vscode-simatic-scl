@@ -106,6 +106,8 @@ Statements:
     | ContinueStatemen
     // | ReturnStatement  // Errors out with "Max call stack size exceeded" for unknown reason
     | ExitStatement
+    | JumpLabel
+    | ProgramJump
 ;
 
 ExpressionBlock:
@@ -143,4 +145,12 @@ ReturnStatement:
 
 ExitStatement returns string:
     'EXIT' ';'
+;
+
+JumpLabel:
+    name=ID ':'
+;
+
+ProgramJump:
+    'GOTO' jumpLabel=[JumpLabel:ID] ';'
 ;
