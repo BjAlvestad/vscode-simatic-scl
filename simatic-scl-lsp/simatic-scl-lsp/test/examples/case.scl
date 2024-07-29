@@ -33,7 +33,7 @@ BEGIN
 	        #myVar2 := 22;
 	    3:
 	        #myVar2 := 23;
-	        #myVar3 := 33;;
+	        #myVar3 := 33;
 	    4:
 	        #myVar4 := 44;
 	END_CASE;
@@ -41,7 +41,7 @@ BEGIN
 	CASE #myStruct.internal1 OF
 	    #myStruct.internal2:
 	        #myVar2 := 23;
-	        #myVar3 := 33;;
+	        #myVar3 := 33;
 	    #myStruct.internal3:
 	        #myVar4 := 44;
 	    #myStruct.internal4,

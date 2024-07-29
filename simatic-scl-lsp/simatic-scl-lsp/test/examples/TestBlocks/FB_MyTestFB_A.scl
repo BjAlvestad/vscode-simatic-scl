@@ -1,0 +1,113 @@
+FUNCTION_BLOCK "FB_MyTestFB_A"
+{ S7_Optimized_Access := 'TRUE' }
+VERSION : 0.1
+   VAR_INPUT 
+      xboMyInput1A { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : BOOL;
+      xboMyInput2A { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Bool;   // Comment for xboMyInput2A
+      xboMyInput3A : Bool;   // Comment for xboMyInput3A
+      xiMyInput4A { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : DINT;
+      xstiMyStringInputA { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : String;
+   END_VAR
+
+   VAR_IN_OUT 
+      xyboMyInOut1A { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Bool;   // Comment for xyboMyInOut1A
+      xyboMyInOut2A { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Bool;   // Comment for xyboMyInOut2A
+      xyuStatusObjectA : "U_Status";
+   END_VAR
+
+   VAR 
+		uStatusObjectA : "U_Status";
+		myStruct : STRUCT
+			intenal1 : DINT;
+			intenal2 : DINT;
+			intenal3 : DINT;
+			myInternal4NestedStruct : STRUCT
+				nestedIntenal1 : DINT;
+				nestedIntenal2 : DINT;
+			END_STRUCT;
+			intenal5 : DINT;
+		END_STRUCT;
+   END_VAR
+
+   VAR_TEMP 
+      tiMyTemp1A : DINT;
+	  myVar1 : DINT;
+	  myVar2 : DINT;
+	  myVar3 : DINT;
+	  myVar4 : DINT;
+	  myVar5 : DINT;
+   END_VAR
+
+
+BEGIN
+	(*
+		# Some block comment
+		blah blah blah
+	*)
+	
+	#tiMyTemp1A := xiMyInput4A;
+	
+	//**********************
+	//****    Basics    ****
+	//**********************
+	
+	#tiMyTemp1A := xiMyInput4A;
+	#uStatusObjectA.good := TRUE;
+	#uStatusObjectA.warning := #uStatusObjectA.good;
+
+	IF xboMyInput1A THEN
+		#tiMyTemp1A := xiMyInput4A;
+
+		IF xboMyInput2A THEN
+			#tiMyTemp1A := xiMyInput4A;
+		END_IF;
+	END_IF;
+
+	IF #uStatusObjectA.good THEN
+		#tiMyTemp1A := xiMyInput4A;
+	ELSIF xboMyInput2A THEN
+		#tiMyTemp1A := xiMyInput4A;
+	ELSIF #myStruct.intenal1 THEN
+		#tiMyTemp1A := xiMyInput4A;
+	ELSIF xboMyInput2A THEN
+		#tiMyTemp1A := xiMyInput4A;
+	ELSE
+		#tiMyTemp1A := xiMyInput4A;
+	END_IF;
+
+	CASE #xiMyInput4A OF
+	    1:
+	        #myVar1 := 11;
+	    2:
+	        #myVar2 := 22;
+	    3:
+	        #myVar2 := 23;
+	        #myVar3 := 33;
+	    4:
+	        #myVar4 := 44;
+	END_CASE;
+
+	CASE #xiMyInput4A OF
+	    xboMyInput1A:
+	        #myVar2 := 23;
+	        #myVar3 := 33;
+	    #xboMyInput2A,
+		#xboMyInput3A:
+	        #myVar4 := 44;
+	    4:
+	        #myVar4 := 444;
+	END_CASE;
+
+	//**************************
+	//****    Jump label    ****
+	//**************************
+
+	LocationsAlwaysVisible: //Jump label
+	#myVar1 := 11;
+	
+	IF TRUE THEN
+	    GOTO LocationsAlwaysVisible;
+	END_IF;
+	
+END_FUNCTION_BLOCK
+
