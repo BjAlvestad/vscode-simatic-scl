@@ -123,7 +123,7 @@ IfStatement:
 ;
 
 ForStatement:
-    ('FOR' '#'? indexVariable=[VariableDeclaration:ID] '^'? ':=' initialValue=Expression 'TO' finalValue=Expression ('BY' execution=Expression)? 'DO')
+    ('FOR' '#'? indexVariable=[VariableDeclaration:QualifiedName] '^'? ':=' initialValue=Expression 'TO' finalValue=Expression ('BY' execution=Expression)? 'DO')
     | ('END_FOR' ';')
 ;
 
