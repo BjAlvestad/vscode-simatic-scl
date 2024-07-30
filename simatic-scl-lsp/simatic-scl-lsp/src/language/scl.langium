@@ -134,9 +134,11 @@ MemberCall infers Expression:
 Primary infers Expression:
     '(' Expression ')'
     | LocalVariable
-    // | StringExpression
-    // | BooleanExpression
-    // | NumberExpression
+    | UnaryExpression
+    | NumberExpression
+    | StringExpression
+    | BooleanExpression
+
     // | TimeExpression
     // | GlobalReference
     // | ArrayAccess
@@ -153,6 +155,10 @@ LocalVariable:
 UnaryExpression:
     operator=('NOT' | '-' | '+') value=Expression
 ;
+
+NumberExpression: value=NUMBER;
+StringExpression: value=SINGLE_QUOTE_STRING;
+BooleanExpression: value?='true' | 'false';
 
 type NamedElement = VariableDeclaration;
 
