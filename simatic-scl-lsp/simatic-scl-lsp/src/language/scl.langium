@@ -7,11 +7,13 @@ entry Model:
     (blockAttribute+=BlockAttribute)*
     (declarationSubSection+=DeclarationSubSection | vars+=VariableDeclaration)*
     ('BEGIN'
-    (
-        assignment+=Assignment
-        | functionCalls+=FunctionCall
-        | statementBlocks+=Statements
-    )*)?
+    // (
+    //     assignment+=Assignment
+    //     | functionCalls+=FunctionCall
+    //     | statementBlocks+=Statements
+    // )*
+    (expressions+=Expression)*
+    )?
     BlockEnd;
 
 Person:
@@ -25,6 +27,8 @@ terminal ID: /[_a-zA-Z][\w_]*/;
 terminal DOUBLE_QUOTE_STRING: /"(\\.|[^"\\])*"/;
 terminal SINGLE_QUOTE_STRING: /'([^'])*'/;
 terminal NUMBER returns number: /([DdLl]?[BbWwLl]#)?((16#[0-9a-fA-F_]+)|(((2|8)#)?[0-9-][0-9_]*(\.?[0-9eE_+-]+)?))/;
+
+terminal MEMORY_AREA: /%[XBWD]\d+/;
 
 hidden terminal ML_COMMENT: /\(\*[\s\S]*?\*\)/;
 hidden terminal SL_COMMENT: /\/\/[^\n\r]*/;
@@ -47,10 +51,11 @@ BlockStart:
         'ORGANIZATION_BLOCK'
     ) ( name=DOUBLE_QUOTE_STRING | name=ID) (':' type=(DataType | 'Void'))?;
 
-VariableDeclaration:
+VariableDeclaration returns NamedElement:
+    {infer VariableDeclaration}
     name=ID
     attributes+=VariableAttribute?
-    ('AT' refName=[VariableDeclaration:ID])?
+    ('AT' refName=[NamedElement:ID])?
     ':'
     (isArray?='ARRAY' '[' arrayRange=ArrayRange ']' 'OF')?
     'REF_TO'? ((dataType=DataType) | dataTypeGlobal=[BlockStart:DOUBLE_QUOTE_STRING]) ((children+=VariableDeclaration)* 'END_STRUCT')?
@@ -69,102 +74,179 @@ QualifiedName returns string:
 // ****  Expressions  ****
 // ***********************
 
-Operator returns string:
-    // Assignment
-    ':=' | '=>' | '?=' | '+=' | '-=' | '*=' | '/=' | '**='
-    // Addition
-    '+' | '-'
-    // Multiplication
-    | '*' | '/' | '**' | 'MOD'
-    // Logical
-    | 'AND' | '&' | 'OR' | 'XOR'
-    // Comparison
-    | '<' | '<=' | '>' | '>=' | '=' | '<>'
+Expression:
+    Assignment
 ;
+
+Assignment infers Expression:
+    Addition ({infer BinaryExpression.left=current} operator=(':=' | '=>' | '?=' | '+=' | '-=' | '*=' | '/=' | '**=') right=Addition)*
+;
+
+Addition infers Expression:
+    Multiplication ({infer BinaryExpression.left=current} operator=('+' | '-') right=Multiplication)*
+;
+
+Multiplication infers Expression:
+    Logical ({infer BinaryExpression.left=current} operator=('*' | '/' | '**' | 'MOD') right=Logical)*
+;
+
+Logical infers Expression:
+    Comparison ({infer BinaryExpression.left=current} operator=('AND' | '&' | 'OR' | 'XOR') right=Comparison)*
+;
+
+Comparison infers Expression:
+    MemberCall ({infer BinaryExpression.left=current} operator=('<' | '<=' | '>' | '>=' | '=' | '<>') right=MemberCall)*
+;
+
+MemberCall infers Expression:
+    Primary
+	({infer MemberCall.previous=current} 
+    // Member call with function call
+        ("." '#'? element=[NamedElement:ID] '^'? (
+		explicitOperationCall?='('
+		(
+		    arguments+=Expression (',' arguments+=Expression)*
+		)?
+		')')?
+    // Array access on member
+        | (
+		explicitOperationCall?='['
+		(
+		    arguments+=Expression (',' arguments+=Expression)*
+		)?
+		']') 
+    // Chained function call
+        | (
+		explicitOperationCall?='('
+		(
+		    arguments+=Expression (',' arguments+=Expression)*
+		)?
+		')')
+        | ("." memoryArea=MEMORY_AREA)
+        )
+    )*
+;
+
+Primary infers Expression:
+    '(' Expression ')'
+    // | StringExpression
+    // | BooleanExpression
+    // | NumberExpression
+    // | TimeExpression
+    // | GlobalReference
+    // | ArrayAccess
+    // | FeatureCall
+    // | Referencing
+    // | BuiltInFeatureCall
+    // | TypeReference
+;
+
+UnaryExpression:
+    operator=('NOT' | '-' | '+') value=Expression
+;
+
+type NamedElement = VariableDeclaration;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ArrayRange:
     start+=Expression ('..' end+=Expression)? (',' start+=Expression ('..' end+=Expression)?)*
 ;
 
-Expression:
-    ((value+=NUMBER)* ('#' ref+=[VariableDeclaration:QualifiedName])* (looseRef+=QualifiedName)* (operator+=Operator)* ('(' args+=Expression (',' args+=Expression)* ')')*)*
-;
+// Expression:
+//     ((value+=NUMBER)* ('#' ref+=[VariableDeclaration:QualifiedName])* (looseRef+=QualifiedName)* (operator+=Operator)* ('(' args+=Expression (',' args+=Expression)* ')')*)*
+// ;
 
 FunctionCall:
     '#' var=[VariableDeclaration:QualifiedName] '(' args+=Expression (',' args+=Expression)* ')' ';'
 ;
 
-Assignment:
-    '#' var=[VariableDeclaration:QualifiedName] ':=' Expression ';'
-;
+// Assignment:
+//     '#' var=[VariableDeclaration:QualifiedName] ':=' Expression ';'
+// ;
 
-Statements:
-    IfStatement
-    | ForStatement
-    | WhileStatement
-    | RepeatStatement
-    | ContinueStatemen
-    // | ReturnStatement  // Errors out with "Max call stack size exceeded" for unknown reason
-    | ExitStatement
-    | JumpLabel
-    | ProgramJump
-    | CaseLabel
-    | CaseStatement
-;
 
-ExpressionBlock:
-    Expression ';'
-;
 
-IfStatement:
-    (('IF' | 'ELSIF') condition=Expression 'THEN')
-    | 'ELSE'
-    | ('END_IF' ';')
-;
 
-ForStatement:
-    ('FOR' '#'? indexVariable=[VariableDeclaration:QualifiedName] '^'? ':=' initialValue=Expression 'TO' finalValue=Expression ('BY' execution=Expression)? 'DO')
-    | ('END_FOR' ';')
-;
+// Statements:
+//     IfStatement
+//     | ForStatement
+//     | WhileStatement
+//     | RepeatStatement
+//     | ContinueStatemen
+//     // | ReturnStatement  // Errors out with "Max call stack size exceeded" for unknown reason
+//     | ExitStatement
+//     | JumpLabel
+//     | ProgramJump
+//     | CaseLabel
+//     | CaseStatement
+// ;
 
-WhileStatement:
-    'WHILE' condition=Expression 'DO' |
-    ('END_WHILE' ';')
-;
+// ExpressionBlock:
+//     Expression ';'
+// ;
 
-RepeatStatement:
-    'REPEAT' 
-    | ('UNTIL' condition=Expression 'END_REPEAT' ';')
-;
+// IfStatement:
+//     (('IF' | 'ELSIF') condition=Expression 'THEN')
+//     | 'ELSE'
+//     | ('END_IF' ';')
+// ;
 
-ContinueStatemen returns string:
-    'CONTINUE' ';'
-;
+// ForStatement:
+//     ('FOR' '#'? indexVariable=[VariableDeclaration:QualifiedName] '^'? ':=' initialValue=Expression 'TO' finalValue=Expression ('BY' execution=Expression)? 'DO')
+//     | ('END_FOR' ';')
+// ;
 
-ReturnStatement:
-    'return' value=Expression? ';'
-;
+// WhileStatement:
+//     'WHILE' condition=Expression 'DO' |
+//     ('END_WHILE' ';')
+// ;
 
-ExitStatement returns string:
-    'EXIT' ';'
-;
+// RepeatStatement:
+//     'REPEAT' 
+//     | ('UNTIL' condition=Expression 'END_REPEAT' ';')
+// ;
 
-JumpLabel:
-    name=ID ':'
-;
+// ContinueStatemen returns string:
+//     'CONTINUE' ';'
+// ;
 
-ProgramJump:
-    'GOTO' jumpLabel=[JumpLabel:ID] ';'
-;
+// ReturnStatement:
+//     'return' value=Expression? ';'
+// ;
 
-CaseLabel:
-    (('#' var+=[VariableDeclaration:QualifiedName]) | start+=NUMBER ('..' end+=NUMBER)?)
-    (',' (('#' var+=[VariableDeclaration:QualifiedName]) | start+=NUMBER ('..' end+=NUMBER)?))*
-    ':'
-;
+// ExitStatement returns string:
+//     'EXIT' ';'
+// ;
 
-CaseStatement:
-    'CASE' '#' var=[VariableDeclaration:QualifiedName] 'OF'
-    | 'ELSE'
-    | 'END_CASE' ';'
-;
+// JumpLabel:
+//     name=ID ':'
+// ;
+
+// ProgramJump:
+//     'GOTO' jumpLabel=[JumpLabel:ID] ';'
+// ;
+
+// CaseLabel:
+//     (('#' var+=[VariableDeclaration:QualifiedName]) | start+=NUMBER ('..' end+=NUMBER)?)
+//     (',' (('#' var+=[VariableDeclaration:QualifiedName]) | start+=NUMBER ('..' end+=NUMBER)?))*
+//     ':'
+// ;
+
+// CaseStatement:
+//     'CASE' '#' var=[VariableDeclaration:QualifiedName] 'OF'
+//     | 'ELSE'
+//     | 'END_CASE' ';'
+// ;
