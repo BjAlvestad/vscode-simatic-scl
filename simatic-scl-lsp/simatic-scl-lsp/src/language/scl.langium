@@ -129,6 +129,7 @@ MemberCall infers Expression:
 
 Primary infers Expression:
     '(' Expression ')'
+    | LocalVariable
     // | StringExpression
     // | BooleanExpression
     // | NumberExpression
@@ -139,6 +140,10 @@ Primary infers Expression:
     // | Referencing
     // | BuiltInFeatureCall
     // | TypeReference
+;
+
+LocalVariable:
+    '#' var=[NamedElement:ID]
 ;
 
 UnaryExpression:
