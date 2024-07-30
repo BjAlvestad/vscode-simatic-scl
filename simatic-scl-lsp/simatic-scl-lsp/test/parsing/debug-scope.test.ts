@@ -22,10 +22,6 @@ describe('Print to log for debug tests', () => {
     test('parse simple model', async () => {
         document = await parse(`
             FUNCTION_BLOCK "FB_MyFunctionBlock"
-            { S7_Optimized_Access := 'TRUE' }
-            AUTHOR : Someone
-            FAMILY : SomeFamily
-            VERSION : 0.1
 
             VAR 
               myStruct: STRUCT
@@ -44,6 +40,10 @@ describe('Print to log for debug tests', () => {
                 #myStruct.internal2 := 22;
             END_FUNCTION
         `);
+        
+        const model = document.parseResult.value;
+        console.log(model)
+
     });
 });
   
