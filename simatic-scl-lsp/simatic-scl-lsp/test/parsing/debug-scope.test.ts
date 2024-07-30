@@ -41,7 +41,6 @@ describe('Print to log for debug tests', () => {
 
             BEGIN
                 #myVar1 := 11;
-                #myVar2 := 22;
                 #myStruct.internal2 := 22;
             END_FUNCTION
         `);

@@ -12,15 +12,19 @@ export class SclScopeProvider extends DefaultScopeProvider {
     // }
 
     override getScope(context: ReferenceInfo): Scope {
+        console.log("")
         console.log("****  INSIDE getScope() !!!  ****")
+        console.log("    refText: " + context.reference.$refText)  // Gives variable name
+        console.log("    refNode: " + context.reference.$refNode)  // An object
+        console.log("    nodeDescription: " + context.reference.$nodeDescription)  // undefined
         if (context.property === 'element' && isMemberCall(context.container)) {
             console.log("  ** inside IF  **")
-            // const memberCall = context.container;
-            // const previous = memberCall.previous;
-            // console.log("    memberCurrent: " + memberCall)
-            // console.log("    memberCurrent type: " + memberCall.$type)
-            // console.log("    previous: " + previous)
-            // console.log("    previous type: " + previous?.$type)
+            const memberCall = context.container;
+            const previous = memberCall.previous;
+            console.log("    memberCurrent: " + memberCall)  // An object
+            console.log("    memberCurrent type: " + memberCall.$type)  // E.g. `MemberCall`
+            console.log("    previous: " + previous)  // Gives and object
+            console.log("    previous type: " + previous?.$type)  // E.g. `MemberCall`
             // console.log(previous)
             // if (!previous) {
             //     console.log("      inside !previous")
