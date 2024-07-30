@@ -9,7 +9,9 @@ entry Model:
     ('BEGIN'
         (elements+=SclProgramElement)*
     )?
-    BlockEnd;
+    ReturnStatement?
+    BlockEnd
+;
 
 Person:
     'person' name=ID;
@@ -76,7 +78,6 @@ SclProgramElement:
     | WhileStatement
     | RepeatStatement
     | ContinueStatemen
-    // | ReturnStatement  // Errors out with "Max call stack size exceeded" for unknown reason
     | ExitStatement
     | JumpLabel
     | ProgramJump

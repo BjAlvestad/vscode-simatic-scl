@@ -114,5 +114,7 @@ BEGIN
 	    GOTO LocationsAlwaysVisible;
 	END_IF;
 	
+	return 2313;
+	
 END_FUNCTION_BLOCK
 
