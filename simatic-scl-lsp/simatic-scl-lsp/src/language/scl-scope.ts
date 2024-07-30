@@ -18,6 +18,9 @@ export class SclScopeProvider extends DefaultScopeProvider {
         console.log("    refNode: " + context.reference.$refNode)  // An object
         console.log("    nodeDescription: " + context.reference.$nodeDescription)  // undefined
 
+        // const localRefs = AstUtils.findLocalReferences(context.container)
+        // console.log("local refs: " + localRefs)
+
         const variableDeclarationItem = AstUtils.getContainerOfType(context.container, isNamedElement)
         console.log("    VariableDeclaration: " + variableDeclarationItem)
         console.log("    VariableDeclaration name: " + variableDeclarationItem?.name)
