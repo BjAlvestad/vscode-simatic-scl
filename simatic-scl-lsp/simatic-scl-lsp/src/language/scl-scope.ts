@@ -1,5 +1,5 @@
 import type { ReferenceInfo, Scope } from 'langium';
-// import { EMPTY_SCOPE } from 'langium';
+import { EMPTY_SCOPE } from 'langium';
 import { DefaultScopeProvider } from 'langium';
 import { isMemberCall } from './generated/ast.js';
 
@@ -7,9 +7,9 @@ import { isMemberCall } from './generated/ast.js';
  * Scope provider that restricts scope to a single file
  */
 export class SclScopeProvider extends DefaultScopeProvider {
-    // protected override getGlobalScope(referenceType: string): Scope {
-    //     return EMPTY_SCOPE;
-    // }
+    protected override getGlobalScope(referenceType: string): Scope {
+        return EMPTY_SCOPE;
+    }
 
     override getScope(context: ReferenceInfo): Scope {
         console.log("")
