@@ -1,7 +1,7 @@
 import type { ReferenceInfo, Scope } from 'langium';
-import { EMPTY_SCOPE } from 'langium';
+import { AstUtils, EMPTY_SCOPE } from 'langium';
 import { DefaultScopeProvider } from 'langium';
-import { isMemberCall } from './generated/ast.js';
+import { isMemberCall, isNamedElement } from './generated/ast.js';
 
 /**
  * Scope provider that restricts scope to a single file
@@ -17,6 +17,11 @@ export class SclScopeProvider extends DefaultScopeProvider {
         console.log("    refText: " + context.reference.$refText)  // Gives variable name
         console.log("    refNode: " + context.reference.$refNode)  // An object
         console.log("    nodeDescription: " + context.reference.$nodeDescription)  // undefined
+
+        const variableDeclarationItem = AstUtils.getContainerOfType(context.container, isNamedElement)
+        console.log("    VariableDeclaration: " + variableDeclarationItem)
+        console.log("    VariableDeclaration name: " + variableDeclarationItem?.name)
+
         if (context.property === 'element' && isMemberCall(context.container)) {
             console.log("  ** inside IF  **")
             const memberCall = context.container;
@@ -25,6 +30,8 @@ export class SclScopeProvider extends DefaultScopeProvider {
             console.log("    memberCurrent type: " + memberCall.$type)  // E.g. `MemberCall`
             console.log("    previous: " + previous)  // Gives and object
             console.log("    previous type: " + previous?.$type)  // E.g. `MemberCall`
+            
+            
             // console.log(previous)
             // if (!previous) {
             //     console.log("      inside !previous")
