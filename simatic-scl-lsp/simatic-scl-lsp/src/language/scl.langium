@@ -12,7 +12,7 @@ entry Model:
     //     | functionCalls+=FunctionCall
     //     | statementBlocks+=Statements
     // )*
-    (expressions+=Expression)*
+    (elements+=SclProgramElement)*
     )?
     BlockEnd;
 
@@ -73,6 +73,10 @@ QualifiedName returns string:
 // ***********************
 // ****  Expressions  ****
 // ***********************
+
+SclProgramElement:
+    Expression ';'
+;
 
 Expression:
     Assignment

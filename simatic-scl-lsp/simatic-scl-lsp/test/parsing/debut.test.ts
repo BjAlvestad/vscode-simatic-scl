@@ -58,7 +58,7 @@ describe('Print to log for debug tests', () => {
         console.log("***********************")
         console.log("****  EXPRESSIONS  ****")
         console.log("***********************")
-        console.log(model.expressions)
+        console.log(model.elements)
         //console.log(model.vars.map(dec => dec.children ? `Children in ${dec.name}:\n ${dec.children.map(child => child.name)}` : `No children in ${dec.name}...`))
         // console.log(model.vars[0].dataType)
         // console.log(model.vars[1].dataType)
