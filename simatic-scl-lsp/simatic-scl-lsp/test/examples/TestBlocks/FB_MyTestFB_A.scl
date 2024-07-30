@@ -45,35 +45,40 @@ BEGIN
 		blah blah blah
 	*)
 	
-	#tiMyTemp1A := xiMyInput4A;
+	#tiMyTemp1A := 123.23 + 2;
+	#tiMyTemp1A := #xiMyInput4A;
 	
 	//**********************
 	//****    Basics    ****
 	//**********************
 	
-	#tiMyTemp1A := xiMyInput4A;
+	#tiMyTemp1A := #xiMyInput4A;
 	#uStatusObjectA.good := TRUE;
 	#uStatusObjectA.warning := #uStatusObjectA.good;
 
-	IF xboMyInput1A THEN
-		#tiMyTemp1A := xiMyInput4A;
+	IF #xboMyInput1A THEN
+		#tiMyTemp1A := #xiMyInput4A;
 
-		IF xboMyInput2A THEN
-			#tiMyTemp1A := xiMyInput4A;
+		IF #xboMyInput2A THEN
+			#tiMyTemp1A := #xiMyInput4A;
 		END_IF;
 	END_IF;
 
 	IF #uStatusObjectA.good THEN
-		#tiMyTemp1A := xiMyInput4A;
-	ELSIF xboMyInput2A THEN
-		#tiMyTemp1A := xiMyInput4A;
+		#tiMyTemp1A := #xiMyInput4A;
+	ELSIF #xboMyInput2A THEN
+		#tiMyTemp1A := #xiMyInput4A;
 	ELSIF #myStruct.intenal1 THEN
-		#tiMyTemp1A := xiMyInput4A;
-	ELSIF xboMyInput2A THEN
-		#tiMyTemp1A := xiMyInput4A;
+		#tiMyTemp1A := #xiMyInput4A;
+	ELSIF #xboMyInput2A THEN
+		#tiMyTemp1A := #xiMyInput4A;
 	ELSE
-		#tiMyTemp1A := xiMyInput4A;
+		#tiMyTemp1A := #xiMyInput4A;
 	END_IF;
+
+	FOR #myVar1 := 1 TO 35 DO
+		#myVar2 := 3;
+	END_FOR;
 
 	CASE #xiMyInput4A OF
 	    1:
@@ -108,6 +113,8 @@ BEGIN
 	IF TRUE THEN
 	    GOTO LocationsAlwaysVisible;
 	END_IF;
+	
+	return 2313;
 	
 END_FUNCTION_BLOCK
 
