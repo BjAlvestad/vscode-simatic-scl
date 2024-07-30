@@ -76,6 +76,10 @@ BEGIN
 		#tiMyTemp1A := #xiMyInput4A;
 	END_IF;
 
+	FOR #myVar1 := 1 TO 35 DO
+		#myVar2 := 3;
+	END_FOR;
+
 	CASE #xiMyInput4A OF
 	    1:
 	        #myVar1 := 11;

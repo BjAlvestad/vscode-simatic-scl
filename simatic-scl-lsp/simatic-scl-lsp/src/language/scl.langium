@@ -76,6 +76,17 @@ QualifiedName returns string:
 
 SclProgramElement:
     Expression ';'
+    | IfStatement
+    | ForStatement
+    | WhileStatement
+    | RepeatStatement
+    | ContinueStatemen
+    // | ReturnStatement  // Errors out with "Max call stack size exceeded" for unknown reason
+    | ExitStatement
+    | JumpLabel
+    | ProgramJump
+    | CaseLabel
+    | CaseStatement
 ;
 
 Expression:
@@ -148,8 +159,16 @@ Primary infers Expression:
     // | TypeReference
 ;
 
+GlobalVariable:
+    var=[NamedElement:DOUBLE_QUOTE_STRING]
+;
+
 LocalVariable:
     '#' var=[NamedElement:ID]
+;
+
+Variable:
+    GlobalVariable | LocalVariable
 ;
 
 UnaryExpression:
@@ -192,76 +211,59 @@ FunctionCall:
 //     '#' var=[VariableDeclaration:QualifiedName] ':=' Expression ';'
 // ;
 
-
-
-
-// Statements:
-//     IfStatement
-//     | ForStatement
-//     | WhileStatement
-//     | RepeatStatement
-//     | ContinueStatemen
-//     // | ReturnStatement  // Errors out with "Max call stack size exceeded" for unknown reason
-//     | ExitStatement
-//     | JumpLabel
-//     | ProgramJump
-//     | CaseLabel
-//     | CaseStatement
-// ;
-
 // ExpressionBlock:
 //     Expression ';'
 // ;
 
-// IfStatement:
-//     (('IF' | 'ELSIF') condition=Expression 'THEN')
-//     | 'ELSE'
-//     | ('END_IF' ';')
-// ;
+IfStatement:
+    (('IF' | 'ELSIF') condition=Expression 'THEN')
+    | 'ELSE'
+    | ('END_IF' ';')
+;
 
-// ForStatement:
-//     ('FOR' '#'? indexVariable=[VariableDeclaration:QualifiedName] '^'? ':=' initialValue=Expression 'TO' finalValue=Expression ('BY' execution=Expression)? 'DO')
-//     | ('END_FOR' ';')
-// ;
+ForStatement:
+    ('FOR' indexVariable=Variable '^'? ':=' initialValue=Expression 'TO' finalValue=Expression ('BY' execution=Expression)? 'DO')
+    | ('END_FOR' ';')
+;
 
-// WhileStatement:
-//     'WHILE' condition=Expression 'DO' |
-//     ('END_WHILE' ';')
-// ;
+WhileStatement:
+    'WHILE' condition=Expression 'DO' |
+    ('END_WHILE' ';')
+;
 
-// RepeatStatement:
-//     'REPEAT' 
-//     | ('UNTIL' condition=Expression 'END_REPEAT' ';')
-// ;
+RepeatStatement:
+    'REPEAT' 
+    | ('UNTIL' condition=Expression 'END_REPEAT' ';')
+;
 
-// ContinueStatemen returns string:
-//     'CONTINUE' ';'
-// ;
+ContinueStatemen returns string:
+    'CONTINUE' ';'
+;
 
-// ReturnStatement:
-//     'return' value=Expression? ';'
-// ;
+ReturnStatement:
+    'return' value=Expression? ';'
+;
 
-// ExitStatement returns string:
-//     'EXIT' ';'
-// ;
+ExitStatement returns string:
+    'EXIT' ';'
+;
 
-// JumpLabel:
-//     name=ID ':'
-// ;
+JumpLabel:
+    name=ID ':'
+;
 
-// ProgramJump:
-//     'GOTO' jumpLabel=[JumpLabel:ID] ';'
-// ;
+ProgramJump:
+    'GOTO' jumpLabel=[JumpLabel:ID] ';'
+;
 
-// CaseLabel:
-//     (('#' var+=[VariableDeclaration:QualifiedName]) | start+=NUMBER ('..' end+=NUMBER)?)
-//     (',' (('#' var+=[VariableDeclaration:QualifiedName]) | start+=NUMBER ('..' end+=NUMBER)?))*
-//     ':'
-// ;
+CaseLabel:
+    ((var+=Variable) | start+=NUMBER ('..' end+=NUMBER)?)
+    (',' ((var+=Variable) | start+=NUMBER ('..' end+=NUMBER)?))*
+    ':'
+;
 
-// CaseStatement:
-//     'CASE' '#' var=[VariableDeclaration:QualifiedName] 'OF'
-//     | 'ELSE'
-//     | 'END_CASE' ';'
-// ;
+CaseStatement:
+    'CASE' var=Variable 'OF'
+    | 'ELSE'
+    | 'END_CASE' ';'
+;
