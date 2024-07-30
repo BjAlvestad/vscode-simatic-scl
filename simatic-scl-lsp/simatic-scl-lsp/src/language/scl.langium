@@ -7,12 +7,7 @@ entry Model:
     (blockAttribute+=BlockAttribute)*
     (declarationSubSection+=DeclarationSubSection | vars+=VariableDeclaration)*
     ('BEGIN'
-    // (
-    //     assignment+=Assignment
-    //     | functionCalls+=FunctionCall
-    //     | statementBlocks+=Statements
-    // )*
-    (elements+=SclProgramElement)*
+        (elements+=SclProgramElement)*
     )?
     BlockEnd;
 
@@ -66,8 +61,8 @@ VariableDeclaration returns NamedElement:
 VariableAttribute:
     '{' (name=ID ':=' value=SINGLE_QUOTE_STRING ';'?)+ '}';
 
-QualifiedName returns string:
-    ID ('.' ID)*
+ArrayRange:
+    start+=Expression ('..' end+=Expression)? (',' start+=Expression ('..' end+=Expression)?)*
 ;
 
 // ***********************
@@ -151,12 +146,6 @@ Primary infers Expression:
     | BooleanExpression
     | FeatureCall
     // | TimeExpression
-    // | GlobalReference
-    // | ArrayAccess
-    // | FeatureCall
-    // | Referencing
-    // | BuiltInFeatureCall
-    // | TypeReference
 ;
 
 FeatureCall infers Expression:
@@ -191,36 +180,6 @@ StringExpression: value=SINGLE_QUOTE_STRING;
 BooleanExpression: value?='true' | 'false';
 
 type NamedElement = VariableDeclaration;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-ArrayRange:
-    start+=Expression ('..' end+=Expression)? (',' start+=Expression ('..' end+=Expression)?)*
-;
-
-// Expression:
-//     ((value+=NUMBER)* ('#' ref+=[VariableDeclaration:QualifiedName])* (looseRef+=QualifiedName)* (operator+=Operator)* ('(' args+=Expression (',' args+=Expression)* ')')*)*
-// ;
-
-// Assignment:
-//     '#' var=[VariableDeclaration:QualifiedName] ':=' Expression ';'
-// ;
-
-// ExpressionBlock:
-//     Expression ';'
-// ;
 
 IfStatement:
     (('IF' | 'ELSIF') condition=Expression 'THEN')
