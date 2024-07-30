@@ -134,7 +134,8 @@ MemberCall infers Expression:
         | (
 		explicitOperationCall?='('
 		(
-		    arguments+=Expression (',' arguments+=Expression)*
+		    parameters+=ID (':=' | '=>') arguments+=Expression
+            (',' parameters+=ID (':=' | '=>') arguments+=Expression)*
 		)?
 		')')
         | ("." memoryArea=MEMORY_AREA)
@@ -144,12 +145,11 @@ MemberCall infers Expression:
 
 Primary infers Expression:
     '(' Expression ')'
-    | LocalVariable
     | UnaryExpression
     | NumberExpression
     | StringExpression
     | BooleanExpression
-
+    | FeatureCall
     // | TimeExpression
     // | GlobalReference
     // | ArrayAccess
@@ -158,6 +158,17 @@ Primary infers Expression:
     // | BuiltInFeatureCall
     // | TypeReference
 ;
+
+FeatureCall infers Expression:
+	{infer MemberCall}
+	(functionCustom=Variable | functionBuiltin=BuiltInFunctionName)
+    // Optional function call after referencing an element
+    (explicitOperationCall?='('
+	(
+        parameters+=ID (':=' | '=>') arguments+=Expression
+        (',' parameters+=ID (':=' | '=>') arguments+=Expression)*
+	)?
+	')')?;
 
 GlobalVariable:
     var=[NamedElement:DOUBLE_QUOTE_STRING]
@@ -202,10 +213,6 @@ ArrayRange:
 // Expression:
 //     ((value+=NUMBER)* ('#' ref+=[VariableDeclaration:QualifiedName])* (looseRef+=QualifiedName)* (operator+=Operator)* ('(' args+=Expression (',' args+=Expression)* ')')*)*
 // ;
-
-FunctionCall:
-    '#' var=[VariableDeclaration:QualifiedName] '(' args+=Expression (',' args+=Expression)* ')' ';'
-;
 
 // Assignment:
 //     '#' var=[VariableDeclaration:QualifiedName] ':=' Expression ';'
