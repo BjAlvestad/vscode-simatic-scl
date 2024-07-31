@@ -55,7 +55,7 @@ VariableDeclaration returns NamedElement:
     ('AT' refName=[NamedElement:ID])?
     ':'
     (isArray?='ARRAY' '[' arrayRange=ArrayRange ']' 'OF')?
-    'REF_TO'? ((dataType=DataType) | dataTypeGlobal=[BlockStart:DOUBLE_QUOTE_STRING]) ((children+=VariableDeclaration)* 'END_STRUCT')?
+    'REF_TO'? ((type=DataType) | typeGlobal=[BlockStart:DOUBLE_QUOTE_STRING]) ((children+=VariableDeclaration)* 'END_STRUCT')?
     (assignment?=':=' value=Expression)?
     ';'
 ;
