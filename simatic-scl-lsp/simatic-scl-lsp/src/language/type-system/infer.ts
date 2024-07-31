@@ -54,7 +54,7 @@ export function inferType(node: AstNode | undefined, cache: Map<AstNode, TypeDes
     } else if (isBinaryExpression(node)) {
         type = inferBinaryExpression(node, cache);
     } else if (isUnaryExpression(node)) {
-        if (node.operator === '!') {
+        if (node.operator === 'NOT') {
             type = createBooleanType();
         } else {
             type = createNumberType();
@@ -117,9 +117,9 @@ function inferMemberCall(node: MemberCall, cache: Map<AstNode, TypeDescription>)
 }
 
 function inferBinaryExpression(expr: BinaryExpression, cache: Map<AstNode, TypeDescription>): TypeDescription {
-    if (['-', '*', '/', '%'].includes(expr.operator)) {
+    if (['-', '*', '/', '**', 'MOD'].includes(expr.operator)) {
         return createNumberType();
-    } else if (['and', 'or', '<', '<=', '>', '>=', '==', '!='].includes(expr.operator)) {
+    } else if (['AND', '&', 'OR', 'XOR', '<', '<=', '>', '>=', '=', '<>'].includes(expr.operator)) {
         return createBooleanType();
     }
     const left = inferType(expr.left, cache);
@@ -130,7 +130,7 @@ function inferBinaryExpression(expr: BinaryExpression, cache: Map<AstNode, TypeD
         } else {
             return createNumberType();
         }
-    } else if (expr.operator === '=') {
+    } else if (expr.operator === ':=') {
         return right;
     }
     return createErrorType('Could not infer type from binary expression', expr);
