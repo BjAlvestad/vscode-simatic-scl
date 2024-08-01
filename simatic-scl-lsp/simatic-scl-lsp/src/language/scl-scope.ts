@@ -60,6 +60,7 @@ export class SclScopeProvider extends DefaultScopeProvider {
 
             if (previous) {
                 console.log("HAS PREVIOUS!!!")
+                console.log(previous)
                 console.log(previous.$type)
                 console.log(previous.$container.$type)
                 const previousType = inferType(previous, new Map())
@@ -83,8 +84,18 @@ export class SclScopeProvider extends DefaultScopeProvider {
                     console.log("         Previous has previous?  " + memCall.previous)
                     console.log("         Container type?  " + memCall.$container.$type)
                     console.log("         Element  " + memCall.element)
+                    console.log("--- START " + memCall.functionCustom?.var.$refText)
+                    console.log("         functionCustom?   " + (memCall.functionCustom ? "HAS functionCustom" : "Does not have functionCustom"))
+                    console.log("         functionCustom?.var.$refText   " + memCall.functionCustom?.var.$refText)
+                    console.log("         Vars inside previous   " + (memCall.functionCustom?.var.ref?.type.struct ? "HAS STRUCT" : "Does not have struct"))
+                    console.log("         Vars inside previous   " + (memCall.functionCustom?.var.ref?.type.struct?.vars.map(g => `\n  ${g.name} : ${g.type.primitive ?? "not primitive"}`)))
+                    console.log("--- END " + memCall.functionCustom?.var.$refText)
                     const prevVarDec = (previous.$container as VariableDeclaration)
                     console.log("        type  " + prevVarDec.type)
+                    if (memCall.functionCustom?.var.ref?.type.struct?.vars) {
+                        console.log("RETURNING VARS FOR previous !!!")
+                        return super.createScopeForNodes(memCall.functionCustom?.var.ref?.type.struct?.vars)  // With this we no longer get errors after entering the variable - AND we get the hover type for it shown!
+                    }
                 }
                 if (isMemberCall(previous.$container)) {
                     console.log("    isMemberCall container")
