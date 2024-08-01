@@ -4,8 +4,6 @@ DeclarationSubSection returns string:
      | 'VAR' 'CONSTANT'
      | 'RETAIN' | 'NON_RETAIN'
      | 'END_VAR'
-     | 'STRUCT'
-     | 'END_STRUCT' ';'
 ;
 
 DataType returns string:

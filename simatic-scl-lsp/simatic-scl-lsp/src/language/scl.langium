@@ -83,6 +83,7 @@ ArrayRange:
 
 SclProgramElement:
     DeclarationSubSection
+    | Struct ';'
     | VariableDeclaration
     | BeginProgramSection
     | IfStatement
