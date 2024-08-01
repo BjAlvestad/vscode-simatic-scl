@@ -5,10 +5,7 @@ entry Model:
     blockStart+=BlockStart
     (compilerDirective+=CompilerDirective)*
     (blockAttribute+=BlockAttribute)*
-    (declarationSubSection+=DeclarationSubSection | vars+=VariableDeclaration)*
-    ('BEGIN'
-        (elements+=SclProgramElement)*
-    )?
+    (elements+=SclProgramElement)*
     ReturnStatement?
     BlockEnd
 ;
@@ -85,7 +82,9 @@ ArrayRange:
 // ***********************
 
 SclProgramElement:
-    Expression ';'
+    DeclarationSubSection
+    | VariableDeclaration
+    | BeginProgramSection
     | IfStatement
     | ForStatement
     | WhileStatement
@@ -96,6 +95,7 @@ SclProgramElement:
     | ProgramJump
     | CaseLabel
     | CaseStatement
+    | Expression ';'
 ;
 
 Expression:
@@ -194,6 +194,10 @@ StringExpression: value=SINGLE_QUOTE_STRING;
 BooleanExpression: value?='true' | 'false';
 
 type NamedElement = VariableDeclaration;
+
+BeginProgramSection returns string:
+    'BEGIN'
+;
 
 IfStatement:
     (('IF' | 'ELSIF') condition=Expression 'THEN')
