@@ -57,6 +57,55 @@ export class SclScopeProvider extends DefaultScopeProvider {
                 }
                 return super.getScope(context);
             }
+
+            if (previous) {
+                console.log("HAS PREVIOUS!!!")
+                console.log(previous.$type)
+                console.log(previous.$container.$type)
+                const previousType = inferType(previous, new Map())
+                console.log("  Previous type  " + previousType.$type)
+                if (isVariableDeclaration(previous)) {
+                    console.log("    isVariableDeclaration")
+                }
+                if (isVariableDeclaration(previous.$container)) {
+                    console.log("    isVariableDeclaration")
+                }
+                if (isLocalVariable(previous)) {
+                    console.log("    isLocalVariable")
+                }
+                if (isLocalVariable(previous.$container)) {
+                    console.log("    isLocalVariable")
+                }
+                if (isMemberCall(previous)) {
+                    console.log("    isMemberCall")
+                    // const prevLocalVar = previous.$container as LocalVariable;
+                    const memCall = previous as MemberCall;
+                    console.log("         Previous has previous?  " + memCall.previous)
+                    console.log("         Container type?  " + memCall.$container.$type)
+                    console.log("         Element  " + memCall.element)
+                    const prevVarDec = (previous.$container as VariableDeclaration)
+                    console.log("        type  " + prevVarDec.type)
+                }
+                if (isMemberCall(previous.$container)) {
+                    console.log("    isMemberCall container")
+                }
+                if (isLocalVariable(previous.$container)) {
+                    const prevLocalVar = previous.$container as LocalVariable;
+                    console.log(prevLocalVar.$type)  // ==> Local variable
+                    console.log(prevLocalVar.var.$refText)  // ==> myStruct (when auto completing with dot behing myStruct)
+
+                    const prevVarDec = (prevLocalVar.var.ref as VariableDeclaration)
+                    console.log(prevVarDec.name)
+                    console.log(prevVarDec.type.struct ? "IS STRUCT" : "Is not struct")
+                    if (prevVarDec.type.struct) {
+                        console.log(prevVarDec.type.struct?.vars.map(g => `\n  ${g.name} : ${g.type.primitive ?? "not primitive"}`) ?? "IS STRUCT")  // Prints internal structure of `myStruct` when putting `.` behind it
+                        const varsInStruct = prevVarDec.type.struct?.vars
+                        return super.createScopeForNodes(varsInStruct)  // This actually returns list of elements in struct. But it gives "Error resolving reference on it afterwards"
+                    }
+                }
+                console.log("END OF PREVIOUS...")
+            }
+
             console.log("    previous: " + previous)  // Gives and object
             console.log("    previous type: " + previous?.$type)  // E.g. `MemberCall`
             
