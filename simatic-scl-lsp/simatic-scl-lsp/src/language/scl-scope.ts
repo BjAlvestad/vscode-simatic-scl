@@ -8,9 +8,9 @@ import { inferType } from './type-system/infer.js';
  * Scope provider that restricts scope to a single file
  */
 export class SclScopeProvider extends DefaultScopeProvider {
-    // protected override getGlobalScope(referenceType: string): Scope {
-    //     return EMPTY_SCOPE;
-    // }
+    protected override getGlobalScope(referenceType: string): Scope {
+        return EMPTY_SCOPE;
+    }
 
     override getScope(context: ReferenceInfo): Scope {
         console.log("\n\n\n")
