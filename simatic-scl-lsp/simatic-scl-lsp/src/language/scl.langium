@@ -127,7 +127,7 @@ MemberCall infers Expression:
     Primary
 	({infer MemberCall.previous=current} 
     // Member call with function call
-        ("." '#'? element=[NamedElement:ID] '^'? (
+        ("." element=[NamedElement:ID] '^'? (
 		explicitOperationCall?='('
 		(
 		    arguments+=Expression (',' arguments+=Expression)*
