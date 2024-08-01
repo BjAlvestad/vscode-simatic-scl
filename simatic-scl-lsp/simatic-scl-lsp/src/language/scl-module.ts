@@ -3,6 +3,7 @@ import { createDefaultModule, createDefaultSharedModule, type DefaultSharedModul
 import { SclGeneratedModule, SclGeneratedSharedModule } from './generated/module.js';
 import { SclValidator, registerValidationChecks } from './scl-validator.js';
 import { SclScopeProvider } from './scl-scope.js';
+import { SclHoverProvider } from './lsp/scl-hover-provider.js';
 
 /**
  * Declaration of custom services - add your own service classes here.
@@ -30,6 +31,9 @@ export const SclModule: Module<SclServices, PartialLangiumServices & SclAddedSer
     },
     references: {
         ScopeProvider: (services) => new SclScopeProvider(services)
+    },
+    lsp: {
+        HoverProvider: (services) => new SclHoverProvider(services)
     },
 };
 
