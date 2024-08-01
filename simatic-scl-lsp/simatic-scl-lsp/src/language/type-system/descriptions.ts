@@ -2,7 +2,7 @@
 import { AstNode } from "langium";
 import {
     BooleanExpression,
-    Class,
+    Struct,
     NumberExpression,
     StringExpression
 } from "../generated/ast.js"
@@ -14,7 +14,7 @@ export type TypeDescription =
     | StringTypeDescription
     | NumberTypeDescription
     | FunctionTypeDescription
-    | ClassTypeDescription
+    | StructTypeDescription
     | ErrorType;
 
 export interface NilTypeDescription {
@@ -116,20 +116,20 @@ export function isFunctionType(item: TypeDescription): item is FunctionTypeDescr
     return item.$type === "function";
 }
 
-export interface ClassTypeDescription {
-    readonly $type: "class"
-    readonly literal: Class
+export interface StructTypeDescription {
+    readonly $type: "Struct"
+    readonly literal: Struct
 }
 
-export function createClassType(literal: Class): ClassTypeDescription {
+export function createStructType(literal: Struct): StructTypeDescription {
     return {
-        $type: "class",
+        $type: "Struct",
         literal
     };
 }
 
-export function isClassType(item: TypeDescription): item is ClassTypeDescription {
-    return item.$type === "class";
+export function isStructType(item: TypeDescription): item is StructTypeDescription {
+    return item.$type === "Struct";
 }
 
 export interface ErrorType {
@@ -151,8 +151,8 @@ export function isErrorType(item: TypeDescription): item is ErrorType {
 }
 
 export function typeToString(item: TypeDescription): string {
-    if (isClassType(item)) {
-        return item.literal.name;
+    if (isStructType(item)) {
+        return "an struct"// item.literal.name;
     } else if (isFunctionType(item)) {
         const params = item.parameters.map(e => `${e.name}: ${typeToString(e.type)}`).join(', ');
         return `(${params}) => ${typeToString(item.returnType)}`;

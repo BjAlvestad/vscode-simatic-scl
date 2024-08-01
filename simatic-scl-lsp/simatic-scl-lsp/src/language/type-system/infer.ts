@@ -1,6 +1,6 @@
 import { AstNode } from "langium";
-import { BinaryExpression, Class, isBinaryExpression, isBooleanExpression, isClass, isFieldMember, isFunctionDeclaration, isMemberCall, isMethodMember, isNilExpression, isNumberExpression, isParameter, isPrintStatement, isReturnStatement, isStringExpression, isTypeReference, isUnaryExpression, isVariableDeclaration, MemberCall, TypeReference } from "../generated/ast.js";
-import { createBooleanType, createClassType, createErrorType, createFunctionType, createNilType, createNumberType, createStringType, createVoidType, isFunctionType, isStringType, TypeDescription } from "./descriptions.js";
+import { BinaryExpression, isBinaryExpression, isBooleanExpression, isStruct, isMemberCall, isNumberExpression, isReturnStatement, isStringExpression, isUnaryExpression, isVariableDeclaration, MemberCall, TypeReference, isTypeReference } from "../generated/ast.js";
+import { createBooleanType, createStructType, createErrorType, createNumberType, createStringType, createVoidType, isFunctionType, isStringType, TypeDescription } from "./descriptions.js";
 
 export function inferType(node: AstNode | undefined, cache: Map<AstNode, TypeDescription>): TypeDescription {
     let type: TypeDescription | undefined;
@@ -19,15 +19,15 @@ export function inferType(node: AstNode | undefined, cache: Map<AstNode, TypeDes
         type = createNumberType(node);
     } else if (isBooleanExpression(node)) {
         type = createBooleanType(node);
-    } else if (isNilExpression(node)) {
-        type = createNilType();
-    } else if (isFunctionDeclaration(node) || isMethodMember(node)) {
-        const returnType = inferType(node.returnType, cache);
-        const parameters = node.parameters.map(e => ({
-            name: e.name,
-            type: inferType(e.type, cache)
-        }));
-        type = createFunctionType(returnType, parameters);
+    // } else if (isNilExpression(node)) {
+    //     type = createNilType();
+    // } else if (isFunctionDeclaration(node) || isMethodMember(node)) {
+    //     const returnType = inferType(node.returnType, cache);
+    //     const parameters = node.parameters.map(e => ({
+    //         name: e.name,
+    //         type: inferType(e.type, cache)
+    //     }));
+    //     type = createFunctionType(returnType, parameters);
     } else if (isTypeReference(node)) {
         type = inferTypeRef(node, cache);
     } else if (isMemberCall(node)) {
@@ -45,12 +45,12 @@ export function inferType(node: AstNode | undefined, cache: Map<AstNode, TypeDes
         } else {
             type = createErrorType('No type hint for this element', node);
         }
-    } else if (isParameter(node)) {
-        type = inferType(node.type, cache);
-    } else if (isFieldMember(node)) {
-        type = inferType(node.type, cache);
-    } else if (isClass(node)) {
-        type = createClassType(node);
+    // } else if (isParameter(node)) {
+    //     type = inferType(node.type, cache);
+    // } else if (isFieldMember(node)) {
+    //     type = inferType(node.type, cache);
+    } else if (isStruct(node)) {
+        type = createStructType(node);
     } else if (isBinaryExpression(node)) {
         type = inferBinaryExpression(node, cache);
     } else if (isUnaryExpression(node)) {
@@ -59,8 +59,8 @@ export function inferType(node: AstNode | undefined, cache: Map<AstNode, TypeDes
         } else {
             type = createNumberType();
         }
-    } else if (isPrintStatement(node)) {
-        type = createVoidType();
+    // } else if (isPrintStatement(node)) {
+    //     type = createVoidType();
     } else if (isReturnStatement(node)) {
         if (!node.value) {
             type = createVoidType();
@@ -76,28 +76,29 @@ export function inferType(node: AstNode | undefined, cache: Map<AstNode, TypeDes
     return type;
 }
 
+//TODO: Update inferTypeRef with what is valid for my own types (and modify grammar to primitive and type ref)
 function inferTypeRef(node: TypeReference, cache: Map<AstNode, TypeDescription>): TypeDescription {
     if (node.primitive) {
-        if (node.primitive === 'number') {
+        if (node.primitive === 'DINT') {
             return createNumberType();
-        } else if (node.primitive === 'string') {
+        } else if (node.primitive === 'STRING' || node.primitive === 'WSTRING') {
             return createStringType();
-        } else if (node.primitive === 'boolean') {
+        } else if (node.primitive === 'BOOL') {
             return createBooleanType();
-        } else if (node.primitive === 'void') {
-            return createVoidType();
+        // } else if (node.primitive === 'void') {
+        //     return createVoidType();
         }
-    } else if (node.reference) {
-        if (node.reference.ref) {
-            return createClassType(node.reference.ref);
+    } else if (node.struct) {
+        if (node.struct) {
+            return createStructType(node.struct);
         }
-    } else if (node.returnType) {
-        const returnType = inferType(node.returnType, cache);
-        const parameters = node.parameters.map((e, i) => ({
-            name: e.name ?? `$${i}`,
-            type: inferType(e.type, cache)
-        }));
-        return createFunctionType(returnType, parameters);
+    // } else if (node.returnType) {
+    //     const returnType = inferType(node.returnType, cache);
+    //     const parameters = node.parameters.map((e, i) => ({
+    //         name: e.name ?? `$${i}`,
+    //         type: inferType(e.type, cache)
+    //     }));
+    //     return createFunctionType(returnType, parameters);
     }
     return createErrorType('Could not infer type for this reference', node);
 }
@@ -136,13 +137,13 @@ function inferBinaryExpression(expr: BinaryExpression, cache: Map<AstNode, TypeD
     return createErrorType('Could not infer type from binary expression', expr);
 }
 
-export function getClassChain(classItem: Class): Class[] {
-    const set = new Set<Class>();
-    let value: Class | undefined = classItem;
-    while (value && !set.has(value)) {
-        set.add(value);
-        value = value.superClass?.ref;
-    }
-    // Sets preserve insertion order
-    return Array.from(set);
-}
+// export function getStructChain(structItem: Struct): Struct[] {
+//     const set = new Set<Struct>();
+//     let value: Struct | undefined = structItem;
+//     while (value && !set.has(value)) {
+//         set.add(value);
+//         value = value.vars.ref;
+//     }
+//     // Sets preserve insertion order
+//     return Array.from(set);
+// }

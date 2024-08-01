@@ -53,7 +53,7 @@ VariableDeclaration returns NamedElement:
     ':'
     (isArray?='ARRAY' '[' arrayRange=ArrayRange ']' 'OF')?
     'REF_TO'?
-    type=TypeRefrence
+    type=TypeReference
     (assignment?=':=' value=Expression)?
     ';'
 ;
@@ -64,7 +64,7 @@ Struct:
     'END_STRUCT'
 ;
 
-TypeRefrence: 
+TypeReference: 
     UdtRef = [BlockStart:DOUBLE_QUOTE_STRING] 
     | primitive=DataType
     | struct=Struct
