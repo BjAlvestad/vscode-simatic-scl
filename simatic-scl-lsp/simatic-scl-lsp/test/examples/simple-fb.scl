@@ -7,11 +7,11 @@ FAMILY : SomeFam
    END_VAR
 
    VAR 
-      intenal1 : DINT;
-      intenal2 : DINT;
-      intenal3 : DINT;
-      intenal4 : DINT;
-      intenal5 : DINT;
+      sfbVar1 : DINT;
+      sfbVar2 : DINT;
+      sfbVar3 : DINT;
+      sfbVar4 : DINT;
+      sfbVar5 : DINT;
    END_VAR
 
    VAR_TEMP 

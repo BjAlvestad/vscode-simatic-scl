@@ -45,8 +45,11 @@ export class SclScopeProvider extends DefaultScopeProvider {
                     const varDec = (localVar.var.ref as VariableDeclaration)
                     console.log(varDec.name)
                     console.log(varDec.type.struct ? "IS STRUCT" : "Is not struct")
-                    console.log(varDec.type.struct?.vars.map(g => `\n  ${g.name} : ${g.type.primitive ?? "not primitive"}`) ?? "IS STRUCT")  // Prints internal structure of `myStruct` when putting `.` behind it
-
+                    if (varDec.type.struct) {
+                        console.log(varDec.type.struct?.vars.map(g => `\n  ${g.name} : ${g.type.primitive ?? "not primitive"}`) ?? "IS STRUCT")  // Prints internal structure of `myStruct` when putting `.` behind it
+                        const varsInStruct = varDec.type.struct?.vars
+                        return super.createScopeForNodes(varsInStruct)  // This actually returns list of elements in struct. But it gives "Error resolving reference on it afterwards"
+                    }
 
                     // console.log(localVar.type.struct ? "Is struct" : localVar.type.primitive ?? "unknown type")
                     // console.log(memberCallType)
