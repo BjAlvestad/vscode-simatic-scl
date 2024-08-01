@@ -1,0 +1,34 @@
+FUNCTION_BLOCK "FB_NestedStruct"
+{ S7_Optimized_Access := 'TRUE' }
+VERSION : 0.1
+   VAR_INPUT 
+
+   END_VAR
+
+   VAR_IN_OUT 
+
+   END_VAR
+
+   VAR 
+		myOuterStruct : STRUCT
+			outerIntenal1 : DINT;
+         myNestedStruct : STRUCT
+            nestedIntenal1 : DINT;
+         END_STRUCT;
+		END_STRUCT;
+   END_VAR
+
+   VAR_TEMP 
+	  myVar1 : DINT;
+   END_VAR
+
+
+BEGIN
+
+	#myVar1;
+
+	#myStruct.intenal1;
+
+	
+END_FUNCTION_BLOCK
+
