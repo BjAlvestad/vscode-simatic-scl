@@ -1,7 +1,7 @@
 import type { ReferenceInfo, Scope } from 'langium';
 import { AstUtils, EMPTY_SCOPE } from 'langium';
 import { DefaultScopeProvider } from 'langium';
-import { isMemberCall, isNamedElement } from './generated/ast.js';
+import { isMemberCall, isVariableDeclaration, LocalVariable, MemberCall } from './generated/ast.js';
 
 /**
  * Scope provider that restricts scope to a single file
@@ -21,7 +21,7 @@ export class SclScopeProvider extends DefaultScopeProvider {
         // const localRefs = AstUtils.findLocalReferences(context.container)
         // console.log("local refs: " + localRefs)
 
-        const variableDeclarationItem = AstUtils.getContainerOfType(context.container, isNamedElement)
+        const variableDeclarationItem = AstUtils.getContainerOfType(context.container, isVariableDeclaration)
         console.log("    VariableDeclaration: " + variableDeclarationItem)
         console.log("    VariableDeclaration name: " + variableDeclarationItem?.name)
 
@@ -34,7 +34,20 @@ export class SclScopeProvider extends DefaultScopeProvider {
             console.log("    previous: " + previous)  // Gives and object
             console.log("    previous type: " + previous?.$type)  // E.g. `MemberCall`
             
+            const test1 = context.container as MemberCall;
+            // const test2 = context.container.$container as MemberCall;
+            const test3 = context.container.previous as unknown as LocalVariable;
+            console.log("    Test name for container as VariableDeclaration - test1: " + test1)
+            console.log("    Test name for container as VariableDeclaration - node description: " + test1.element?.$nodeDescription)
+            console.log("    Test name for container as VariableDeclaration - refText: " + test1.element?.$refText)
+            console.log("    Test name for container as VariableDeclaration - refNode: " + test1.element?.$refNode)
+            console.log("    Test3: " + test3.var)
+            console.log("    Test3: " + test3.var.$refText)
+            console.log("    Test3: " + test3.var.$refNode)
+            // console.log("    Test name for container as VariableDeclaration: " + test1.element?.ref)
             
+            // if()
+
             // console.log(previous)
             // if (!previous) {
             //     console.log("      inside !previous")
