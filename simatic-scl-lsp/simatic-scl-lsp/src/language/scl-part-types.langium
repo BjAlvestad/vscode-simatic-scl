@@ -17,8 +17,6 @@ DataType returns string:
     | 'S5TIME' | 'TIME' | 'LTIME'
     | 'DATE'   | 'TIME_OF_DAY' | 'TOD' | 'LTOD' | 'LTIME_OF_DAY'
     | 'CHAR'  | 'WCHAR'
-    // Complex - Struct
-    | 'STRUCT'
     // Complex - Data and time
     | 'DT' | 'DATE_AND_TIME' | 'LDT' | 'DATE_AND_LTIME' | 'DTL'
     // String

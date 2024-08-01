@@ -55,9 +55,22 @@ VariableDeclaration returns NamedElement:
     ('AT' refName=[NamedElement:ID])?
     ':'
     (isArray?='ARRAY' '[' arrayRange=ArrayRange ']' 'OF')?
-    'REF_TO'? ((type=DataType) | typeGlobal=[BlockStart:DOUBLE_QUOTE_STRING]) ((children+=VariableDeclaration)* 'END_STRUCT')?
+    'REF_TO'?
+    type=TypeRefrence
     (assignment?=':=' value=Expression)?
     ';'
+;
+
+Struct:
+    'STRUCT'
+        (vars+=VariableDeclaration)*
+    'END_STRUCT'
+;
+
+TypeRefrence: 
+    UdtRef = [BlockStart:DOUBLE_QUOTE_STRING] 
+    | primitive=DataType
+    | struct=Struct
 ;
 
 VariableAttribute:
