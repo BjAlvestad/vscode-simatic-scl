@@ -9,11 +9,11 @@ FAMILY : SomeFam
 
    VAR 
       myStruct : STRUCT
-        intenal1 : DINT;
-        intenal2 : DINT;
-        intenal3 : DINT;
-        intenal4 : DINT;
-        intenal5 : DINT;
+        internal1 : DINT;
+        internal2 : DINT;
+        internal3 : DINT;
+        internal4 : DINT;
+        internal5 : DINT;
       END_STRUCT;
    END_VAR
 
