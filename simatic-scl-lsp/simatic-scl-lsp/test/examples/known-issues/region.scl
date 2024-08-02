@@ -1,0 +1,13 @@
+FUNCTION_BLOCK "FB_Region"
+
+   VAR 
+        otherVar1 : DINT;
+   END_VAR
+
+BEGIN
+
+    REGION The problematic description of a region since they are not strings
+
+    END_REGION
+
+END_FUNCTION_BLOCK

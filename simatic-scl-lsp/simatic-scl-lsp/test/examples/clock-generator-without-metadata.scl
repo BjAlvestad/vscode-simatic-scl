@@ -15,7 +15,6 @@ FUNCTION_BLOCK "fb_ClockGenerator_V15.0.2"
       instTofTimePulse : TOF_TIME;   // -
       // single line comment
       instTofTimePause : TOF_TIME;   // -
-      (*(*Nestet multi line comment*) with some in outer nesting*)
       statTimePulse : Time;   // -
       statTimePause : Time;   // -
    END_VAR

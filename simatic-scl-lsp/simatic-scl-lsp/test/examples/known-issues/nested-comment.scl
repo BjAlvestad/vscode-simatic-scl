@@ -1,0 +1,11 @@
+FUNCTION_BLOCK "FB_NestedComment"
+
+   VAR 
+        otherVar1 : DINT;
+   END_VAR
+
+BEGIN
+
+   (*(*Nested multi line comment*) with some in outer nesting*)
+
+END_FUNCTION_BLOCK

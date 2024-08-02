@@ -1,0 +1,10 @@
+FUNCTION_BLOCK "FB_TitleWithoutString"
+TITLE = Some problematic title not placed in string
+
+   VAR 
+        otherVar1 : DINT;
+   END_VAR
+
+BEGIN
+
+END_FUNCTION_BLOCK
