@@ -24,7 +24,7 @@ export class SclScopeProvider extends DefaultScopeProvider {
         if (context.property === 'element') {
             const memberCall = context.container as MemberCall;
             const previous = memberCall.previous;
-            this.logTypeInfo(memberCall, this.skipConsoleLog)
+            this.logTypeInfo(memberCall, this.skipConsoleLog && false)
 
              /** RETURNS normal scope if it has no previous (i.e. is top level ref) */
              if (!previous) {
@@ -38,10 +38,7 @@ export class SclScopeProvider extends DefaultScopeProvider {
             }
 
             if (isUdtRef(previousType)) {
-                console.log("PREVIOUS TYPE WAS UDT REF ! :D")
-                this.scopeUdtMembers(previousType.literal)
-                return EMPTY_SCOPE;
-                // return this.scopeUdtMembers(previousType.literal);
+                return this.scopeUdtMembers(previousType.literal);
             }
 
             return EMPTY_SCOPE;
@@ -89,7 +86,10 @@ export class SclScopeProvider extends DefaultScopeProvider {
     }
 
     private scopeUdtMembers(udtItem: UdtRef) {
-        console.log(udtItem.udtRef.ref?.name)
-        // return this.createScopeForNodes(udtItem.udtRef.ref);
+        if (udtItem.udtRef.ref?.$container.udtStruct.vars) {
+            return this.createScopeForNodes(udtItem.udtRef.ref?.$container.udtStruct.vars);
+        }
+
+        return EMPTY_SCOPE;
     }
 }
