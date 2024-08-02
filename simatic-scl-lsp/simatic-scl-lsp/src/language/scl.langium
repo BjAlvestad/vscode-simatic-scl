@@ -94,7 +94,7 @@ SclProgramElement:
     | ExitStatement
     | JumpLabel
     | ProgramJump
-    // | CaseLabel
+    // | CaseLabel  //BUG: Causes auto completion to break (but strangely enough not scoping itself (i.e. valid name is valid, and red lies on invalid ones))
     | CaseStatement
     | Expression ';'
 ;
@@ -148,7 +148,7 @@ MemberCall infers Expression:
             (',' parameters+=ID (':=' | '=>') arguments+=Expression)*
 		)?
 		')')
-        // | ("." memoryArea=MEMORY_AREA)  // causes issue since this also has "dot"
+        // | ("." memoryArea=MEMORY_AREA)  //BUG: causes issue since this also has "dot"
         )
     )*
 ;
