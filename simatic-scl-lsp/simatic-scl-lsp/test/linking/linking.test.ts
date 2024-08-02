@@ -3,7 +3,7 @@ import { EmptyFileSystem, type LangiumDocument } from "langium";
 import { expandToString as s } from "langium/generate";
 import { clearDocuments, parseHelper } from "langium/test";
 import { createSclServices } from "../../src/language/scl-module.js";
-import { Model, isModel } from "../../src/language/generated/ast.js";
+import { MemberCall, Model, isBinaryExpression, isModel } from "../../src/language/generated/ast.js";
 import { EOL } from "os";
 
 let services: ReturnType<typeof createSclServices>;
@@ -24,7 +24,7 @@ afterEach(async () => {
 
 describe('Linking tests', () => {
 
-    test('linking of greetings', async () => {
+    test('linking first level variables', async () => {
         document = await parse(`
             FUNCTION_BLOCK "FB_MyFunctionBlock"
             { S7_Optimized_Access := 'TRUE' }
@@ -53,17 +53,63 @@ describe('Linking tests', () => {
             END_FUNCTION
         `);
 
+        const filteredAndMapped = getLeftRefsFromBinaryExpression(document);
+
         expect(
             // here we first check for validity of the parsed document object by means of the reusable function
             //  'checkDocumentValid()' to sort out (critical) typos first,
             // and then evaluate the cross references we're interested in by checking
             //  the referenced AST element as well as for a potential error message;
             checkDocumentValid(document)
-                || document.parseResult.value.assignment.map(g => g.var.ref?.name || g.var.error?.message).join(EOL)
+                || filteredAndMapped.map(g => g.element?.ref?.name || g.element?.error?.message).join(EOL)
         ).toBe(s`
             myVar1
             myVar2
             internal2
+        `);
+    });
+
+    test('linking of nested structs', async () => {
+        document = await parse(`
+            FUNCTION_BLOCK "FB_MyFunctionBlock"
+
+            VAR 
+                myVar1 : DINT;
+                myStruct : STRUCT
+                    var1InMyStruct : DINT;
+                    var2InMyStruct : DINT;
+                    nestedStructInMyStruct : STRUCT
+                        var1InNestedStruct : DINT;
+                    END_STRUCT;
+                END_STRUCT;
+                myVar2 : DINT;
+            END_VAR
+
+
+            BEGIN
+                #myVar1 := 11;
+                #myStruct := 11;
+                #myStruct.var1InMyStruct := 11;
+                #myStruct.nestedStructInMyStruct.var1InNestedStruct := 11;
+                #myVar2 := 22;
+            END_FUNCTION
+        `);
+
+        const filteredAndMapped = getLeftRefsFromBinaryExpression(document);
+
+        expect(
+            // here we first check for validity of the parsed document object by means of the reusable function
+            //  'checkDocumentValid()' to sort out (critical) typos first,
+            // and then evaluate the cross references we're interested in by checking
+            //  the referenced AST element as well as for a potential error message;
+            checkDocumentValid(document)
+                || filteredAndMapped.map(g => g.element?.ref?.name || g.element?.error?.message).join(EOL)
+        ).toBe(s`
+            myVar1
+            myStruct
+            var1InMyStruct
+            var1InNestedStruct
+            myVar2
         `);
     });
 });
@@ -76,4 +122,12 @@ function checkDocumentValid(document: LangiumDocument): string | undefined {
         || document.parseResult.value === undefined && `ParseResult is 'undefined'.`
         || !isModel(document.parseResult.value) && `Root AST object is a ${document.parseResult.value.$type}, expected a '${Model}'.`
         || undefined;
+}
+
+function getLeftRefsFromBinaryExpression(document: LangiumDocument<Model>) {
+    // Extract only BinaryExpression elements from AST
+    const filtered = document.parseResult.value.elements.filter(g => isBinaryExpression(g))
+    // Then get only left hand side (where we have the variable getting linked in our tests)
+    const filteredAndMapped = filtered.map(g => (g.left as MemberCall))
+    return filteredAndMapped;
 }

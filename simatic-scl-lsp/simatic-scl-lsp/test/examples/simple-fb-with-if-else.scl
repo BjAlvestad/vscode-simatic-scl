@@ -7,36 +7,36 @@ FAMILY : SomeFam
    END_VAR
 
    VAR 
-      intenal1 : DINT;
-      intenal2 : DINT;
-      intenal3 : DINT;
-      intenal4 : DINT;
-      intenal5 : DINT;
+      sfbIEVar1 : DINT;
+      sfbIEVar2 : DINT;
+      sfbIEVar3 : DINT;
+      sfbIEVar4 : DINT;
+      sfbIEVar5 : DINT;
    END_VAR
 
    VAR_TEMP 
-      myVar1 : DINT;   // Comment for my variable 1
-      myVar2 : DINT;   // Comment for my variable 2
-      myVar3 : DINT;   // Comment for my variable 3
-      myVar4 : DINT;   // Comment for my variable 4
+      sfbIEmyVar1 : DINT;   // Comment for my variable 1
+      sfbIEmyVar2 : DINT;   // Comment for my variable 2
+      sfbIEmyVar3 : DINT;   // Comment for my variable 3
+      sfbIEmyVar4 : DINT;   // Comment for my variable 4
    END_VAR
 
 BEGIN
-	#myVar1 := 11;
-	#myVar2 := 22;
-	#myVar2 := 23;
-	#myVar3 := 33;
-	#myVar4 := 44;
+	#sfbIEmyVar1 := 11;
+	#sfbIEmyVar2 := 22;
+	#sfbIEmyVar2 := 23;
+	#sfbIEmyVar3 := 33;
+	#sfbIEmyVar4 := 44;
 
-   IF #intenal1 THEN
-      #intenal3 := #myVar2;
-      IF #intenal1 THEN
-         #intenal3 := #myVar2;
+   IF #sfbIEVar1 THEN
+      #sfbIEVar3 := #myVar2;
+      IF #sfbIEVar1 THEN
+         #sfbIEVar3 := #myVar2;
       END_IF;
 	ELSE
-      #intenal3 := myVar4;
-      FOR #intenal2 := 3 TO 43 DO
-         #intenal5 := 34;
+      #sfbIEVar3 := myVar4;
+      FOR #sfbIEVar2 := 3 TO 43 DO
+         #sfbIEVar5 := 34;
       END_FOR;
    END_IF;
 

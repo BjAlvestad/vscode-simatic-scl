@@ -3,7 +3,7 @@ import { EmptyFileSystem, type LangiumDocument } from "langium";
 import { expandToString as s } from "langium/generate";
 import { parseHelper } from "langium/test";
 import { createSclServices } from "../../src/language/scl-module.js";
-import { Model, isModel } from "../../src/language/generated/ast.js";
+import { MemberCall, Model, isBinaryExpression, isModel } from "../../src/language/generated/ast.js";
 
 let services: ReturnType<typeof createSclServices>;
 let parse:    ReturnType<typeof parseHelper<Model>>;
@@ -52,6 +52,7 @@ describe('Parsing tests', () => {
         //  deacivated, find a much more human readable way below!
         // expect(document.parseResult.parserErrors).toHaveLength(0);
 
+        const memberCallsFromBinaryExpressions = getLeftRefsFromBinaryExpression(document);
         expect(
             // here we use a (tagged) template expression to create a human readable representation
             //  of the AST part we are interested in and that is to be compared to our expectation;
@@ -59,21 +60,21 @@ describe('Parsing tests', () => {
             //  by means of the reusable function 'checkDocumentValid()' to sort out (critical) typos first;
             checkDocumentValid(document) || s`
                 Declarations:
-                  ${document.parseResult.value?.vars?.map(p => p.name)?.join('\n  ')}
+                  ${document.parseResult.value?.vars?.map(p => p.name)?.join('\n')}
                 Var usages in assignments:
-                  ${document.parseResult.value?.assignment?.map(g => g.var.$refText)?.join('\n  ')}
+                  ${memberCallsFromBinaryExpressions.map(g => g.element?.$refText)?.join('\n')}
             `
         ).toBe(s`
             Declarations:
               myCaseSelectorInputVar
-                internal1
-                internal2
-                myVar1
-                myVar2
+              internal1
+              internal2
+              myVar1
+              myVar2
             Var usages in assignments:
               myVar1
-                myVar2
-                internal2
+              myVar2
+              internal2
         `);
     });
 
@@ -105,10 +106,12 @@ describe('Parsing tests', () => {
         // expect(document.parseResult.parserErrors).toHaveLength(0);
         
         const model = document.parseResult.value;
+        const memberCallsFromBinaryExpressions = getLeftRefsFromBinaryExpression(document);
+
         expect(model.vars).toHaveLength(2)
-        // expect((model.vars[0].structure as TypeReference).).toEqual("dsa")
-        expect(model.vars[1].dataType).toEqual("STRUCT")
-        expect(model.vars[1].children.length).equal(3)
+        // // expect((model.vars[0].structure as TypeReference).).toEqual("dsa")
+        expect(model.vars[1].type.struct?.$type).toEqual("Struct")
+        expect(model.vars[1].type.struct?.vars.length).equal(3)
 
         expect(
             // here we use a (tagged) template expression to create a human readable representation
@@ -119,9 +122,9 @@ describe('Parsing tests', () => {
                 ** Top level vars: **
                   ${document.parseResult.value?.vars?.map(p => p.name)?.join('\n')}
                 ** Inside myStruct: **
-                  ${document.parseResult.value?.vars[1].children.map(p => p.name)?.join('\n')}
+                  ${document.parseResult.value?.vars[1].type.struct?.vars.map(p => p.name)?.join('\n')}
                 ** Var usages in assignments: **
-                  ${document.parseResult.value?.assignment?.map(g => g.var.$refText)?.join('\n')}
+                  ${memberCallsFromBinaryExpressions.map(g => g.element?.$refText)?.join('\n')}
             `
         ).toBe(s`
             ** Top level vars: **
@@ -133,7 +136,7 @@ describe('Parsing tests', () => {
               myInternal3
             ** Var usages in assignments: **
               myInt
-              myStruct.myInternal1
+              myInternal1
         `);
     });
 
@@ -162,6 +165,7 @@ describe('Parsing tests', () => {
             BEGIN
                 #myInt := 11;
                 #myStruct.myInternal1 := 22;
+                #myStruct.myInnerStruct.myInnerInternal1 := 22;
             END_FUNCTION
         `);
 
@@ -178,10 +182,11 @@ describe('Parsing tests', () => {
 
         expect(model.vars).toHaveLength(2)
         // expect((model.vars[0].structure as TypeReference).).toEqual("dsa")
-        expect(model.vars[0].dataType).toEqual("DINT")
-        expect(model.vars[1].dataType).toEqual("STRUCT")
-        expect(model.vars[1].children.length).equal(4)
+        expect(model.vars[0].type.primitive).toEqual("DINT")
+        expect(model.vars[1].type.struct?.$type).toEqual("Struct")
+        expect(model.vars[1].type.struct?.vars.length).equal(4)
 
+        const memberCallsFromBinaryExpressions = getLeftRefsFromBinaryExpression(document);
         expect(
             // here we use a (tagged) template expression to create a human readable representation
             //  of the AST part we are interested in and that is to be compared to our expectation;
@@ -191,9 +196,9 @@ describe('Parsing tests', () => {
                 ** Top level vars: **
                   ${document.parseResult.value?.vars?.map(p => p.name)?.join('\n')}
                 ** Inside myStruct: **
-                  ${document.parseResult.value?.vars[1].children.map(p => p.name)?.join('\n')}
+                  ${document.parseResult.value?.vars[1].type.struct?.vars.map(p => p.name)?.join('\n')}
                 ** Var usages in assignments: **
-                  ${document.parseResult.value?.assignment?.map(g => g.var.$refText)?.join('\n')}
+                  ${memberCallsFromBinaryExpressions.map(g => g.element?.$refText)?.join('\n')}
             `
         ).toBe(s`
             ** Top level vars: **
@@ -206,7 +211,8 @@ describe('Parsing tests', () => {
               myInternal3
             ** Var usages in assignments: **
               myInt
-              myStruct.myInternal1
+              myInternal1
+              myInnerInternal1
         `);
     });
 });
@@ -219,4 +225,12 @@ function checkDocumentValid(document: LangiumDocument): string | undefined {
         || document.parseResult.value === undefined && `ParseResult is 'undefined'.`
         || !isModel(document.parseResult.value) && `Root AST object is a ${document.parseResult.value.$type}, expected a '${Model}'.`
         || undefined;
+}
+
+function getLeftRefsFromBinaryExpression(document: LangiumDocument<Model>) {
+  // Extract only BinaryExpression elements from AST
+  const filtered = document.parseResult.value.elements.filter(g => isBinaryExpression(g))
+  // Then get only left hand side (where we have the variable getting linked in our tests)
+  const filteredAndMapped = filtered.map(g => (g.left as MemberCall))
+  return filteredAndMapped;
 }

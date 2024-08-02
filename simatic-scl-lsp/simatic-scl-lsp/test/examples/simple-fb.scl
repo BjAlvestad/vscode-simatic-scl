@@ -3,28 +3,20 @@ AUTHOR : Myself
 FAMILY : SomeFam
 
    VAR_INPUT 
-      myCaseSelectorInputVar : DINT;
-   END_VAR
-
-   VAR 
-      intenal1 : DINT;
-      intenal2 : DINT;
-      intenal3 : DINT;
-      intenal4 : DINT;
-      intenal5 : DINT;
+      sfbmyCaseSelectorInputVar : DINT;
    END_VAR
 
    VAR_TEMP 
-      myVar1 : DINT;   // Comment for my variable 1
-      myVar2 : DINT;   // Comment for my variable 2
-      myVar3 : DINT;   // Comment for my variable 3
-      myVar4 : DINT;   // Comment for my variable 4
+      sfbmyVar1 : DINT;   // Comment for my variable 1
+      sfbmyVar2 : DINT;   // Comment for my variable 2
+      sfbmyVar3 : DINT;   // Comment for my variable 3
+      sfbmyVar4 : DINT;   // Comment for my variable 4
    END_VAR
 
 BEGIN
-	#myVar1 := 11;
-	#myVar2 := 22;
-	#myVar2 := 23;
-	#myVar3 := 33;
-	#myVar4 := 44;
+	#sfbVar1 := 11;
+	#sfbVar2 := 22;
+	#sfbVar2 := 23;
+	#sfbVar3 := 33;
+	#sfbVar4 := 44;
 END_FUNCTION
