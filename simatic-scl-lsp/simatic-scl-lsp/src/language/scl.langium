@@ -18,7 +18,10 @@ entry Model:
     blockStart+=BlockStart
     (compilerDirective+=CompilerDirective)*
     (blockAttribute+=BlockAttribute)*
-    (elements+=SclProgramElement)*
+    (declarationSubSection+=DeclarationSubSection | vars+=VariableDeclaration)*
+    ('BEGIN'
+        (elements+=SclProgramElement)*
+    )?
     // ReturnStatement?
     BlockEnd
 ;
