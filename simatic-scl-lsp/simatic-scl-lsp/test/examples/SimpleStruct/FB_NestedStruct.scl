@@ -14,6 +14,9 @@ VERSION : 0.1
 			outerIntenal1 : DINT;
          myNestedStruct : STRUCT
             nestedIntenal1 : DINT;
+            inception : STRUCT
+               l2 : DINT;
+            END_STRUCT;
          END_STRUCT;
 		END_STRUCT;
    END_VAR
@@ -24,11 +27,9 @@ VERSION : 0.1
 
 
 BEGIN
+#myVar1.myOuterStruct.myNestedStruct;
+#myOuterStruct.myNestedStruct.nestedIntenal1.inception.l2;
+#myOuterStruct.myNestedStruct.inception.l2;
 
-	#myVar1;
-
-	#myStruct.intenal1;
-
-	
 END_FUNCTION_BLOCK
 

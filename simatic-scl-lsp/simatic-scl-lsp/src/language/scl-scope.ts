@@ -1,7 +1,9 @@
 import type { ReferenceInfo, Scope } from 'langium';
-import { EMPTY_SCOPE } from 'langium';
+import { AstUtils, EMPTY_SCOPE } from 'langium';
 import { DefaultScopeProvider } from 'langium';
-import { isMemberCall, MemberCall } from './generated/ast.js';
+import { isMemberCall, isVariableDeclaration, MemberCall, Struct } from './generated/ast.js';
+import { inferType } from './type-system/infer.js';
+import { isStructType } from './type-system/descriptions.js';
 // import { inferType } from './type-system/infer.js';
 
 /**
@@ -16,18 +18,48 @@ export class SclScopeProvider extends DefaultScopeProvider {
 
     override getScope(context: ReferenceInfo): Scope {
         console.log(`\n\n\n****  INSIDE getScope() for refText ${context.reference.$refText} !!!  ****`)  // Gives variable name
+        console.log("container type: " + context.container.$type)
+        console.log("context property: " + context.property)
+        console.log("\n")
 
-        if (context.property === 'element' && isMemberCall(context.container)) {
-            const memberCall = context.container;
+        // if (isNamedElement(context.container.)) {
+        //     console.log("TRUEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE")
+        // }
+
+        if (context.property === 'element' && context.reference.$refText) {
+            const memberCall = context.container as MemberCall;
             const previous = memberCall.previous;
+
+             /** RETURNS normal scope if it has no previous (i.e. is top level ref) */
+             if (!previous) {
+                console.log("Has no previous, so returning context")
+                return super.getScope(context);
+             }
             
+            //** Makes nested scope work, but not auto-complete for it (but you can write the elements out, and it works, and if you write element not inside struct you get red underlines (as you should)) */
+            const previousType = inferType(previous, new Map());
+            console.log("inferred previous type: " + previousType.$type)
+            if (isStructType(previousType)) {
+                console.log("previousType isStructType");
+                return this.scopeStructMembers(previousType.literal);
+            }
+
+            const declItem = AstUtils.getContainerOfType(context.container, isVariableDeclaration);
+            console.log("declItem START")
+            console.log(declItem)
+            console.log(declItem?.refName)
+            console.log("declItem END")
+
+
             this.logTypeInfo(memberCall);
 
+            
+
             /** RETURNS scope for struct when putting `.` behind a top level struct. */
-            if (isMemberCall(memberCall.$container)) {
+            if (isMemberCall(memberCall)) {
                 console.log("--> memberCall isLocalVariable")
                 // const memberCallType = inferType(memberCall, new Map());
-                const localVar = memberCall.$container as MemberCall;
+                const localVar = memberCall as MemberCall;
                 console.log(localVar.$type)  // ==> Local variable
                 console.log(localVar.element?.$refText)  // ==> myStruct (when auto completing with dot behind myStruct)
                 
@@ -42,15 +74,14 @@ export class SclScopeProvider extends DefaultScopeProvider {
                 // } else {
                 //     console.log("WAS NOT STRUCT SO DO NOT RETURN STRUCT SCOPE")
                 // }
+
+
+                return EMPTY_SCOPE;
             } else {
                 console.log("Was not memberCall...")
             }
 
-            /** RETURNS normal scope if it has no previous (i.e. is top level ref) */
-            if (!previous) {
-                console.log("Has no previous, so returning context")
-                return super.getScope(context);
-            }
+           
 
             /** CURRENTLY HAS NO EFFECT - Trying to get it to complete on nested structs.
              * It enters the function, but I cannot find the elements inside the struct to return
@@ -105,6 +136,10 @@ export class SclScopeProvider extends DefaultScopeProvider {
         console.log("    'current' functionCustom var refText: " + (memberCall.element?.$refText
             ?? (memberCall.element ? "Has element var" : `element is undefined.`)
         ));
+        // console.log("\nmemberCall printout\n")
+        // console.log(memberCall)
+        // console.log("\nmemberCall.$container printout\n")
+        // console.log(memberCall.$container)
         console.log("    'current' element var refText: " + (memberCall.element?.$refText
             ?? (memberCall.element ? "Has element" : `element is undefined.`)
         ));
@@ -139,14 +174,9 @@ export class SclScopeProvider extends DefaultScopeProvider {
         console.log("---\n");
     }
 
-    // private scopeStructMembers(variableDecl: VariableDeclaration) {
-    //     if (variableDecl.type.struct) {
-    //         const allMembers = variableDecl.type.struct.vars;
-    //         return this.createScopeForNodes(allMembers);
-    //     }
-
-    //     return EMPTY_SCOPE;
-    // }
+    private scopeStructMembers(structItem: Struct) {
+        return this.createScopeForNodes(structItem.vars);
+    }
 
     // private scopeClassMembers(classItem: Class): Scope {
     //     const allMembers = getClassChain(classItem).flatMap(e => e.members);
