@@ -4,19 +4,17 @@ import { DefaultScopeProvider } from 'langium';
 import { isMemberCall, MemberCall, Struct } from './generated/ast.js';
 import { inferType } from './type-system/infer.js';
 import { isStructType } from './type-system/descriptions.js';
-// import { inferType } from './type-system/infer.js';
 
-/**
- * Scope provider that restricts scope to a single file
- */
 export class SclScopeProvider extends DefaultScopeProvider {
-    DEBUG_WITH_AST_PRINT = false;
     skipConsoleLog = true;
 
+    /** Global scope */
     protected override getGlobalScope(referenceType: string): Scope {
+        /** Restrict scope to a single file */
         return EMPTY_SCOPE;
     }
 
+    /** Context based scope */
     override getScope(context: ReferenceInfo): Scope {
         this.logContextInfo(context, this.skipConsoleLog)
 
