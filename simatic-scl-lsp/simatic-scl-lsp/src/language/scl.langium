@@ -173,9 +173,10 @@ Primary infers Expression:
     | TimeExpression
 ;
 
+//TODO: Handle # prefix for local variables in validation. Optional here, so it can also parse usage in DBs, where there is no prefix.
 FeatureCall infers Expression:
 	{infer MemberCall}
-	(('#' element=[NamedElement:ID]) | element=[NamedElement:DOUBLE_QUOTE_STRING])
+	(('#'? element=[NamedElement:ID]) | element=[NamedElement:DOUBLE_QUOTE_STRING])
     // Optional function call after referencing an element
     (explicitOperationCall?='('
 	(
