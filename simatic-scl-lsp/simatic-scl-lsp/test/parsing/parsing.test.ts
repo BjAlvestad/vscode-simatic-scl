@@ -3,7 +3,7 @@ import { EmptyFileSystem, type LangiumDocument } from "langium";
 import { expandToString as s } from "langium/generate";
 import { parseHelper } from "langium/test";
 import { createSclServices } from "../../src/language/scl-module.js";
-import { MemberCall, Model, isBinaryExpression, isModel } from "../../src/language/generated/ast.js";
+import { BinaryExpression, MemberCall, Model, NumberExpression, isBinaryExpression, isModel } from "../../src/language/generated/ast.js";
 
 let services: ReturnType<typeof createSclServices>;
 let parse:    ReturnType<typeof parseHelper<Model>>;
@@ -19,6 +19,78 @@ beforeAll(async () => {
 
 describe('Parsing tests', () => {
 
+    test('parse numbers', async () => {
+        document = await parse(`
+            FUNCTION_BLOCK "FB_MyFunctionBlock"
+
+            BEGIN
+                11;
+                22;
+                16#22adf;
+                3.3;
+                3.3e+7;
+                3.3e-8;
+                3.3e8;
+                33e8;
+                33e+8;
+                33e-8;
+                40_123E10;
+                3.0E+10;
+            END_FUNCTION
+        `);
+
+        expect(
+            checkDocumentValid(document) || s`
+                Numbers:
+                  ${document.parseResult.value?.elements?.map(p => (p as NumberExpression).value)?.join('\n')}
+            `
+        ).toBe(s`
+            Numbers:
+              11
+              22
+              16#22adf
+              3.3
+              3.3e+7
+              3.3e-8
+              3.3e8
+              33e8
+              33e+8
+              33e-8
+              40_123E10
+              3.0E+10
+        `);
+    });
+
+  test('Parse addition', async () => {
+        document = await parse(`
+            FUNCTION_BLOCK "FB_MyFunctionBlock"
+
+            BEGIN
+                11-43;
+                32 - 443.32e3;
+                32+54;
+            END_FUNCTION
+        `);
+
+        // console.log(document.parseResult.value)
+        const expression1 = document.parseResult.value?.elements[0] as BinaryExpression;
+        const expression2 = document.parseResult.value?.elements[1] as BinaryExpression;
+        const expression3 = document.parseResult.value?.elements[2] as BinaryExpression;
+        expect(
+            checkDocumentValid(document) || s`
+                Numbers:
+                  ${(expression1.left as NumberExpression).value} ${expression1.operator} ${(expression1.right as NumberExpression).value}
+                  ${(expression2.left as NumberExpression).value} ${expression2.operator} ${(expression2.right as NumberExpression).value}
+                  ${(expression3.left as NumberExpression).value} ${expression3.operator} ${(expression3.right as NumberExpression).value}
+            `
+        ).toBe(s`
+            Numbers:
+              11 - 43
+              32 - 443.32e3
+              32 + 54
+        `);
+    });
+  
     test('parse simple model', async () => {
         document = await parse(`
             FUNCTION_BLOCK "FB_MyFunctionBlock"

@@ -26,8 +26,8 @@ VERSION : 0.1
 BEGIN
 	#tempPulseRate := #ir_PulsePauseRatioPercent / 100;
 	#statTimePulse := UDINT_TO_TIME(REAL_TO_UDINT(1000.0 * #ir_PulsePauseLengthSeconds * #tempPulseRate));    
-	#statTimePause := UDINT_TO_TIME(REAL_TO_UDINT(1000.0 * #ir_PulsePauseLengthSeconds * (1-#tempPulseRate)));
-	#instTofTimePulse(IN := NOT #instTofTimePause.Q,PT := #statTimePulse);
+	#statTimePause := UDINT_TO_TIME(REAL_TO_UDINT(1000.0 * #ir_PulsePauseLengthSeconds * (1 - #tempPulseRate)));
+	#instTofTimePulse(IN := NOT #instTofTimePause.Q, PT := #statTimePulse);
 	#instTofTimePause(IN := #instTofTimePulse.Q, PT := #statTimePause);
 	IF #ib_Start THEN #ob_Clock := #instTofTimePulse.Q;
 	ELSE #ob_Clock := FALSE; END_IF;

@@ -1,0 +1,42 @@
+FUNCTION_BLOCK "FB_IssueWith_addition_no_space_and_var"
+
+   VAR 
+        var1 : DINT;
+   END_VAR
+
+BEGIN
+
+   // No issues with multiplication
+   1*32;
+   1* #var1;
+   1 *#var1;
+   1 * #var1;
+   1*#var1;
+   
+   1/32;
+   1/ #var1;
+   1 /#var1;
+   1 / #var1;
+   1/#var1;
+
+   // But issues with addtion
+   1-32;
+   1- #var1;
+   1 -#var1;
+   1 - #var1;
+   1-#var1;
+
+   1+32;
+   1+ #var1;
+   1 +#var1;
+   1 + #var1;
+   1+#var1;
+   
+   #var1 +1;  // ok
+   #var1+ 1;  // ok
+   #var1 + 1+ #var1+ 1;  // not ok (error on # in `1+#var1`)
+
+   // Assume issue to be that NUMBER terminal 'eats' the `+` since it is too relaxed:
+   // terminal NUMBER returns number: /([DdLl]?[BbWwLl]#)?((16#[0-9a-fA-F_]+)|(((2|8)#)?[0-9-][0-9_]*(\.?[0-9eE_+-]+)?))/;
+
+END_FUNCTION_BLOCK
