@@ -42,12 +42,8 @@ export class SclScopeProvider extends DefaultScopeProvider {
                 } else {
                     console.log("WAS NOT STRUCT SO DO NOT RETURN STRUCT SCOPE")
                 }
-
-                // console.log(localVar.type.struct ? "Is struct" : localVar.type.primitive ?? "unknown type")
-                // console.log(memberCallType)
-                // return super.createScopeForNodes(Array.from(varDec.type.struct?.vars.flatMap(g => g.)))
             } else {
-
+                console.log("Was not memberCall...")
             }
 
             /** RETURNS normal scope if it has no previous (i.e. is top level ref) */
@@ -87,106 +83,6 @@ export class SclScopeProvider extends DefaultScopeProvider {
                     return super.createScopeForNodes(struct.vars)
                 }
             }
-
-            // if (previous) {
-            //     console.log("--> HAS PREVIOUS!!!")
-            //     if (this.DEBUG_WITH_AST_PRINT) { console.log(previous) } // Will print AST for it
-            //     console.log(previous.$type)
-            //     console.log(previous.$container.$type)
-            //     const previousType = inferType(previous, new Map())
-            //     console.log("  Previous type  " + previousType.$type)
-            //     if (isVariableDeclaration(previous)) {
-            //         console.log("    isVariableDeclaration")
-            //     }
-            //     if (isVariableDeclaration(previous.$container)) {
-            //         console.log("    isVariableDeclaration")
-            //     }
-            //     if (isLocalVariable(previous)) {
-            //         console.log("    isLocalVariable")
-            //     }
-            //     if (isLocalVariable(previous.$container)) {
-            //         console.log("    isLocalVariable")
-            //     }
-            //     if (isMemberCall(previous)) {
-            //         console.log("    isMemberCall")
-            //         // const prevLocalVar = previous.$container as LocalVariable;
-            //         const memCall = previous as MemberCall;
-            //         console.log("         Previous has previous?  " + memCall.previous)
-            //         console.log("         Container type?  " + memCall.$container.$type)
-            //         console.log("         Element  " + memCall.element)
-            //         console.log("\n--- START " + memCall.functionCustom?.var.$refText)
-            //         console.log("         functionCustom?   " + (memCall.functionCustom ? "HAS functionCustom" : "Does not have functionCustom"))
-            //         console.log("         functionCustom?.var.$refText   " + memCall.functionCustom?.var.$refText)
-            //         console.log("         Vars inside previous   " + (memCall.functionCustom?.var.ref?.type.struct ? "HAS STRUCT" : "Does not have struct"))
-            //         console.log("         Vars inside previous   " + (memCall.functionCustom?.var.ref?.type.struct?.vars.map(g => `\n  ${g.name} : ${g.type.primitive ?? "not primitive"}`)))
-            //         console.log("\n--- END " + memCall.functionCustom?.var.$refText)
-            //         const prevVarDec = (previous.$container as VariableDeclaration)
-            //         console.log("        type  " + prevVarDec.type)
-            //         if (memCall.functionCustom?.var.ref?.type.struct?.vars) {
-            //             console.log("RETURNING VARS FOR previous !!!")
-            //             return super.createScopeForNodes(memCall.functionCustom?.var.ref?.type.struct?.vars)  // With this we no longer get errors after entering the variable - AND we get the hover type for it shown!
-            //         }
-            //         else {
-            //             console.log("PREV WAS NOT STRUCT SO DO NOT RETURN STRUCT SCOPE")
-            //         }
-            //     }
-            //     if (isMemberCall(previous.$container)) {
-            //         console.log("    isMemberCall container")
-            //     }
-            //     if (isLocalVariable(previous.$container)) {
-            //         const prevLocalVar = previous.$container as LocalVariable;
-            //         console.log(prevLocalVar.$type)  // ==> Local variable
-            //         console.log(prevLocalVar.var.$refText)  // ==> myStruct (when auto completing with dot behing myStruct)
-
-            //         const prevVarDec = (prevLocalVar.var.ref as VariableDeclaration)
-            //         console.log(prevVarDec.name)
-            //         console.log(prevVarDec.type.struct ? "IS STRUCT" : "Is not struct")
-            //         if (prevVarDec.type.struct) {
-            //             console.log(prevVarDec.type.struct?.vars.map(g => `\n  ${g.name} : ${g.type.primitive ?? "not primitive"}`) ?? "IS STRUCT")  // Prints internal structure of `myStruct` when putting `.` behind it
-            //             const varsInStruct = prevVarDec.type.struct?.vars
-            //             return super.createScopeForNodes(varsInStruct)  // This actually returns list of elements in struct. But it gives "Error resolving reference on it afterwards"
-            //         }
-            //     }
-            //     console.log("END OF PREVIOUS...")
-            // }
-
-            // console.log("    previous: " + previous)  // Gives and object
-            // console.log("    previous type: " + previous?.$type)  // E.g. `MemberCall`
-            
-            // const previousType = inferType(previous, new Map());
-            // console.log("Previous type: " + previousType)
-            // if (isVariableDeclaration(previousType)) {
-            //     console.log("INSIDE isVariableDeclaration RETURNING scopeStructMembers")
-            //     return this.scopeStructMembers(previousType)
-            // }
-            // if (isNamedElement(previousType)) {
-            //     console.log("INSIDE isNamedElement RETURNING scopeStructMembers")
-            //     return this.scopeStructMembers(previousType)
-            // }
-            // if (isMemberCall(previousType)) {
-            //     console.log("INSIDE isNamedElement RETURNING scopeStructMembers")
-            //     return this.scopeStructMembers(previousType)
-            // }
-
-            // const test1 = context.container as MemberCall;
-            // // const test2 = context.container.$container as MemberCall;
-            // const test3 = context.container.previous as unknown as LocalVariable;
-            // console.log("    Test name for container as VariableDeclaration - test1: " + test1)
-            // console.log("    Test name for container as VariableDeclaration - node description: " + test1.element?.$nodeDescription)
-            // console.log("    Test name for container as VariableDeclaration - refText: " + test1.element?.$refText)
-            // console.log("    Test name for container as VariableDeclaration - refNode: " + test1.element?.$refNode)
-            // console.log("    Test3: " + test3.var)
-            // console.log("    Test3: " + test3.var.$refText)
-            // console.log("    Test3: " + test3.var.$refNode)
-            // // console.log("    Test name for container as VariableDeclaration: " + test1.element?.ref)
-            
-            // // if()
-
-            // // console.log(previous)
-            // // if (!previous) {
-            // //     console.log("      inside !previous")
-            // //     return super.getScope(context)
-            // // }
         } else {
             console.log("Skipping 'if' with context.property " + context.property)
         }
