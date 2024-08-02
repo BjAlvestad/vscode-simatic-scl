@@ -1,7 +1,7 @@
 import type { ReferenceInfo, Scope } from 'langium';
 import { EMPTY_SCOPE, MapScope } from 'langium';
 import { DefaultScopeProvider } from 'langium';
-import { BlockStart, isMemberCall, MemberCall, Struct } from './generated/ast.js';
+import { BlockStart, isMemberCall, isUdtRef, MemberCall, Struct, UdtRef } from './generated/ast.js';
 import { inferType } from './type-system/infer.js';
 import { isStructType } from './type-system/descriptions.js';
 
@@ -35,6 +35,13 @@ export class SclScopeProvider extends DefaultScopeProvider {
             const previousType = inferType(previous, new Map());
             if (isStructType(previousType)) {
                 return this.scopeStructMembers(previousType.literal);
+            }
+
+            if (isUdtRef(previousType)) {
+                console.log("PREVIOUS TYPE WAS UDT REF ! :D")
+                this.scopeUdtMembers(previousType.literal)
+                return EMPTY_SCOPE;
+                // return this.scopeUdtMembers(previousType.literal);
             }
 
             return EMPTY_SCOPE;
@@ -79,5 +86,10 @@ export class SclScopeProvider extends DefaultScopeProvider {
 
     private scopeStructMembers(structItem: Struct) {
         return this.createScopeForNodes(structItem.vars);
+    }
+
+    private scopeUdtMembers(udtItem: UdtRef) {
+        console.log(udtItem.udtRef.ref?.name)
+        // return this.createScopeForNodes(udtItem.udtRef.ref);
     }
 }

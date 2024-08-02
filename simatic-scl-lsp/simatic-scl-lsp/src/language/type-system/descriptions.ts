@@ -4,7 +4,8 @@ import {
     BooleanExpression,
     Struct,
     NumberExpression,
-    StringExpression
+    StringExpression,
+    UdtRef
 } from "../generated/ast.js"
 
 export type TypeDescription =
@@ -14,6 +15,7 @@ export type TypeDescription =
     | StringTypeDescription
     | NumberTypeDescription
     | FunctionTypeDescription
+    | UdtRefTypeDescription
     | StructTypeDescription
     | ErrorType;
 
@@ -114,6 +116,22 @@ export function createFunctionType(returnType: TypeDescription, parameters: Func
 
 export function isFunctionType(item: TypeDescription): item is FunctionTypeDescription {
     return item.$type === "function";
+}
+
+export interface UdtRefTypeDescription {
+    readonly $type: "UdtRef"
+    readonly literal: UdtRef
+}
+
+export function createUdtRefType(literal: UdtRef): UdtRefTypeDescription {
+    return {
+        $type: "UdtRef",
+        literal
+    };
+}
+
+export function isUdtRefType(item: TypeDescription): item is UdtRefTypeDescription {
+    return item.$type === "UdtRef";
 }
 
 export interface StructTypeDescription {

@@ -36,13 +36,13 @@ export class SclHoverProvider extends AstNodeHoverProvider {
                         value: `var ${node.name}: STRUCT ${node.type.struct.vars.map(v => `\n  ${v.name} : ${v.type.primitive ?? 'STRUCT'}`)}\n(Inferred type is ${typeToString(type)})`
                     }
                 }
-            } else if (node.type.UdtRef) {
+            } else if (node.type.udtRef) {
                 // This hover does not trigger for some reason.
                 return {
                     contents: {
                         kind: 'markdown',
                         language: 'scl',
-                        value: `var ${node.name}: UDT ${node.type.UdtRef} (Inferred type is ${typeToString(type)})`
+                        value: `var ${node.name}: UDT ${node.type.udtRef} (Inferred type is ${typeToString(type)})`
                     }
                 }
             }
