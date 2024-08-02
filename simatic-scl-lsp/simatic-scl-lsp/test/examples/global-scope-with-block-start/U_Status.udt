@@ -1,0 +1,10 @@
+TYPE "U_Status"
+VERSION : 0.1
+   STRUCT
+      good : Bool;
+      warning : Bool;
+      fault : Bool;
+      critical : Bool;
+   END_STRUCT;
+
+END_TYPE

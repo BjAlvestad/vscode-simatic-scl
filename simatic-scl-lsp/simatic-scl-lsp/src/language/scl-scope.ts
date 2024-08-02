@@ -1,7 +1,7 @@
 import type { ReferenceInfo, Scope } from 'langium';
-import { EMPTY_SCOPE } from 'langium';
+import { EMPTY_SCOPE, MapScope } from 'langium';
 import { DefaultScopeProvider } from 'langium';
-import { isMemberCall, MemberCall, Struct } from './generated/ast.js';
+import { BlockStart, isMemberCall, MemberCall, Struct } from './generated/ast.js';
 import { inferType } from './type-system/infer.js';
 import { isStructType } from './type-system/descriptions.js';
 
@@ -9,9 +9,12 @@ export class SclScopeProvider extends DefaultScopeProvider {
     skipConsoleLog = true;
 
     /** Global scope */
-    protected override getGlobalScope(referenceType: string): Scope {
-        /** Restrict scope to a single file */
-        return EMPTY_SCOPE;
+    protected override getGlobalScope(referenceType: string, context: ReferenceInfo): Scope {
+        if (referenceType === BlockStart) {
+            return new MapScope(this.indexManager.allElements(BlockStart));
+        } else {
+            return EMPTY_SCOPE;
+        }
     }
 
     /** Context based scope */

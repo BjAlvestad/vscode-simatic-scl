@@ -1,0 +1,13 @@
+FUNCTION_BLOCK "FB_WithUdtRef"
+   
+   VAR 
+		uStatusObjectB : "U_Status";
+		intenal5432 : DINT;
+   END_VAR
+
+BEGIN
+
+
+
+END_FUNCTION_BLOCK
+
