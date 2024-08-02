@@ -1,0 +1,15 @@
+FUNCTION_BLOCK "FB_Other"
+   
+   VAR 
+		otherVar1 : DINT;
+		otherVar2 : DINT;
+		otherVar3 : DINT;
+		otherVar4 : DINT;
+   END_VAR
+
+BEGIN
+
+
+
+END_FUNCTION_BLOCK
+

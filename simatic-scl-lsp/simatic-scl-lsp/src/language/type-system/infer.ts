@@ -1,6 +1,6 @@
 import { AstNode } from "langium";
 import { BinaryExpression, isBinaryExpression, isBooleanExpression, isStruct, isMemberCall, isNumberExpression, isStringExpression, isUnaryExpression, isVariableDeclaration, MemberCall, TypeReference, isTypeReference } from "../generated/ast.js";
-import { createBooleanType, createStructType, createErrorType, createNumberType, createStringType, isFunctionType, isStringType, TypeDescription } from "./descriptions.js";
+import { createBooleanType, createStructType, createErrorType, createNumberType, createStringType, isFunctionType, isStringType, TypeDescription, createUdtRefType } from "./descriptions.js";
 
 export function inferType(node: AstNode | undefined, cache: Map<AstNode, TypeDescription>): TypeDescription {
     let type: TypeDescription | undefined;
@@ -88,6 +88,10 @@ function inferTypeRef(node: TypeReference, cache: Map<AstNode, TypeDescription>)
     } else if (node.struct) {
         if (node.struct) {
             return createStructType(node.struct);
+        }
+    } else if (node.udtRef) {
+        if (node.udtRef) {
+            return createUdtRefType(node.udtRef);
         }
     // } else if (node.returnType) {
     //     const returnType = inferType(node.returnType, cache);

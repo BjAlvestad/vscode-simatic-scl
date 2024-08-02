@@ -1,0 +1,13 @@
+TYPE "U_Status"
+VERSION : 0.1
+   STRUCT
+      good : Bool;
+      warning : Bool;
+      fault : Bool;
+      myStructInUdt : STRUCT
+         innerVar : DINT;
+      END_STRUCT;
+      critical : Bool;
+   END_STRUCT;
+
+END_TYPE

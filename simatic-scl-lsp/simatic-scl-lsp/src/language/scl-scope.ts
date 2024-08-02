@@ -1,7 +1,7 @@
 import type { ReferenceInfo, Scope } from 'langium';
-import { EMPTY_SCOPE } from 'langium';
+import { EMPTY_SCOPE, MapScope } from 'langium';
 import { DefaultScopeProvider } from 'langium';
-import { isMemberCall, MemberCall, Struct } from './generated/ast.js';
+import { BlockStart, isMemberCall, isUdtRef, MemberCall, Struct, UdtRef } from './generated/ast.js';
 import { inferType } from './type-system/infer.js';
 import { isStructType } from './type-system/descriptions.js';
 
@@ -9,9 +9,12 @@ export class SclScopeProvider extends DefaultScopeProvider {
     skipConsoleLog = true;
 
     /** Global scope */
-    protected override getGlobalScope(referenceType: string): Scope {
-        /** Restrict scope to a single file */
-        return EMPTY_SCOPE;
+    protected override getGlobalScope(referenceType: string, context: ReferenceInfo): Scope {
+        if (referenceType === BlockStart) {
+            return new MapScope(this.indexManager.allElements(BlockStart));
+        } else {
+            return EMPTY_SCOPE;
+        }
     }
 
     /** Context based scope */
@@ -21,7 +24,7 @@ export class SclScopeProvider extends DefaultScopeProvider {
         if (context.property === 'element') {
             const memberCall = context.container as MemberCall;
             const previous = memberCall.previous;
-            this.logTypeInfo(memberCall, this.skipConsoleLog)
+            this.logTypeInfo(memberCall, this.skipConsoleLog && false)
 
              /** RETURNS normal scope if it has no previous (i.e. is top level ref) */
              if (!previous) {
@@ -32,6 +35,10 @@ export class SclScopeProvider extends DefaultScopeProvider {
             const previousType = inferType(previous, new Map());
             if (isStructType(previousType)) {
                 return this.scopeStructMembers(previousType.literal);
+            }
+
+            if (isUdtRef(previousType)) {
+                return this.scopeUdtMembers(previousType.literal);
             }
 
             return EMPTY_SCOPE;
@@ -76,5 +83,13 @@ export class SclScopeProvider extends DefaultScopeProvider {
 
     private scopeStructMembers(structItem: Struct) {
         return this.createScopeForNodes(structItem.vars);
+    }
+
+    private scopeUdtMembers(udtItem: UdtRef) {
+        if (udtItem.udtRef.ref?.$container.udtStruct.vars) {
+            return this.createScopeForNodes(udtItem.udtRef.ref?.$container.udtStruct.vars);
+        }
+
+        return EMPTY_SCOPE;
     }
 }

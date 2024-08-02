@@ -5,7 +5,7 @@ entry Model:
     blockStart+=BlockStart
     (compilerDirective+=CompilerDirective)*
     (blockAttribute+=BlockAttribute)*
-    ((udtStruct+=Struct ';') |
+    ((udtStruct=Struct ';') |
     (declarationSubSection+=DeclarationSubSection | vars+=VariableDeclaration)*)
     ('BEGIN'
         (elements+=SclProgramElement)*
@@ -62,6 +62,8 @@ VariableDeclaration returns NamedElement:
     ';'
 ;
 
+UdtRef: udtRef=[BlockStart:DOUBLE_QUOTE_STRING];
+
 Struct:
     'STRUCT'
         (vars+=VariableDeclaration)*
@@ -69,7 +71,7 @@ Struct:
 ;
 
 TypeReference: 
-    UdtRef = [BlockStart:DOUBLE_QUOTE_STRING] 
+    udtRef = UdtRef
     | primitive=DataType
     | struct=Struct
 ;
