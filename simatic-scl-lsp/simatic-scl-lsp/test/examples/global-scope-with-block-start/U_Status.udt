@@ -4,6 +4,9 @@ VERSION : 0.1
       good : Bool;
       warning : Bool;
       fault : Bool;
+      myStructInUdt : STRUCT
+         innerVar : DINT;
+      END_STRUCT;
       critical : Bool;
    END_STRUCT;
 
