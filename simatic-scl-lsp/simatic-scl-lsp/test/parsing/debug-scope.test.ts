@@ -41,8 +41,8 @@ describe('Print to log for debug tests', () => {
             END_FUNCTION
         `);
         
-        const model = document.parseResult.value;
-        console.log(model)
+        // const model = document.parseResult.value;
+        // console.log(model)
 
     });
 });
