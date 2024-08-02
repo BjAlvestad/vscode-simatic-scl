@@ -5,7 +5,8 @@ entry Model:
     blockStart+=BlockStart
     (compilerDirective+=CompilerDirective)*
     (blockAttribute+=BlockAttribute)*
-    (declarationSubSection+=DeclarationSubSection | vars+=VariableDeclaration)*
+    ((udtStruct+=Struct ';') |
+    (declarationSubSection+=DeclarationSubSection | vars+=VariableDeclaration)*)
     ('BEGIN'
         (elements+=SclProgramElement)*
     )?
@@ -55,9 +56,22 @@ VariableDeclaration returns NamedElement:
     ('AT' refName=[NamedElement:ID])?
     ':'
     (isArray?='ARRAY' '[' arrayRange=ArrayRange ']' 'OF')?
-    'REF_TO'? ((dataType=DataType) | dataTypeGlobal=[BlockStart:DOUBLE_QUOTE_STRING]) ((children+=VariableDeclaration)* 'END_STRUCT')?
+    'REF_TO'?
+    type=TypeReference
     (assignment?=':=' value=Expression)?
     ';'
+;
+
+Struct:
+    'STRUCT'
+        (vars+=VariableDeclaration)*
+    'END_STRUCT'
+;
+
+TypeReference: 
+    UdtRef = [BlockStart:DOUBLE_QUOTE_STRING] 
+    | primitive=DataType
+    | struct=Struct
 ;
 
 VariableAttribute:
@@ -72,8 +86,7 @@ ArrayRange:
 // ***********************
 
 SclProgramElement:
-    Expression ';'
-    | IfStatement
+    IfStatement
     | ForStatement
     | WhileStatement
     | RepeatStatement
@@ -81,8 +94,9 @@ SclProgramElement:
     | ExitStatement
     | JumpLabel
     | ProgramJump
-    | CaseLabel
+    // | CaseLabel  //BUG: Causes auto completion to break (but strangely enough not scoping itself (i.e. valid name is valid, and red lies on invalid ones))
     | CaseStatement
+    | Expression ';'
 ;
 
 Expression:
@@ -113,7 +127,7 @@ MemberCall infers Expression:
     Primary
 	({infer MemberCall.previous=current} 
     // Member call with function call
-        ("." '#'? element=[NamedElement:ID] '^'? (
+        ("." element=[NamedElement:ID] '^'? (
 		explicitOperationCall?='('
 		(
 		    arguments+=Expression (',' arguments+=Expression)*
@@ -134,7 +148,7 @@ MemberCall infers Expression:
             (',' parameters+=ID (':=' | '=>') arguments+=Expression)*
 		)?
 		')')
-        | ("." memoryArea=MEMORY_AREA)
+        // | ("." memoryArea=MEMORY_AREA)  //BUG: causes issue since this also has "dot"
         )
     )*
 ;
@@ -151,7 +165,7 @@ Primary infers Expression:
 
 FeatureCall infers Expression:
 	{infer MemberCall}
-	(functionCustom=Variable | functionBuiltin=BuiltInFunctionName)
+	(('#'? element=[NamedElement:ID]) | element=[NamedElement:DOUBLE_QUOTE_STRING] | functionBuiltin=BuiltInFunctionName)
     // Optional function call after referencing an element
     (explicitOperationCall?='('
 	(
@@ -159,18 +173,6 @@ FeatureCall infers Expression:
         (',' parameters+=ID (':=' | '=>') arguments+=Expression)*
 	)?
 	')')?;
-
-GlobalVariable:
-    var=[NamedElement:DOUBLE_QUOTE_STRING]
-;
-
-LocalVariable:
-    '#' var=[NamedElement:ID]
-;
-
-Variable:
-    GlobalVariable | LocalVariable
-;
 
 UnaryExpression:
     operator=('NOT' | '-' | '+') value=Expression
@@ -189,7 +191,7 @@ IfStatement:
 ;
 
 ForStatement:
-    ('FOR' indexVariable=Variable '^'? ':=' initialValue=Expression 'TO' finalValue=Expression ('BY' execution=Expression)? 'DO')
+    ('FOR' indexVariable=Expression '^'? ':=' initialValue=Expression 'TO' finalValue=Expression ('BY' execution=Expression)? 'DO')
     | ('END_FOR' ';')
 ;
 
@@ -224,13 +226,13 @@ ProgramJump:
 ;
 
 CaseLabel:
-    ((var+=Variable) | start+=NUMBER ('..' end+=NUMBER)?)
-    (',' ((var+=Variable) | start+=NUMBER ('..' end+=NUMBER)?))*
+    ((var+=Expression) | start+=NUMBER ('..' end+=NUMBER)?)
+    (',' ((var+=Expression) | start+=NUMBER ('..' end+=NUMBER)?))*
     ':'
 ;
 
 CaseStatement:
-    'CASE' var=Variable 'OF'
+    'CASE' var=Expression 'OF'
     | 'ELSE'
     | 'END_CASE' ';'
 ;
