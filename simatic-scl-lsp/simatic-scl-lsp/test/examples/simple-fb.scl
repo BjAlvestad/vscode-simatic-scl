@@ -14,9 +14,9 @@ FAMILY : SomeFam
    END_VAR
 
 BEGIN
-	#sfbVar1 := 11;
-	#sfbVar2 := 22;
-	#sfbVar2 := 23;
-	#sfbVar3 := 33;
-	#sfbVar4 := 44;
+	#sfbmyVar1 := 11;
+	#sfbmyVar2 := 22;
+	#sfbmyVar2 := 23;
+	#sfbmyVar3 := 33;
+	#sfbmyVar4 := 44;
 END_FUNCTION

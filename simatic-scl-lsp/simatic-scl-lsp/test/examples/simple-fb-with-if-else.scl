@@ -29,12 +29,12 @@ BEGIN
 	#sfbIEmyVar4 := 44;
 
    IF #sfbIEVar1 THEN
-      #sfbIEVar3 := #myVar2;
+      #sfbIEVar3 := #sfbIEVar2;
       IF #sfbIEVar1 THEN
-         #sfbIEVar3 := #myVar2;
+         #sfbIEVar3 := #sfbIEVar2;
       END_IF;
 	ELSE
-      #sfbIEVar3 := myVar4;
+      #sfbIEVar3 := #sfbIEVar4;
       FOR #sfbIEVar2 := 3 TO 43 DO
          #sfbIEVar5 := 34;
       END_FOR;
