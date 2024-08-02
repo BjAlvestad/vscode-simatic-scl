@@ -99,16 +99,16 @@ SclProgramElement:
     | Struct ';'
     | VariableDeclaration
     | BeginProgramSection
-    // | IfStatement
-    // | ForStatement
-    // | WhileStatement
-    // | RepeatStatement
-    // | ContinueStatemen
-    // | ExitStatement
-    // | JumpLabel
-    // | ProgramJump
+    | IfStatement
+    | ForStatement
+    | WhileStatement
+    | RepeatStatement
+    | ContinueStatemen
+    | ExitStatement
+    | JumpLabel
+    | ProgramJump
     // | CaseLabel
-    // | CaseStatement
+    | CaseStatement
     | Expression ';'
 ;
 
@@ -206,55 +206,55 @@ BeginProgramSection returns string:
     'BEGIN'
 ;
 
-// IfStatement:
-//     (('IF' | 'ELSIF') condition=Expression 'THEN')
-//     | 'ELSE'
-//     | ('END_IF' ';')
-// ;
+IfStatement:
+    (('IF' | 'ELSIF') condition=Expression 'THEN')
+    | 'ELSE'
+    | ('END_IF' ';')
+;
 
-// ForStatement:
-//     ('FOR' indexVariable=Expression '^'? ':=' initialValue=Expression 'TO' finalValue=Expression ('BY' execution=Expression)? 'DO')
-//     | ('END_FOR' ';')
-// ;
+ForStatement:
+    ('FOR' indexVariable=Expression '^'? ':=' initialValue=Expression 'TO' finalValue=Expression ('BY' execution=Expression)? 'DO')
+    | ('END_FOR' ';')
+;
 
-// WhileStatement:
-//     'WHILE' condition=Expression 'DO' |
-//     ('END_WHILE' ';')
-// ;
+WhileStatement:
+    'WHILE' condition=Expression 'DO' |
+    ('END_WHILE' ';')
+;
 
-// RepeatStatement:
-//     'REPEAT' 
-//     | ('UNTIL' condition=Expression 'END_REPEAT' ';')
-// ;
+RepeatStatement:
+    'REPEAT' 
+    | ('UNTIL' condition=Expression 'END_REPEAT' ';')
+;
 
-// ContinueStatemen returns string:
-//     'CONTINUE' ';'
-// ;
+ContinueStatemen returns string:
+    'CONTINUE' ';'
+;
 
-// ReturnStatement:
-//     'return' value=Expression? ';'
-// ;
+ReturnStatement:
+    'return' value=Expression? ';'
+;
 
-// ExitStatement returns string:
-//     'EXIT' ';'
-// ;
+ExitStatement returns string:
+    'EXIT' ';'
+;
 
-// JumpLabel:
-//     name=ID ':'
-// ;
+JumpLabel:
+    name=ID ':'
+;
 
-// ProgramJump:
-//     'GOTO' jumpLabel=[JumpLabel:ID] ';'
-// ;
+ProgramJump:
+    'GOTO' jumpLabel=[JumpLabel:ID] ';'
+;
 
-// CaseLabel:
-//     ((var+=Expression) | start+=NUMBER ('..' end+=NUMBER)?)
-//     (',' ((var+=Expression) | start+=NUMBER ('..' end+=NUMBER)?))*
-//     ':'
-// ;
+CaseLabel:
+    ((var+=Expression) | start+=NUMBER ('..' end+=NUMBER)?)
+    (',' ((var+=Expression) | start+=NUMBER ('..' end+=NUMBER)?))*
+    ':'
+;
 
-// CaseStatement:
-//     'CASE' var=Expression 'OF'
-//     | 'ELSE'
-//     | 'END_CASE' ';'
-// ;
+CaseStatement:
+    'CASE' var=Expression 'OF'
+    | 'ELSE'
+    | 'END_CASE' ';'
+;
