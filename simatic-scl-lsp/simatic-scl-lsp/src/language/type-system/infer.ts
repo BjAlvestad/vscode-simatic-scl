@@ -1,6 +1,6 @@
 import { AstNode } from "langium";
-import { BinaryExpression, isBinaryExpression, isBooleanExpression, isStruct, isMemberCall, isNumberExpression, isReturnStatement, isStringExpression, isUnaryExpression, isVariableDeclaration, MemberCall, TypeReference, isTypeReference } from "../generated/ast.js";
-import { createBooleanType, createStructType, createErrorType, createNumberType, createStringType, createVoidType, isFunctionType, isStringType, TypeDescription } from "./descriptions.js";
+import { BinaryExpression, isBinaryExpression, isBooleanExpression, isStruct, isMemberCall, isNumberExpression, isStringExpression, isUnaryExpression, isVariableDeclaration, MemberCall, TypeReference, isTypeReference } from "../generated/ast.js";
+import { createBooleanType, createStructType, createErrorType, createNumberType, createStringType, isFunctionType, isStringType, TypeDescription } from "./descriptions.js";
 
 export function inferType(node: AstNode | undefined, cache: Map<AstNode, TypeDescription>): TypeDescription {
     let type: TypeDescription | undefined;
@@ -61,12 +61,12 @@ export function inferType(node: AstNode | undefined, cache: Map<AstNode, TypeDes
         }
     // } else if (isPrintStatement(node)) {
     //     type = createVoidType();
-    } else if (isReturnStatement(node)) {
-        if (!node.value) {
-            type = createVoidType();
-        } else {
-            type = inferType(node.value, cache);
-        }
+    // } else if (isReturnStatement(node)) {
+    //     if (!node.value) {
+    //         type = createVoidType();
+    //     } else {
+    //         type = inferType(node.value, cache);
+    //     }
     }
     if (!type) {
         type = createErrorType('Could not infer type for ' + node.$type, node);
