@@ -26,7 +26,7 @@ export class SclScopeProvider extends DefaultScopeProvider {
         //     console.log("TRUEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE")
         // }
 
-        if (context.property === 'element' && context.reference.$refText) {
+        if (context.property === 'element') {
             const memberCall = context.container as MemberCall;
             const previous = memberCall.previous;
 

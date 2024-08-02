@@ -161,7 +161,7 @@ MemberCall infers Expression:
             (',' parameters+=ID (':=' | '=>') arguments+=Expression)*
 		)?
 		')')
-        | ("." memoryArea=MEMORY_AREA)
+        // | ("." memoryArea=MEMORY_AREA)  // causes issue since this also has "dot"
         )
     )*
 ;
