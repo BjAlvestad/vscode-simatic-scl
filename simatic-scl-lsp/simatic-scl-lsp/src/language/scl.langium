@@ -1,19 +1,6 @@
 grammar Scl
 import "./scl-part-types"
 
-// entry Model:
-//     sclBlock+=SclBlock*
-// ;
-
-// SclBlock:
-//     blockStart+=BlockStart
-//     (compilerDirective+=CompilerDirective)*
-//     (blockAttribute+=BlockAttribute)*
-//     (elements+=SclProgramElement)*
-//     ReturnStatement?
-//     BlockEnd
-// ;
-
 entry Model:
     blockStart+=BlockStart
     (compilerDirective+=CompilerDirective)*
@@ -98,10 +85,7 @@ ArrayRange:
 // ***********************
 
 SclProgramElement:
-    DeclarationSubSection
-    | Struct ';'
-    | VariableDeclaration
-    | BeginProgramSection
+    Struct ';'
     | IfStatement
     | ForStatement
     | WhileStatement
@@ -204,10 +188,6 @@ StringExpression: value=SINGLE_QUOTE_STRING;
 BooleanExpression: value?='true' | 'false';
 
 type NamedElement = VariableDeclaration;
-
-BeginProgramSection returns string:
-    'BEGIN'
-;
 
 IfStatement:
     (('IF' | 'ELSIF') condition=Expression 'THEN')
