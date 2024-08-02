@@ -80,6 +80,7 @@ TypeReference:
     udtRef = UdtRef
     | primitive=DataType
     | struct=Struct
+    | builtIn=ID
 ;
 
 VariableAttribute:
@@ -168,12 +169,13 @@ Primary infers Expression:
     | StringExpression
     | BooleanExpression
     | FeatureCall
+    | BuiltInFunction
     | TimeExpression
 ;
 
 FeatureCall infers Expression:
 	{infer MemberCall}
-	(('#'? element=[NamedElement:ID]) | element=[NamedElement:DOUBLE_QUOTE_STRING] | functionBuiltin=BuiltInFunctionName)
+	(('#' element=[NamedElement:ID]) | element=[NamedElement:DOUBLE_QUOTE_STRING])
     // Optional function call after referencing an element
     (explicitOperationCall?='('
 	(
@@ -181,6 +183,10 @@ FeatureCall infers Expression:
         (',' parameters+=ID (':=' | '=>') arguments+=Expression)*
 	)?
 	')')?;
+
+BuiltInFunction:
+    name=ID '(' argument=Expression? ')'
+;
 
 UnaryExpression:
     operator=('NOT' | '-' | '+') value=Expression

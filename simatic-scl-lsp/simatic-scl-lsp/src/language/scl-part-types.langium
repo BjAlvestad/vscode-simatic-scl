@@ -43,8 +43,3 @@ BlockEnd returns string:
     'END_DATA_BLOCK' |
     'END_ORGANIZATION_BLOCK'
 ;
-
-BuiltInFunctionName returns string:
-    'SCATTER'
-    | 'GATHER'
-;
