@@ -24,7 +24,7 @@ export class SclScopeProvider extends DefaultScopeProvider {
         if (context.property === 'element') {
             const memberCall = context.container as MemberCall;
             const previous = memberCall.previous;
-            this.logTypeInfo(memberCall, this.skipConsoleLog && false)
+            this.logTypeInfo(memberCall, this.skipConsoleLog)
 
              /** RETURNS normal scope if it has no previous (i.e. is top level ref) */
              if (!previous) {
