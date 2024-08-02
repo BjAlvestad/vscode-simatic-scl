@@ -27,8 +27,8 @@ VERSION : 0.1
 
 
 BEGIN
-#myVar1.myOuterStruct.myNestedStruct;
-#myOuterStruct.myNestedStruct.nestedIntenal1.inception.l2;
+
+#myOuterStruct.myNestedStruct.nestedIntenal1;
 #myOuterStruct.myNestedStruct.inception.l2;
 
 END_FUNCTION_BLOCK
