@@ -5,7 +5,8 @@ entry Model:
     blockStart+=BlockStart
     (compilerDirective+=CompilerDirective)*
     (blockAttribute+=BlockAttribute)*
-    (declarationSubSection+=DeclarationSubSection | vars+=VariableDeclaration)*
+    ((udtVars+=Struct ';') |
+    (declarationSubSection+=DeclarationSubSection | vars+=VariableDeclaration)*)
     ('BEGIN'
         (elements+=SclProgramElement)*
     )?
