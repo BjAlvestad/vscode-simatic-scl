@@ -208,7 +208,7 @@ IfStatement:
 ;
 
 ForStatement:
-    ('FOR' indexVariable=Expression '^'? ':=' initialValue=Expression 'TO' finalValue=Expression ('BY' execution=Expression)? 'DO')
+    ('FOR' indexVariable=Expression 'TO' finalValue=Expression ('BY' execution=Expression)? 'DO')
     | ('END_FOR' ';')
 ;
 
