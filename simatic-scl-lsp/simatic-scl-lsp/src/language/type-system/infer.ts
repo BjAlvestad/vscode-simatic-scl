@@ -76,7 +76,6 @@ export function inferType(node: AstNode | undefined, cache: Map<AstNode, TypeDes
     return type;
 }
 
-//TODO: Update inferTypeRef with what is valid for my own types (and modify grammar to primitive and type ref)
 function inferTypeRef(node: TypeReference, cache: Map<AstNode, TypeDescription>): TypeDescription {
     if (node.primitive) {
         if (node.primitive === 'DINT') {
@@ -85,8 +84,6 @@ function inferTypeRef(node: TypeReference, cache: Map<AstNode, TypeDescription>)
             return createStringType();
         } else if (node.primitive === 'BOOL') {
             return createBooleanType();
-        // } else if (node.primitive === 'void') {
-        //     return createVoidType();
         }
     } else if (node.struct) {
         if (node.struct) {
@@ -136,14 +133,3 @@ function inferBinaryExpression(expr: BinaryExpression, cache: Map<AstNode, TypeD
     }
     return createErrorType('Could not infer type from binary expression', expr);
 }
-
-// export function getStructChain(structItem: Struct): Struct[] {
-//     const set = new Set<Struct>();
-//     let value: Struct | undefined = structItem;
-//     while (value && !set.has(value)) {
-//         set.add(value);
-//         value = value.vars.ref;
-//     }
-//     // Sets preserve insertion order
-//     return Array.from(set);
-// }

@@ -51,7 +51,7 @@ BEGIN
 	//**********************
 	//****    Basics    ****
 	//**********************
-	#myStruct.intenal1;
+	
 	#tiMyTemp1A := #xiMyInput4A;
 	#uStatusObjectA.good := TRUE;
 	#uStatusObjectA.warning := #uStatusObjectA.good;
