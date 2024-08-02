@@ -1,7 +1,7 @@
 import type { ReferenceInfo, Scope } from 'langium';
 import { EMPTY_SCOPE } from 'langium';
 import { DefaultScopeProvider } from 'langium';
-import { isLocalVariable, isMemberCall, LocalVariable, MemberCall, VariableDeclaration } from './generated/ast.js';
+import { isMemberCall, MemberCall, VariableDeclaration } from './generated/ast.js';
 // import { inferType } from './type-system/infer.js';
 
 /**
@@ -24,14 +24,14 @@ export class SclScopeProvider extends DefaultScopeProvider {
             this.logTypeInfo(memberCall);
 
             /** RETURNS scope for struct when putting `.` behind a top level struct. */
-            if (isLocalVariable(memberCall.$container)) {
+            if (isMemberCall(memberCall.$container)) {
                 console.log("--> memberCall isLocalVariable")
                 // const memberCallType = inferType(memberCall, new Map());
-                const localVar = memberCall.$container as LocalVariable;
+                const localVar = memberCall.$container as MemberCall;
                 console.log(localVar.$type)  // ==> Local variable
-                console.log(localVar.var.$refText)  // ==> myStruct (when auto completing with dot behind myStruct)
+                console.log(localVar.element?.$refText)  // ==> myStruct (when auto completing with dot behind myStruct)
                 
-                const varDec = (localVar.var.ref as VariableDeclaration)
+                const varDec = (localVar.element?.ref as VariableDeclaration)
                 console.log(varDec.name)
                 const memberCallIsStruct = varDec.type.struct != undefined;
                 console.log(memberCallIsStruct ? "IS STRUCT" : "Is not struct")
@@ -63,14 +63,27 @@ export class SclScopeProvider extends DefaultScopeProvider {
             if (isMemberCall(previous)) {
                 console.log("Previous isMemberCall")
                 const prevCall = previous as MemberCall
-                const struct = prevCall.functionCustom?.var.ref?.type.struct;
+                const struct = prevCall.element?.ref?.type.struct;
                 if (struct) {
                     console.log("!!!! IT IS STRUCT !!!!!")
                     this.logTypeInfo(memberCall);
-                    console.log("         Vars inside previous   " + (prevCall.functionCustom?.var.ref?.type.struct?.vars.map(g => `\n  ${g.name} : ${g.type.primitive ?? "not primitive"}`)))
-                    console.log("         Vars inside current   " + (memberCall.functionCustom?.var.ref?.type.struct?.vars.map(g => `\n  ${g.name} : ${g.type.primitive ?? "not primitive"}`)))
+                    console.log("         Vars inside previous   " + (prevCall.element?.ref?.type.struct?.vars.map(g => `\n  ${g.name} : ${g.type.primitive ?? "not primitive"}`)))
+                    console.log("         Vars inside current   " + (memberCall.element?.ref?.type.struct?.vars.map(g => `\n  ${g.name} : ${g.type.primitive ?? "not primitive"}`)))
                     // console.log("         Vars inside current element   " + (memberCall.element?.ref?.type.struct?.vars.map(g => `\n  ${g.name} : ${g.type.primitive ?? "not primitive"}`)))
-                    console.log("         Vars inside previous element   " + (prevCall.element?.ref?.type.struct?.vars.map(g => `\n  ${g.name} : ${g.type.primitive ?? "not primitive"}`)))
+
+                    const currentVarDec = memberCall.element as unknown as VariableDeclaration
+                    console.log(`         Is currentVarDec undefined? ${(currentVarDec === undefined)}`)
+                    console.log(`         Has currentVarDec type? ${(currentVarDec.type)}`)
+                    console.log(`         Has currentVarDec struct? ${(currentVarDec.type.struct)}`)
+                    console.log(`         Vars inside element  ${(currentVarDec.type.struct?.vars.map(g => `\n  ${g.name} : ${g.type.primitive ?? "not primitive"}`))}`)
+
+                    // console.log("         Vars inside current element   " + (memberCall.element?.ref?.type.struct?.vars.map(g => `\n  ${g.name} : ${g.type.primitive ?? "not primitive"}`)))
+                    // console.log("         Vars inside previous element   " + (prevCall.element?.ref?.type.struct?.vars.map(g => `\n  ${g.name} : ${g.type.primitive ?? "not primitive"}`)))
+                    
+                    if (memberCall.element?.ref?.type.struct) {
+                        console.log("no loop")
+                        console.log(`         MemberCall element ref is struct type? ${memberCall.element?.ref?.type.struct}`)  // Call to memberCall.element?.ref Causes infinite loop
+                    }
                     return super.createScopeForNodes(struct.vars)
                 }
             }
@@ -193,16 +206,16 @@ export class SclScopeProvider extends DefaultScopeProvider {
         const previous = memberCall.previous;
         console.log("\n---");
         console.log("    'current' type: " + memberCall.$type); // E.g. `MemberCall`
-        console.log("    'current' functionCustom var refText: " + (memberCall.functionCustom?.var.$refText
-            ?? (memberCall.functionCustom ? "Has functionCustom var" : `functionCustom is undefined.`)
+        console.log("    'current' functionCustom var refText: " + (memberCall.element?.$refText
+            ?? (memberCall.element ? "Has element var" : `element is undefined.`)
         ));
         console.log("    'current' element var refText: " + (memberCall.element?.$refText
-            ?? (memberCall.functionCustom ? "Has element" : `element is undefined.`)
+            ?? (memberCall.element ? "Has element" : `element is undefined.`)
         ));
         if (previous) {
             console.log("    'previous' type: " + previous.$type);
-            console.log("    'previous' functionCustom var refText: " + (isMemberCall(previous)
-                ? `${(previous as MemberCall).functionCustom?.var.$refText}`
+            console.log("    'previous' element var refText: " + (isMemberCall(previous)
+                ? `${(previous as MemberCall).element?.$refText}`
                 : "Skipped. 'previous' exists, but is not MemberCall."
             ));
         } else {
@@ -210,14 +223,14 @@ export class SclScopeProvider extends DefaultScopeProvider {
         }
         if (isMemberCall(previous) && previous.previous) {
             console.log("    '2x previous' type: " + previous.previous.$type);
-            console.log("    '2x previous' functionCustom var refText: " + (isLocalVariable(previous.previous)
-                ? `${(previous.previous as LocalVariable).var.ref?.type.struct?.vars.map(g => `\n  ${g.name} : ${g.type.primitive ?? "not primitive"}`)}`
+            console.log("    '2x previous' element var refText: " + (isMemberCall(previous.previous)
+                ? `${(previous.previous as MemberCall).element?.ref?.type.struct?.vars.map(g => `\n  ${g.name} : ${g.type.primitive ?? "not primitive"}`)}`
                 : "Skipped. 'previous.previous' exists, but is not MemberCall."
             ));
             if (isMemberCall(previous.previous) && previous.previous.previous) {
                 console.log("    '3x previous' type: " + memberCall.$type);
-                console.log("    '3x previous' functionCustom var refText: " + (isLocalVariable(previous.previous.previous)
-                    ? `${(previous.previous.previous as LocalVariable).var.ref?.type.struct?.vars.map(g => `\n  ${g.name} : ${g.type.primitive ?? "not primitive"}`)}`
+                console.log("    '3x previous' element var refText: " + (isMemberCall(previous.previous.previous)
+                    ? `${(previous.previous.previous as MemberCall).element?.ref?.type.struct?.vars.map(g => `\n  ${g.name} : ${g.type.primitive ?? "not primitive"}`)}`
                     : "Skipped. 'previous.previous.previous' exists, but is not MemberCall."
                 ));
             } else {
@@ -229,6 +242,7 @@ export class SclScopeProvider extends DefaultScopeProvider {
 
         console.log("---\n");
     }
+
     // private scopeStructMembers(variableDecl: VariableDeclaration) {
     //     if (variableDecl.type.struct) {
     //         const allMembers = variableDecl.type.struct.vars;

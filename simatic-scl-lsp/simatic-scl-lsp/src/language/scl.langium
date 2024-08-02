@@ -1,6 +1,19 @@
 grammar Scl
 import "./scl-part-types"
 
+// entry Model:
+//     sclBlock+=SclBlock*
+// ;
+
+// SclBlock:
+//     blockStart+=BlockStart
+//     (compilerDirective+=CompilerDirective)*
+//     (blockAttribute+=BlockAttribute)*
+//     (elements+=SclProgramElement)*
+//     ReturnStatement?
+//     BlockEnd
+// ;
+
 entry Model:
     blockStart+=BlockStart
     (compilerDirective+=CompilerDirective)*
@@ -165,7 +178,7 @@ Primary infers Expression:
 
 FeatureCall infers Expression:
 	{infer MemberCall}
-	(functionCustom=Variable | functionBuiltin=BuiltInFunctionName)
+	(('#'? element=[NamedElement:ID]) | element=[NamedElement:DOUBLE_QUOTE_STRING] | functionBuiltin=BuiltInFunctionName)
     // Optional function call after referencing an element
     (explicitOperationCall?='('
 	(
@@ -178,13 +191,6 @@ GlobalVariable:
     var=[NamedElement:DOUBLE_QUOTE_STRING]
 ;
 
-LocalVariable:
-    '#' var=[NamedElement:ID]
-;
-
-Variable:
-    GlobalVariable | LocalVariable
-;
 
 UnaryExpression:
     operator=('NOT' | '-' | '+') value=Expression
@@ -207,7 +213,7 @@ IfStatement:
 ;
 
 ForStatement:
-    ('FOR' indexVariable=Variable '^'? ':=' initialValue=Expression 'TO' finalValue=Expression ('BY' execution=Expression)? 'DO')
+    ('FOR' indexVariable=Expression '^'? ':=' initialValue=Expression 'TO' finalValue=Expression ('BY' execution=Expression)? 'DO')
     | ('END_FOR' ';')
 ;
 
@@ -242,13 +248,13 @@ ProgramJump:
 ;
 
 CaseLabel:
-    ((var+=Variable) | start+=NUMBER ('..' end+=NUMBER)?)
-    (',' ((var+=Variable) | start+=NUMBER ('..' end+=NUMBER)?))*
+    ((var+=Expression) | start+=NUMBER ('..' end+=NUMBER)?)
+    (',' ((var+=Expression) | start+=NUMBER ('..' end+=NUMBER)?))*
     ':'
 ;
 
 CaseStatement:
-    'CASE' var=Variable 'OF'
+    'CASE' var=Expression 'OF'
     | 'ELSE'
     | 'END_CASE' ';'
 ;
