@@ -22,7 +22,7 @@ entry Model:
     ('BEGIN'
         (elements+=SclProgramElement)*
     )?
-    // ReturnStatement?
+    ReturnStatement?
     BlockEnd
 ;
 
