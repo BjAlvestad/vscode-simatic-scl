@@ -32,7 +32,7 @@ terminal DATE_LITERAL: /[Dd]#[0-9-]+/;
 terminal TIME_OF_DAY_LITERAL: /[Ll]?[Tt][Oo][Dd]#[0-9:\.]+/;
 terminal DATE_AND_TIME_LITERAL: /(([Dd][Tt])|DATE_AND_TIME)#[0-9-]*[0-9:\.]*/;
 
-terminal MEMORY_AREA: /%[XBWD]\d+/;
+terminal MEMORY_AREA: /\.%[XBWD]\d+/;  //TODO: Consider using positive look-behind for `.%`, and then instead use `.%` as operationCall in MemberCall
 
 hidden terminal ML_COMMENT: /\(\*[\s\S]*?\*\)/;
 hidden terminal SL_COMMENT: /\/\/[^\n\r]*/;
@@ -157,7 +157,7 @@ MemberCall infers Expression:
             (',' parameters+=ID (':=' | '=>') arguments+=Expression)*
 		)?
 		')')
-        // | ("." memoryArea=MEMORY_AREA)  //BUG: causes issue since this also has "dot"
+        | (memoryArea=MEMORY_AREA)
         )
     )*
 ;
