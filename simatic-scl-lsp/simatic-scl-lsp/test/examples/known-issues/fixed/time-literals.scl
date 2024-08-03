@@ -1,0 +1,11 @@
+FUNCTION_BLOCK "FB_TimeLiterals"
+
+   VAR 
+        otherVar1 : DINT;
+   END_VAR
+
+BEGIN
+
+    T#500ms;
+
+END_FUNCTION_BLOCK

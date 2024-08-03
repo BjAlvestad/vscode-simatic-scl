@@ -3,7 +3,7 @@ import { EmptyFileSystem, type LangiumDocument } from "langium";
 import { expandToString as s } from "langium/generate";
 import { parseHelper } from "langium/test";
 import { createSclServices } from "../../src/language/scl-module.js";
-import { BinaryExpression, MemberCall, Model, NumberExpression, Region, isBinaryExpression, isModel } from "../../src/language/generated/ast.js";
+import { BinaryExpression, MemberCall, Model, NumberExpression, Region, TimeExpression, isBinaryExpression, isModel } from "../../src/language/generated/ast.js";
 
 let services: ReturnType<typeof createSclServices>;
 let parse:    ReturnType<typeof parseHelper<Model>>;
@@ -58,6 +58,26 @@ describe('Parsing tests', () => {
               33e-8
               40_123E10
               3.0E+10
+        `);
+    });
+
+    test('parse time literals', async () => {
+        document = await parse(`
+            FUNCTION_BLOCK "FB_MyFunctionBlock"
+
+            BEGIN
+                T#123ms;
+            END_FUNCTION
+        `);
+
+        expect(
+            checkDocumentValid(document) || s`
+                Numbers:
+                  ${document.parseResult.value?.elements?.map(p => (p as TimeExpression).value)?.join('\n')}
+            `
+        ).toBe(s`
+            Numbers:
+              T#123ms
         `);
     });
 
