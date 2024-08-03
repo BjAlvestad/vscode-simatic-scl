@@ -21,8 +21,8 @@ Person:
 Greeting:
     'Hello' person=[Person:ID] '!';
 
-terminal REGION_TEXT: /(?<=(REGION ))[^\r?\n]*/;
-terminal TITLE_TEXT: /(?<=(TITLE = ))[^\r?\n]*/;
+terminal REGION_TEXT: /REGION [^\r\n]*/;
+terminal TITLE_TEXT: /TITLE = [^\r\n]*/;
 hidden terminal WS: /\s+/;
 terminal ID: /[_a-zA-Z][\w_]*/;
 terminal DOUBLE_QUOTE_STRING: /"(\\.|[^"\\])*"/;
@@ -59,7 +59,7 @@ BlockStart:
     ) ( name=DOUBLE_QUOTE_STRING | name=ID) (':' type=(DataType | 'Void'))?;
 
 Title:
-    'TITLE' '=' value=TITLE_TEXT
+    value=TITLE_TEXT
 ;
 
 VariableDeclaration returns NamedElement:
@@ -117,7 +117,7 @@ SclProgramElement:
 ;
 
 Region:
-    ('REGION' value=REGION_TEXT)
+    value=REGION_TEXT
     | regionEnd?='END_REGION'
 ;
 

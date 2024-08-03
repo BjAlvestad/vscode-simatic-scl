@@ -314,7 +314,7 @@ describe('Parsing tests', () => {
           `
       ).toBe(s`
         11
-        Region text: The problematic description of a region since they are not strings
+        Region text: REGION The problematic description of a region since they are not strings
         22
         33
       `);
@@ -340,7 +340,7 @@ describe('Parsing tests', () => {
           `
       ).toBe(s`
         Title:
-          Some problematic title not placed in string
+          TITLE = Some problematic title not placed in string
       `);
     });
 });

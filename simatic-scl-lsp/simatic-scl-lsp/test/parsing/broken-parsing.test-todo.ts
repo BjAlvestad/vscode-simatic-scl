@@ -23,6 +23,7 @@ describe('Parsing tests for broken functionality not being worked on yet', () =>
     // But it works in the playground https://langium.org/playground?grammar=OYJwhgthYgBAEgUwDbIPYHU0mQEwFD6IB2ALiAJ6wCyauKAXPrC7ABQAOiIAzmsTwDUAXgAK3PsVgAfWKESJSAS2LAhwgOIgFy1TNjbgS-sIBKiI-wCUAKgDchcb35NWsAORdnxd7GKREYQBJABEHfC0dFWBXVnckVDRfL0lhAG0nSQZQgF0PAEJ3cNJuCBUwZFhTAFENIIB5ADkAfQAVaoANVoZYAHo2AH4AHmE2Grqm2CsrNIA9AB0QAfniHJtehwALJVx6KRKQMv9KjABlHt75oQ38A6OK2FCLtOawAFoALwBBN4AtHLS8wA7s01jd8NtdiRYHdypVqAAZZoAYXq1Go1Ua3T680uNkBPHmpzWyxsuJukL2MNKcNgpyRqPRmOxl1ZcxWizB4XMlmIsRYbHc4wajV8ADcKgBXQLCpptTqtKzMViyQzGYjVYi4AbCdyYkLNWWi-B2IA&content=A4UwTgzg9gdgBAKSgCxgKFJWiCGMRpoASIANqVIijAITFkW751oBKAogOICSA8gHJwAYlDAB3HGAAmcAEYUAxgGsQMgLYgIEHAHNNcBVDVq8Uwu34ARAPoceAtEA
     // Just adding another letter in front of the problematic words will cause it to parse properly
     // Issue seem to be when it is starting with "Mod" or "For", which are keywords we have.
+    // Temporaraly solved by capturing `REGION` as part of terminal instead of using as a keyword.
     test("parse problematic regions", async () => {
       document = await parse(`
             FUNCTION_BLOCK "FB_Region"
