@@ -109,6 +109,7 @@ ArrayRange:
 
 SclProgramElement:
     IfStatement
+    | CaseStatement
     | ForStatement
     | WhileStatement
     | RepeatStatement
@@ -117,8 +118,6 @@ SclProgramElement:
     | JumpLabel
     | ProgramJump
     | Region
-    // | CaseLabel  //BUG: Causes auto completion to break (but strangely enough not scoping itself (i.e. valid name is valid, and red lies on invalid ones))
-    | CaseStatement
     | Expression ';'
 ;
 
@@ -269,13 +268,20 @@ ProgramJump:
 ;
 
 CaseLabel:
-    ((var+=Expression) | start+=NUMBER ('..' end+=NUMBER)?)
-    (',' ((var+=Expression) | start+=NUMBER ('..' end+=NUMBER)?))*
+    ((var+=MemberCall) | (start+=NUMBER ('..' end+=NUMBER)?))
+    (',' (var+=MemberCall | (start+=NUMBER ('..' end+=NUMBER)?)))*
     ':'
 ;
 
 CaseStatement:
     'CASE' var=Expression 'OF'
-    | 'ELSE'
-    | 'END_CASE' ';'
+    (
+        labels+=CaseLabel
+        elements+=SclProgramElement*
+    )*
+    (
+    'ELSE'
+        elements+=SclProgramElement*
+    )?
+    'END_CASE' ';'
 ;
