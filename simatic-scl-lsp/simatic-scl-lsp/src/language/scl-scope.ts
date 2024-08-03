@@ -11,8 +11,10 @@ export class SclScopeProvider extends DefaultScopeProvider {
     /** Global scope */
     protected override getGlobalScope(referenceType: string, context: ReferenceInfo): Scope {
         if (referenceType === BlockStart) {
+            // Return all block starts (so that we can cross reference UDTs)
             return new MapScope(this.indexManager.allElements(BlockStart));
         } else {
+            // File level scope
             return EMPTY_SCOPE;
         }
     }
@@ -31,7 +33,7 @@ export class SclScopeProvider extends DefaultScopeProvider {
                 return super.getScope(context);
              }
             
-            //** Makes nested scope work, but not auto-complete for it (but you can write the elements out, and it works, and if you write element not inside struct you get red underlines (as you should)) */
+            //** Makes nested scope for structs work */
             const previousType = inferType(previous, new Map());
             if (isStructType(previousType)) {
                 return this.scopeStructMembers(previousType.literal);
@@ -62,15 +64,12 @@ export class SclScopeProvider extends DefaultScopeProvider {
         const previous = memberCall.previous;
         console.log("\n---");
         console.log("    'current' type: " + memberCall.$type); // E.g. `MemberCall`
-        console.log("    'current' functionCustom var refText: " + (memberCall.element?.$refText
-            ?? (memberCall.element ? "Has element var" : `element is undefined.`)
-        ));
-        console.log("    'current' element var refText: " + (memberCall.element?.$refText
+        console.log("    'current' element refText: " + (memberCall.element?.$refText
             ?? (memberCall.element ? "Has element" : `element is undefined.`)
         ));
         if (previous) {
             console.log("    'previous' type: " + previous.$type);
-            console.log("    'previous' element var refText: " + (isMemberCall(previous)
+            console.log("    'previous' element refText: " + (isMemberCall(previous)
                 ? `${(previous as MemberCall).element?.$refText}`
                 : "Skipped. 'previous' exists, but is not MemberCall."
             ));
