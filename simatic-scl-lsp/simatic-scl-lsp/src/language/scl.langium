@@ -94,7 +94,7 @@ VariableAttribute:
     '{' (name=ID ':=' value=SINGLE_QUOTE_STRING ';'?)+ '}';
 
 ArrayRange:
-    start+=Expression ('..' end+=Expression)? (',' start+=Expression ('..' end+=Expression)?)*
+    start+=(Expression|'*') ('..' end+=Expression)? (',' start+=(Expression|'*') ('..' end+=Expression)?)*
 ;
 
 // ***********************
