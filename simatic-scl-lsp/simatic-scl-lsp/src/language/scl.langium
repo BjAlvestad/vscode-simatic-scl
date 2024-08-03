@@ -144,7 +144,7 @@ MemberCall infers Expression:
 		')')?
     // Array access on member
         | (
-		explicitOperationCall?='['
+		arrayAccessCall?='['
 		(
 		    arguments+=Expression (',' arguments+=Expression)*
 		)?

@@ -1,0 +1,13 @@
+FUNCTION_BLOCK "U_StructAccessOnArray"
+   VAR
+      myArray : ARRAY[1..5] OF STRUCT
+         aVar1 : DINT;
+         aVar2 : DINT;
+      END_STRUCT;
+   END_VAR
+
+BEGIN
+
+myArray[1].aVar1;
+
+END_FUNCTION_BLOCK
