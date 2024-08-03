@@ -83,10 +83,15 @@ Struct:
     'END_STRUCT'
 ;
 
+StringType:
+    (isString?='STRING' | isWideString?='WSTRING') ('[' size=NUMBER ']')?
+;
+
 TypeReference: 
     udtRef = UdtRef
     | primitive=DataType
     | struct=Struct
+    | string=StringType
     | builtIn=ID
 ;
 

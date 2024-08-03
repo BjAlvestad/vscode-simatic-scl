@@ -17,8 +17,6 @@ DataType returns string:
     | 'CHAR'  | 'WCHAR'
     // Complex - Data and time
     | 'DT' | 'DATE_AND_TIME' | 'LDT' | 'DATE_AND_LTIME' | 'DTL'
-    // String
-    | 'WSTRING' | 'STRING'
 ;
 
 // Declaration/assignment for elementary data types

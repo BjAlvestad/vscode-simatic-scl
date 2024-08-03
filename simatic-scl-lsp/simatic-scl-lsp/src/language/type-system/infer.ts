@@ -82,10 +82,12 @@ function inferTypeRef(node: TypeReference, cache: Map<AstNode, TypeDescription>)
     if (node.primitive) {
         if (node.primitive === 'DINT') {
             return createNumberType();
-        } else if (node.primitive === 'STRING' || node.primitive === 'WSTRING') {
-            return createStringType();
         } else if (node.primitive === 'BOOL') {
             return createBooleanType();
+        }
+    } else if (node.string) {
+        if (node.string?.isString || node.string?.isWideString) {
+            return createStringType();
         }
     } else if (node.struct) {
         if (node.struct) {
