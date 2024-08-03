@@ -319,6 +319,30 @@ describe('Parsing tests', () => {
         33
       `);
     });
+
+    test("parse stringless title", async () => {
+      document = await parse(`
+            FUNCTION_BLOCK "FB_Region"
+            TITLE = Some problematic title not placed in string
+            VAR 
+                otherVar1 : DINT;
+            END_VAR
+            BEGIN
+                11;
+            END_FUNCTION_BLOCK
+        `);
+
+      expect(
+        checkDocumentValid(document) ||
+          s`
+          Title:
+            ${document.parseResult.value?.title?.value}
+          `
+      ).toBe(s`
+        Title:
+          Some problematic title not placed in string
+      `);
+    });
 });
 
 function checkDocumentValid(document: LangiumDocument): string | undefined {
