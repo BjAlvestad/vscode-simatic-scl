@@ -3,7 +3,7 @@ import { EmptyFileSystem, type LangiumDocument } from "langium";
 import { expandToString as s } from "langium/generate";
 import { parseHelper } from "langium/test";
 import { createSclServices } from "../../src/language/scl-module.js";
-import { BinaryExpression, MemberCall, Model, NumberExpression, isBinaryExpression, isModel } from "../../src/language/generated/ast.js";
+import { BinaryExpression, MemberCall, Model, NumberExpression, Region, isBinaryExpression, isModel } from "../../src/language/generated/ast.js";
 
 let services: ReturnType<typeof createSclServices>;
 let parse:    ReturnType<typeof parseHelper<Model>>;
@@ -286,6 +286,38 @@ describe('Parsing tests', () => {
               myInternal1
               myInnerInternal1
         `);
+    });
+  
+    test("parse region", async () => {
+      document = await parse(`
+            FUNCTION_BLOCK "FB_Region"
+            VAR 
+                otherVar1 : DINT;
+            END_VAR
+            BEGIN
+                11;
+                REGION The problematic description of a region since they are not strings
+                    22;
+                END_REGION
+                33;
+            END_FUNCTION_BLOCK
+        `);
+
+      const elements = document.parseResult.value?.elements;
+      expect(
+        checkDocumentValid(document) ||
+          s`
+            ${(elements[0] as NumberExpression).value}
+            Region text: ${(elements[1] as Region).value}
+            ${(elements[2] as NumberExpression).value}
+            ${(elements[4] as NumberExpression).value}
+          `
+      ).toBe(s`
+        11
+        Region text: The problematic description of a region since they are not strings
+        22
+        33
+      `);
     });
 });
 

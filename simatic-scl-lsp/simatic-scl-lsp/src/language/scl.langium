@@ -20,6 +20,7 @@ Person:
 Greeting:
     'Hello' person=[Person:ID] '!';
 
+terminal REGION_TEXT: /(?<=(REGION ))[^\r?\n]*/;
 hidden terminal WS: /\s+/;
 terminal ID: /[_a-zA-Z][\w_]*/;
 terminal DOUBLE_QUOTE_STRING: /"(\\.|[^"\\])*"/;
@@ -103,9 +104,15 @@ SclProgramElement:
     | ExitStatement
     | JumpLabel
     | ProgramJump
+    | Region
     // | CaseLabel  //BUG: Causes auto completion to break (but strangely enough not scoping itself (i.e. valid name is valid, and red lies on invalid ones))
     | CaseStatement
     | Expression ';'
+;
+
+Region:
+    ('REGION' value=REGION_TEXT)
+    | regionEnd?='END_REGION'
 ;
 
 Expression:
