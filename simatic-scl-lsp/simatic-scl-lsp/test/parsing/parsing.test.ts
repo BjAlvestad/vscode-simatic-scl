@@ -141,6 +141,23 @@ describe('Parsing tests', () => {
         expect(vars[0].value?.$type).toEqual("UdtInitialization")
     });
 
+    test('parse DB from UDT', async () => {
+        document = await parse(`
+            DATA_BLOCK "MyDB"
+            NON_RETAIN
+
+            "MyUDT"
+
+            BEGIN
+
+            END_DATA_BLOCK
+        `);
+
+        const dbFromUdt = document.parseResult.value.dbFromUdt;
+        expect(checkDocumentValid(document)).toBeFalsy();
+        expect(dbFromUdt?.$refText).toEqual('"MyUDT"')
+    });
+
   test('Parse addition', async () => {
         document = await parse(`
             FUNCTION_BLOCK "FB_MyFunctionBlock"

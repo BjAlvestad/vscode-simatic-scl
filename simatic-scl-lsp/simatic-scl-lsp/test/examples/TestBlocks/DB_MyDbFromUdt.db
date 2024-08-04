@@ -1,0 +1,8 @@
+DATA_BLOCK "MyDB"
+NON_RETAIN
+
+"U_Status"
+
+BEGIN
+
+END_DATA_BLOCK
