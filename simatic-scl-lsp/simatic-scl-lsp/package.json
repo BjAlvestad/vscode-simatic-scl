@@ -14,7 +14,8 @@
         "lint": "eslint src --ext ts",
         "langium:generate": "langium generate",
         "langium:watch": "langium generate --watch",
-        "vscode:prepublish": "npm run build && npm run lint",
+        "vscode:prepublish": "npm run esbuild-base -- --minify && npm run lint",
+        "esbuild-base": "esbuild ./src/extension/main.ts --bundle --outfile=out/main.js --external:vscode --format=cjs --platform=node",
         "test": "vitest run"
     },
     "dependencies": {
@@ -24,14 +25,14 @@
     },
     "devDependencies": {
         "@types/node": "^18.0.0",
-        "@typescript-eslint/parser": "~7.3.1",
+        "@types/vscode": "~1.67.0",
         "@typescript-eslint/eslint-plugin": "~7.3.1",
+        "@typescript-eslint/parser": "~7.3.1",
+        "concurrently": "~8.2.1",
+        "esbuild": "^0.20.2",
         "eslint": "~8.57.0",
         "langium-cli": "~3.1.0",
         "typescript": "~5.1.6",
-        "@types/vscode": "~1.67.0",
-        "concurrently": "~8.2.1",
-        "esbuild": "~0.20.2",
         "vitest": "~1.4.0"
     },
     "volta": {
@@ -53,7 +54,11 @@
                     "SCL",
                     "scl"
                 ],
-                "extensions": [".scl", ".db", ".udt"],
+                "extensions": [
+                    ".scl",
+                    ".db",
+                    ".udt"
+                ],
                 "configuration": "./language-configuration.json"
             }
         ],
