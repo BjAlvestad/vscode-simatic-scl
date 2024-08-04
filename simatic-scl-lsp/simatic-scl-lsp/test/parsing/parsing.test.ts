@@ -62,6 +62,21 @@ describe('Parsing tests', () => {
         `);
     });
 
+    test('parse standalone semicolon', async () => {
+        document = await parse(`
+            FUNCTION_BLOCK "FB_MyFunctionBlock"
+
+            BEGIN
+                11;
+                ;
+                22;
+                ;;;
+            END_FUNCTION
+        `);
+
+        expect(checkDocumentValid(document)).toBeFalsy();
+    });
+
     test('parse time literals', async () => {
         document = await parse(`
             FUNCTION_BLOCK "FB_MyFunctionBlock"
