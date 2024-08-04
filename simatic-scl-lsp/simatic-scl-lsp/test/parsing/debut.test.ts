@@ -53,7 +53,10 @@ describe('Print to log for debug tests', () => {
         console.log("****************")
         console.log("****  VARS  ****")
         console.log("****************")
-        console.log(model.vars)
+        console.log("decBlocks:")
+        console.log(model.decBlocks)
+        console.log("decBlocks[0] (VAR):")
+        console.log(model.decBlocks[0])
         
         console.log("***********************")
         console.log("****  EXPRESSIONS  ****")

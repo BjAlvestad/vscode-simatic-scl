@@ -112,6 +112,54 @@ describe('Linking tests', () => {
             myVar2
         `);
     });
+
+    test('linking first level variable - in FB with return statement', async () => {
+        document = await parse(`
+            FUNCTION_BLOCK "FB_MyFunctionBlock"
+            { S7_Optimized_Access := 'TRUE' }
+            AUTHOR : Someone
+            FAMILY : SomeFamily
+            VERSION : 0.1
+
+            VAR_INPUT 
+                myCaseSelectorInputVar : DINT;
+            END_VAR
+
+            VAR 
+                internal1 : DINT;
+                internal2 : DINT;
+            END_VAR
+
+            VAR_TEMP 
+                myVar1 : DINT;   // Comment for my variable 1
+                myVar2 : DINT;   // Comment for my variable 2
+            END_VAR
+
+            BEGIN
+                #myVar1 := 11;
+                #myVar2 := 22;
+                #internal2 := 22;
+
+                return 1234;
+            END_FUNCTION
+        `);
+
+        const filteredAndMapped = getLeftRefsFromBinaryExpression(document);
+
+        expect(
+            // here we first check for validity of the parsed document object by means of the reusable function
+            //  'checkDocumentValid()' to sort out (critical) typos first,
+            // and then evaluate the cross references we're interested in by checking
+            //  the referenced AST element as well as for a potential error message;
+            checkDocumentValid(document)
+                || filteredAndMapped.map(g => g.element?.ref?.name || g.element?.error?.message).join(EOL)
+        ).toBe(s`
+            myVar1
+            myVar2
+            internal2
+        `);
+    });
+
 });
 
 function checkDocumentValid(document: LangiumDocument): string | undefined {

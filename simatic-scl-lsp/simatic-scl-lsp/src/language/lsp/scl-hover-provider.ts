@@ -12,7 +12,7 @@ export class SclHoverProvider extends AstNodeHoverProvider {
                 contents: {
                     kind: 'markdown',
                     language: 'scl',
-                    value: `struct ${node.vars}}`
+                    value: `struct ${node.varDecs}}`
                 }
             }
         } else if (isNamedElement(node)) {
@@ -33,7 +33,7 @@ export class SclHoverProvider extends AstNodeHoverProvider {
                     contents: {
                         kind: 'markdown',
                         language: 'scl',
-                        value: `var ${node.name}: STRUCT ${node.type.struct.vars.map(v => `\n  ${v.name} : ${v.type.primitive ?? 'STRUCT'}`)}\n(Inferred type is ${typeToString(type)})`
+                        value: `var ${node.name}: STRUCT ${node.type.struct.varDecs.map(v => `\n  ${v.name} : ${v.type.primitive ?? 'STRUCT'}`)}\n(Inferred type is ${typeToString(type)})`
                     }
                 }
             } else if (node.type.udtRef) {
