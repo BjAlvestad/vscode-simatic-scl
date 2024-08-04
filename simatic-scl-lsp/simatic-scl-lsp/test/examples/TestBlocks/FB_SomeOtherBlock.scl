@@ -1,0 +1,51 @@
+FUNCTION_BLOCK "FB_MyTestFB_A"
+{ S7_Optimized_Access := 'TRUE' }
+VERSION : 0.1
+   VAR_INPUT 
+      dasdasf { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : BOOL;
+   END_VAR
+
+
+   VAR 
+		otherStatus : "U_Status";
+		aStruct : STRUCT
+			good : DINT;
+			intenal2 : DINT;
+			intenal3 : DINT;
+			myInternal4NestedStruct : STRUCT
+				nestedIntenal1 : DINT;
+				nestedIntenal2 : DINT;
+			END_STRUCT;
+			intenal5 : DINT;
+		END_STRUCT;
+   END_VAR
+
+   VAR_TEMP 
+      tempis : DINT;
+   END_VAR
+
+
+BEGIN
+	
+	#otherStatus.good := TRUE;
+
+	(*
+	Lorem ipsum dolor sit amet, consectetur adipiscing elit,
+	sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+	Ut enim ad minim veniam, quis nostrud exercitation ullamco
+	laboris nisi ut aliquip ex ea commodo consequat.
+	Duis aute irure dolor in reprehenderit in voluptate velit
+	esse cillum dolore eu fugiat nulla pariatur. 
+	Excepteur sint occaecat cupidatat non proident,
+	sunt in culpa qui officia deserunt mollit anim id est laborum.
+	*)
+
+	#aStruct.myInternal4NestedStruct.nestedIntenal1;
+
+	#aStruct.good;
+	#otherStatus.warning := #otherStatus.good;
+
+	
+	
+END_FUNCTION_BLOCK
+
