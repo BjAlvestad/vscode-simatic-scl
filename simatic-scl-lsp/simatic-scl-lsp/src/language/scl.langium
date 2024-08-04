@@ -11,7 +11,7 @@ entry Model:
     ('BEGIN'
         (elements+=SclProgramElement)*
     )?
-    ReturnStatement?
+    return=ReturnStatement?
     BlockEnd
 ;
 
