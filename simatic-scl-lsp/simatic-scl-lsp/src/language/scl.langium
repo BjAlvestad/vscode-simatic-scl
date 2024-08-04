@@ -127,8 +127,8 @@ ArrayRange:
 ;
 
 UdtInitialization:
-    '(' (('(' ')') | arrayInitialization+=ArrayInitialization | expressions+=Expression)
-    (',' (('(' ')') | arrayInitialization+=ArrayInitialization | expressions+=Expression) )* ')'
+    '(' (('(' ')') | udtInitialization+=UdtInitialization | arrayInitialization+=ArrayInitialization | expressions+=Expression)
+    (',' (('(' ')') | udtInitialization+=UdtInitialization | arrayInitialization+=ArrayInitialization | expressions+=Expression) )* ')'
 ;
 
 ArrayInitialization:

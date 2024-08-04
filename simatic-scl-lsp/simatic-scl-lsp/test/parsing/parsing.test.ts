@@ -124,6 +124,23 @@ describe('Parsing tests', () => {
         expect(vars[1].value?.$type).toEqual("UdtInitialization")
     });
   
+    test('parse nested UDT literal', async () => {
+        document = await parse(`
+            FUNCTION_BLOCK "FB_MyFunctionBlock"
+            VAR
+                myUdtWithFieldSkip : "MyUDT" := (32, (), ((), (), (), ()), TRUE, (), 43);
+            END_VAR
+
+            BEGIN
+
+            END_FUNCTION
+        `);
+
+        const vars = document.parseResult.value.decBlocks[0].varDecs;
+        expect(checkDocumentValid(document)).toBeFalsy();
+        expect(vars[0].value?.$type).toEqual("UdtInitialization")
+    });
+  
     test('parse array of UDT literals', async () => {
         document = await parse(`
             FUNCTION_BLOCK "FB_MyFunctionBlock"
