@@ -152,6 +152,7 @@ SclProgramElement:
     | ProgramJump
     | Region
     | Expression ';'
+    | ';' // SCL allows just a `;` on its own
 ;
 
 Region:
