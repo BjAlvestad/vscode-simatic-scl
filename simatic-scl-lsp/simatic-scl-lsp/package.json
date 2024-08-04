@@ -1,5 +1,6 @@
 {
     "name": "simatic-scl-lsp",
+    "publisher": "BjAlvestad",
     "description": "TIA Portal SCL language support",
     "version": "0.0.1",
     "files": [
@@ -37,7 +38,7 @@
         "node": "18.19.1",
         "npm": "10.2.4"
     },
-    "displayName": "simatic-scl-lsp",
+    "displayName": "LSP for SCL v18",
     "engines": {
         "vscode": "^1.67.0"
     },
