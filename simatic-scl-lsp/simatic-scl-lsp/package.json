@@ -4,8 +4,8 @@
     "description": "TIA Portal SCL language support",
     "version": "0.0.1",
     "files": [
-        "out",
-        "src"
+        "out/**",
+        "syntaxes/**"
     ],
     "type": "module",
     "scripts": {
