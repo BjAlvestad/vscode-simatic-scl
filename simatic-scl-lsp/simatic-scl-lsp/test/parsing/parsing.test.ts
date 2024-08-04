@@ -247,6 +247,84 @@ describe('Parsing tests', () => {
               internal2
         `);
     });
+  
+    test('parse local variable with double quote string', async () => {
+        document = await parse(`
+            FUNCTION_BLOCK "FB_MyFunctionBlock"
+
+            VAR 
+                internal1 : DINT;
+                "internal2-2" : DINT;
+            END_VAR
+
+            BEGIN
+                #internal1 := 11;
+                "internal2-2" := 22;
+            END_FUNCTION
+        `);
+
+        const memberCallsFromBinaryExpressions = getLeftRefsFromBinaryExpression(document);
+        const varDecs = GetAllVarDecsFromModel(document.parseResult.value);
+        expect(
+            checkDocumentValid(document) || s`
+                Declarations:
+                    ${varDecs.map(p => p.name)?.join('\n')}
+                Var usages in assignments:
+                    ${memberCallsFromBinaryExpressions.map(g => g.element?.$refText)?.join('\n')}
+            `
+        ).toBe(s`
+            Declarations:
+                internal1
+                "internal2-2"
+            Var usages in assignments:
+                internal1
+                "internal2-2"
+        `);
+    });
+  
+    test('parse local struct variable with double quote string', async () => {
+        document = await parse(`
+            FUNCTION_BLOCK "FB_MyFunctionBlock"
+
+            VAR 
+                "quoteStruct2-2" : STRUCT
+                    internal4 : DINT;
+                    "internal5-6" : DINT;
+                END_STRUCT;
+                normalStruct : STRUCT
+                    internal77 : DINT;
+                    "internal123-3" : DINT;
+                END_STRUCT;
+            END_VAR
+
+            BEGIN
+                normalStruct.internal77 := 123;
+                "quoteStruct2-2".internal4 := 123;
+                normalStruct."internal123-3" := 123;
+                "quoteStruct2-2"."internal5-6" := 123;
+            END_FUNCTION
+        `);
+
+        const memberCallsFromBinaryExpressions = getLeftRefsFromBinaryExpression(document);
+        const varDecs = GetAllVarDecsFromModel(document.parseResult.value);
+        expect(
+            checkDocumentValid(document) || s`
+                Declarations:
+                    ${varDecs.map(p => p.name)?.join('\n')}
+                Var usages in assignments:
+                    ${memberCallsFromBinaryExpressions.map(g => g.element?.$refText)?.join('\n')}
+            `
+        ).toBe(s`
+            Declarations:
+                "quoteStruct2-2"
+                normalStruct
+            Var usages in assignments:
+                internal77
+                internal4
+                "internal123-3"
+                "internal5-6"
+        `);
+    });
 
     test('parse struct in FB', async () => {
         document = await parse(`
