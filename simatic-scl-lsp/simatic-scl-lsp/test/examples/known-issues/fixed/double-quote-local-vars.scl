@@ -1,0 +1,23 @@
+FUNCTION_BLOCK "FB_MyFunctionBlock"
+
+VAR 
+    internal1 : DINT;
+    "internal2-2" : DINT;
+    "quoteStruct2-2" : STRUCT
+        internal4 : DINT;
+        "internal5-6" : DINT;
+    END_STRUCT;
+    normalStruct : STRUCT
+        internal77 : DINT;
+        "internal123-3" : DINT;
+    END_STRUCT;
+END_VAR
+
+BEGIN
+    #internal1 := 11;
+    "internal2-2" := 22;
+    normalStruct.internal77;
+    "quoteStruct2-2".internal4;
+    normalStruct."internal123-3";
+    "quoteStruct2-2"."internal5-6";
+END_FUNCTION

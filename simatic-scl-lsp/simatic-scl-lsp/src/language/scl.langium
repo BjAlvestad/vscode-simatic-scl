@@ -89,7 +89,7 @@ Struct:
 
 VariableDeclaration returns NamedElement:
     {infer VariableDeclaration}
-    name=ID
+    (name=ID | name=DOUBLE_QUOTE_STRING)
     attributes+=VariableAttribute?
     ('AT' refName=[NamedElement:ID])?
     ':'
@@ -187,7 +187,7 @@ MemberCall infers Expression:
     Primary
 	({infer MemberCall.previous=current} 
     // Member call with function call
-        ("." '#'? element=[NamedElement:ID] '^'? (
+        ("." (('#'? element=[NamedElement:ID]) | element=[NamedElement:DOUBLE_QUOTE_STRING]) '^'? (
 		explicitOperationCall?='('
 		(
 		    arguments+=Expression (',' arguments+=Expression)*
