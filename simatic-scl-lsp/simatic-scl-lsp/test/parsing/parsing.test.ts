@@ -4,6 +4,7 @@ import { expandToString as s } from "langium/generate";
 import { parseHelper } from "langium/test";
 import { createSclServices } from "../../src/language/scl-module.js";
 import { BinaryExpression, MemberCall, Model, NumberExpression, Region, TimeExpression, isBinaryExpression, isModel } from "../../src/language/generated/ast.js";
+import { GetAllVarDecsFromModel } from "../../src/language/utils.js";
 
 let services: ReturnType<typeof createSclServices>;
 let parse:    ReturnType<typeof parseHelper<Model>>;
@@ -145,6 +146,7 @@ describe('Parsing tests', () => {
         // expect(document.parseResult.parserErrors).toHaveLength(0);
 
         const memberCallsFromBinaryExpressions = getLeftRefsFromBinaryExpression(document);
+        const varDecs = GetAllVarDecsFromModel(document.parseResult.value);
         expect(
             // here we use a (tagged) template expression to create a human readable representation
             //  of the AST part we are interested in and that is to be compared to our expectation;
@@ -152,7 +154,7 @@ describe('Parsing tests', () => {
             //  by means of the reusable function 'checkDocumentValid()' to sort out (critical) typos first;
             checkDocumentValid(document) || s`
                 Declarations:
-                  ${document.parseResult.value?.vars?.map(p => p.name)?.join('\n')}
+                  ${varDecs.map(p => p.name)?.join('\n')}
                 Var usages in assignments:
                   ${memberCallsFromBinaryExpressions.map(g => g.element?.$refText)?.join('\n')}
             `
@@ -200,10 +202,11 @@ describe('Parsing tests', () => {
         const model = document.parseResult.value;
         const memberCallsFromBinaryExpressions = getLeftRefsFromBinaryExpression(document);
 
-        expect(model.vars).toHaveLength(2)
+        const varDecs = GetAllVarDecsFromModel(model);
+        expect(varDecs).toHaveLength(2)
         // // expect((model.vars[0].structure as TypeReference).).toEqual("dsa")
-        expect(model.vars[1].type.struct?.$type).toEqual("Struct")
-        expect(model.vars[1].type.struct?.vars.length).equal(3)
+        expect(varDecs[1].type.struct?.$type).toEqual("Struct")
+        expect(varDecs[1].type.struct?.varDecs.length).equal(3)
 
         expect(
             // here we use a (tagged) template expression to create a human readable representation
@@ -212,9 +215,9 @@ describe('Parsing tests', () => {
             //  by means of the reusable function 'checkDocumentValid()' to sort out (critical) typos first;
             checkDocumentValid(document) || s`
                 ** Top level vars: **
-                  ${document.parseResult.value?.vars?.map(p => p.name)?.join('\n')}
+                  ${varDecs.map(p => p.name)?.join('\n')}
                 ** Inside myStruct: **
-                  ${document.parseResult.value?.vars[1].type.struct?.vars.map(p => p.name)?.join('\n')}
+                  ${varDecs[1].type.struct?.varDecs.map(p => p.name)?.join('\n')}
                 ** Var usages in assignments: **
                   ${memberCallsFromBinaryExpressions.map(g => g.element?.$refText)?.join('\n')}
             `
@@ -266,17 +269,18 @@ describe('Parsing tests', () => {
         // expect(document.parseResult.parserErrors).toHaveLength(0);
         
         const model = document.parseResult.value;
-        // console.log(model.vars)
-        //console.log(model.vars.map(dec => dec.children ? `Children in ${dec.name}:\n ${dec.children.map(child => child.name)}` : `No children in ${dec.name}...`))
-        // console.log(model.vars[0].dataType)
-        // console.log(model.vars[1].dataType)
+        const varDecs = GetAllVarDecsFromModel(model);
+        // console.log(varDecs)
+        //console.log(varDecs.map(dec => dec.children ? `Children in ${dec.name}:\n ${dec.children.map(child => child.name)}` : `No children in ${dec.name}...`))
+        // console.log(varDecs[0].dataType)
+        // console.log(varDecs[1].dataType)
 
 
-        expect(model.vars).toHaveLength(2)
-        // expect((model.vars[0].structure as TypeReference).).toEqual("dsa")
-        expect(model.vars[0].type.primitive).toEqual("DINT")
-        expect(model.vars[1].type.struct?.$type).toEqual("Struct")
-        expect(model.vars[1].type.struct?.vars.length).equal(4)
+        expect(varDecs).toHaveLength(2)
+        // expect((varDecs[0].structure as TypeReference).).toEqual("dsa")
+        expect(varDecs[0].type.primitive).toEqual("DINT")
+        expect(varDecs[1].type.struct?.$type).toEqual("Struct")
+        expect(varDecs[1].type.struct?.varDecs.length).equal(4)
 
         const memberCallsFromBinaryExpressions = getLeftRefsFromBinaryExpression(document);
         expect(
@@ -286,9 +290,9 @@ describe('Parsing tests', () => {
             //  by means of the reusable function 'checkDocumentValid()' to sort out (critical) typos first;
             checkDocumentValid(document) || s`
                 ** Top level vars: **
-                  ${document.parseResult.value?.vars?.map(p => p.name)?.join('\n')}
+                  ${varDecs.map(p => p.name)?.join('\n')}
                 ** Inside myStruct: **
-                  ${document.parseResult.value?.vars[1].type.struct?.vars.map(p => p.name)?.join('\n')}
+                  ${varDecs[1].type.struct?.varDecs.map(p => p.name)?.join('\n')}
                 ** Var usages in assignments: **
                   ${memberCallsFromBinaryExpressions.map(g => g.element?.$refText)?.join('\n')}
             `

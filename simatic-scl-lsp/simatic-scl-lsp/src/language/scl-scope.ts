@@ -4,6 +4,7 @@ import { DefaultScopeProvider } from 'langium';
 import { BlockStart, isMemberCall, isUdtRef, MemberCall, Struct, UdtRef } from './generated/ast.js';
 import { inferType } from './type-system/infer.js';
 import { isStructType } from './type-system/descriptions.js';
+import { GetAllVarDecsFromModel, GetModelContainerFromContext } from './utils.js';
 
 export class SclScopeProvider extends DefaultScopeProvider {
     skipConsoleLog = true;
@@ -29,8 +30,13 @@ export class SclScopeProvider extends DefaultScopeProvider {
             this.logTypeInfo(memberCall, this.skipConsoleLog)
 
              /** RETURNS normal scope if it has no previous (i.e. is top level ref) */
-             if (!previous) {
-                return super.getScope(context);
+            if (!previous) {
+                const model = GetModelContainerFromContext(context);
+                if (model) {
+                    const allLocalVars = GetAllVarDecsFromModel(model)
+                    return super.createScopeForNodes(allLocalVars);
+                }
+                return EMPTY_SCOPE;
              }
             
             //** Makes nested scope for structs work */
@@ -81,12 +87,13 @@ export class SclScopeProvider extends DefaultScopeProvider {
     }
 
     private scopeStructMembers(structItem: Struct) {
-        return this.createScopeForNodes(structItem.vars);
+        return this.createScopeForNodes(structItem.varDecs);
     }
 
     private scopeUdtMembers(udtItem: UdtRef) {
-        if (udtItem.udtRef.ref?.$container.udtStruct.vars) {
-            return this.createScopeForNodes(udtItem.udtRef.ref?.$container.udtStruct.vars);
+        const varDecs = udtItem.udtRef.ref?.$container.decBlocks.flatMap(c => c.varDecs);
+        if (varDecs) {
+            return this.createScopeForNodes(varDecs);
         }
 
         return EMPTY_SCOPE;

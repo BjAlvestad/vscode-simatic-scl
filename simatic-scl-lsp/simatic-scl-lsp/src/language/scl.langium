@@ -6,8 +6,8 @@ entry Model:
     title=Title?
     (compilerDirective+=CompilerDirective)*
     (blockAttribute+=BlockAttribute)*
-    ((udtStruct=Struct ';') |
-    (declarationSubSection+=DeclarationSubSection | vars+=VariableDeclaration)*)
+    isNonRetain?='NON_RETAIN'?
+    decBlocks+=DecBlocks*
     ('BEGIN'
         (elements+=SclProgramElement)*
     )?
@@ -63,6 +63,29 @@ Title:
     value=TITLE_TEXT
 ;
 
+DecBlocks:
+    InputVarDecBlock
+    | OutputVarDecBlock
+    | InOutVarDecBlock
+    | VarDecBlock
+    | TempVarDecBlock
+    | ConstVarDecBlock
+    | (Struct ';')  // Struct is used as top level section in UDT
+;
+
+InputVarDecBlock: type='VAR_INPUT' varDecs+=VariableDeclaration* 'END_VAR';
+OutputVarDecBlock: type='VAR_OUTPUT' varDecs+=VariableDeclaration* 'END_VAR';
+InOutVarDecBlock: type='VAR_IN_OUT' varDecs+=VariableDeclaration* 'END_VAR';
+VarDecBlock: type='VAR' retain?='RETAIN'? varDecs+=VariableDeclaration* 'END_VAR';
+TempVarDecBlock: type='VAR_TEMP' varDecs+=VariableDeclaration* 'END_VAR';
+ConstVarDecBlock: 'VAR' type='CONSTANT' varDecs+=VariableDeclaration* 'END_VAR';
+
+Struct:
+    'STRUCT'
+        (varDecs+=VariableDeclaration)*
+    'END_STRUCT'
+;
+
 VariableDeclaration returns NamedElement:
     {infer VariableDeclaration}
     name=ID
@@ -77,12 +100,6 @@ VariableDeclaration returns NamedElement:
 ;
 
 UdtRef: udtRef=[BlockStart:DOUBLE_QUOTE_STRING];
-
-Struct:
-    'STRUCT'
-        (vars+=VariableDeclaration)*
-    'END_STRUCT'
-;
 
 StringType:
     (isString?='STRING' | isWideString?='WSTRING') ('[' size=NUMBER ']')?

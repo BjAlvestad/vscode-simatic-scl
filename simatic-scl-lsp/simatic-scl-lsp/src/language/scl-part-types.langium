@@ -1,11 +1,4 @@
 
-DeclarationSubSection returns string:
-    'VAR_INPUT' | 'VAR_OUTPUT' | 'VAR_IN_OUT' | 'VAR' | 'VAR_TEMP' | 'CONST'
-     | 'VAR' 'CONSTANT'
-     | 'RETAIN' | 'NON_RETAIN'
-     | 'END_VAR'
-;
-
 DataType returns string:
     // Elementary types
     'BOOL'
