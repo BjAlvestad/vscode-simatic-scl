@@ -81,6 +81,82 @@ describe('Parsing tests', () => {
               T#123ms
         `);
     });
+  
+    test('parse array literals', async () => {
+        document = await parse(`
+            FUNCTION_BLOCK "FB_MyFunctionBlock"
+            VAR
+                myArrayOfWord :  Array[0..0] of DWord := [2#0000_0000_0000_0000_0001_0100_0011_1111];
+                myArrayOfBools :  Array[1..2] of BOOL := [TRUE, False];
+                myArrayOfBools2 :  Array[1..3] of INT := [2(True)];
+                myArrayOfBools3 :  Array[1..30] of INT := [2(True), 13(TRUE)];
+            END_VAR
+
+            BEGIN
+
+            END_FUNCTION
+        `);
+
+        const vars = document.parseResult.value.decBlocks[0].varDecs;
+        expect(checkDocumentValid(document)).toBeFalsy();
+        expect(vars[0].value?.$type).toEqual("ArrayInitialization")
+        expect(vars[1].value?.$type).toEqual("ArrayInitialization")
+        expect(vars[2].value?.$type).toEqual("ArrayInitialization")
+        expect(vars[3].value?.$type).toEqual("ArrayInitialization")
+    });
+  
+    test('parse UDT literal', async () => {
+        document = await parse(`
+            FUNCTION_BLOCK "FB_MyFunctionBlock"
+            VAR
+                myUdt : "MyUDT" := (32, 13, 43);
+                myUdtWithFieldSkip : "MyUDT" := (32, (), TRUE, (), 43);
+            END_VAR
+
+            BEGIN
+
+            END_FUNCTION
+        `);
+
+        const vars = document.parseResult.value.decBlocks[0].varDecs;
+        expect(checkDocumentValid(document)).toBeFalsy();
+        expect(vars[0].value?.$type).toEqual("UdtInitialization")
+        expect(vars[1].value?.$type).toEqual("UdtInitialization")
+    });
+  
+    test('parse nested UDT literal', async () => {
+        document = await parse(`
+            FUNCTION_BLOCK "FB_MyFunctionBlock"
+            VAR
+                myUdtWithFieldSkip : "MyUDT" := (32, (), ((), (), (), ()), TRUE, (), 43);
+            END_VAR
+
+            BEGIN
+
+            END_FUNCTION
+        `);
+
+        const vars = document.parseResult.value.decBlocks[0].varDecs;
+        expect(checkDocumentValid(document)).toBeFalsy();
+        expect(vars[0].value?.$type).toEqual("UdtInitialization")
+    });
+  
+    test('parse array of UDT literals', async () => {
+        document = await parse(`
+            FUNCTION_BLOCK "FB_MyFunctionBlock"
+            VAR
+                myArrayOfUdt : ARRAY [1..3] OF "MyUDT" := ([()], [()], [16#0051]);
+            END_VAR
+
+            BEGIN
+
+            END_FUNCTION
+        `);
+
+        const vars = document.parseResult.value.decBlocks[0].varDecs;
+        expect(checkDocumentValid(document)).toBeFalsy();
+        expect(vars[0].value?.$type).toEqual("UdtInitialization")
+    });
 
   test('Parse addition', async () => {
         document = await parse(`

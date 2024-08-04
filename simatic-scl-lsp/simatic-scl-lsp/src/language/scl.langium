@@ -95,7 +95,12 @@ VariableDeclaration returns NamedElement:
     (isArray?='ARRAY' '[' arrayRange=ArrayRange ']' 'OF')?
     'REF_TO'?
     type=TypeReference
-    (assignment?=':=' value=Expression)?
+    (
+        assignment?=':='
+        (value=Expression
+        | value=ArrayInitialization
+        | value=UdtInitialization)
+    )?
     ';'
 ;
 
@@ -118,6 +123,16 @@ VariableAttribute:
 
 ArrayRange:
     start+=(Expression|'*') ('..' end+=Expression)? (',' start+=(Expression|'*') ('..' end+=Expression)?)*
+;
+
+UdtInitialization:
+    '(' (('(' ')') | udtInitialization+=UdtInitialization | arrayInitialization+=ArrayInitialization | expressions+=Expression)
+    (',' (('(' ')') | udtInitialization+=UdtInitialization | arrayInitialization+=ArrayInitialization | expressions+=Expression) )* ')'
+;
+
+ArrayInitialization:
+    '[' (('(' ')') | udtInitialization+=UdtInitialization | (NUMBER '(' expressions+=Expression ')' | expressions+=Expression))
+    (',' (('(' ')') |udtInitialization+=UdtInitialization | (NUMBER '(' expressions+=Expression ')' | expressions+=Expression)))* ']'
 ;
 
 // ***********************
