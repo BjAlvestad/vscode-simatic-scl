@@ -104,7 +104,7 @@ VariableDeclaration returns NamedElement:
         (
             value=MemberCall
             | value=ArrayInitialization
-            | value=UdtInitialization
+            // | value=UdtInitialization
         )
     )?
     ';'
@@ -131,14 +131,15 @@ ArrayRange:
     start+=(MemberCall|'*') ('..' end+=MemberCall)? (',' start+=(MemberCall|'*') ('..' end+=MemberCall)?)*
 ;
 
+//TODO: Solve ambiguity between MemberCall and UdtInitialization (<(, NUMBER, ), ,, (> may appears as a prefix path in all these alternatives.)
 UdtInitialization:
-    '(' (('(' ')') | udtInitialization+=UdtInitialization | arrayInitialization+=ArrayInitialization | expressions+=MemberCall)
-    (',' (('(' ')') | udtInitialization+=UdtInitialization | arrayInitialization+=ArrayInitialization | expressions+=MemberCall) )* ')'
+    '(' expressions+=MemberCall
+    (',' ( expressions+=MemberCall))* ')'
 ;
 
 ArrayInitialization:
-    '[' (('(' ')') | udtInitialization+=UdtInitialization | (NUMBER '(' expressions+=MemberCall ')') | expressions+=MemberCall)
-    (',' (('(' ')') | udtInitialization+=UdtInitialization | (NUMBER '(' expressions+=MemberCall ')') | expressions+=MemberCall))* ']'
+    '[' ( expressions+=MemberCall | (NUMBER '(' expressions+=MemberCall ')') )
+    (',' ( expressions+=MemberCall | (NUMBER '(' expressions+=MemberCall ')') ))* ']'
 ;
 
 // ***********************
@@ -229,6 +230,9 @@ Primary infers Expression:
     | BooleanExpression
     | FeatureCall
     | TimeExpression
+    // | ('(' ')')
+    // | UdtInitialization
+    // | ('(' UdtInitialization ')')
 ;
 
 //TODO: Handle # prefix for local variables in validation. Optional here, so it can also parse usage in DBs, where there is no prefix.
