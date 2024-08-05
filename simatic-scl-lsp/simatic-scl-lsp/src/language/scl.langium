@@ -192,7 +192,7 @@ MemberCall infers Expression:
     Primary
 	({infer MemberCall.previous=current} 
     // Member call with function call
-        ("." (('#'? element=[NamedElement:ID]) | element=[NamedElement:DOUBLE_QUOTE_STRING]) '^'? (
+        ("." '#'? (element=[NamedElement:ID] | element=[NamedElement:DOUBLE_QUOTE_STRING]) '^'? (
 		explicitOperationCall?='('
 		(
 		    arguments+=Expression (',' arguments+=Expression)*
@@ -233,7 +233,7 @@ Primary infers Expression:
 //TODO: Handle # prefix for local variables in validation. Optional here, so it can also parse usage in DBs, where there is no prefix.
 FeatureCall infers Expression:
 	{infer MemberCall}
-	(('#'? element=[NamedElement:ID]) | element=[NamedElement:DOUBLE_QUOTE_STRING]) '^'?
+	'#'? ((element=[NamedElement:ID]) | element=[NamedElement:DOUBLE_QUOTE_STRING]) '^'?
     // Optional function call after referencing an element
     (explicitOperationCall?='('
 	(
