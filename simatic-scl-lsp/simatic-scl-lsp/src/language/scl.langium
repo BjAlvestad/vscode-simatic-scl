@@ -237,8 +237,11 @@ FeatureCall infers Expression:
     // Optional function call after referencing an element
     (explicitOperationCall?='('
 	(
-        parameters+=(ID | DOUBLE_QUOTE_STRING) (':=' | '=>') arguments+=Expression
-        (',' parameters+=(ID | DOUBLE_QUOTE_STRING) (':=' | '=>') arguments+=Expression)*
+        argument=Expression?
+        |(
+            parameters+=(ID | DOUBLE_QUOTE_STRING) (':=' | '=>') arguments+=Expression
+            (',' parameters+=(ID | DOUBLE_QUOTE_STRING) (':=' | '=>') arguments+=Expression)*
+        )
 	)?
 	')')?;
 
