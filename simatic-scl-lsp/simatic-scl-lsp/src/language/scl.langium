@@ -237,16 +237,13 @@ FeatureCall infers Expression:
     // Optional function call after referencing an element
     (explicitOperationCall?='('
 	(
-        argument=Expression?
-        |(
-            parameters+=(ID | DOUBLE_QUOTE_STRING) (':=' | '=>') arguments+=Expression
-            (',' parameters+=(ID | DOUBLE_QUOTE_STRING) (':=' | '=>') arguments+=Expression)*
-        )
+        argument=Expression? (',' argument+=Expression)*
 	)?
 	')')?;
 
+//TODO: Consider removing BuiltInFunction entirely, and instead inject some SCL files it can cross-reference, and tereby being covered by FeatureCall
 BuiltInFunction:
-    name=ID '(' argument=Expression? ')'
+    name=BuiltInFunctionNames '(' argument=Expression? (',' argument+=Expression) ')'
 ;
 
 UnaryExpression:
@@ -366,6 +363,10 @@ fragment ElementaryType returns string:
 
 fragment DateAndTime returns string:
     'DT' | 'DATE_AND_TIME' | 'LDT' | 'DATE_AND_LTIME' | 'DTL'
+;
+
+BuiltInFunctionNames returns string:
+    'GATHER' | 'SCATTER'
 ;
 
 BlockEnd returns string:
