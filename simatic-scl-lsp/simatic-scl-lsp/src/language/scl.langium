@@ -56,7 +56,7 @@ BlockStart:
         'TYPE' |
         'DATA_BLOCK' |
         'ORGANIZATION_BLOCK'
-    ) ( name=DOUBLE_QUOTE_STRING | name=ID) (':' type=(DataType | 'Void'))?;
+    ) ( name=DOUBLE_QUOTE_STRING | name=ID) (':' type=TypeName)?;
 
 Title:
     value=TITLE_TEXT
@@ -111,7 +111,7 @@ VariableDeclaration returns NamedElement:
 UdtRef: udtRef=[BlockStart:DOUBLE_QUOTE_STRING];
 
 StringType:
-    (isString?='STRING' | isWideString?='WSTRING') ('[' (sizeLiteral=NUMBER | sizeRef=FeatureCall) ']')?
+    type=StringTypeName ('[' (sizeLiteral=NUMBER | sizeRef=FeatureCall) ']')?
 ;
 
 TypeReference: 
@@ -220,7 +220,7 @@ MemberCall infers Expression:
 
 Primary infers Expression:
     '(' Expression ')'
-    | DataType '#'?
+    | TypeName '#'?
     | UnaryExpression
     | NumberExpression
     | StringExpression
@@ -250,7 +250,7 @@ UnaryExpression:
     operator=('NOT' | '-' | '+') value=Expression
 ;
 
-NumberExpression: (type=DataType '#')? value=NUMBER;
+NumberExpression: (type=TypeName '#')? value=NUMBER;
 StringExpression: value=SINGLE_QUOTE_STRING;
 BooleanExpression: value?='true' | 'false';
 TimeExpression:
@@ -325,6 +325,12 @@ CaseStatement:
     'END_CASE' ';'
 ;
 
+TypeName returns string:
+    DataType 
+    | StringTypeName
+    | 'Void'
+;
+
 DataType returns string:
     // Elementary types
     'BOOL'
@@ -336,6 +342,10 @@ DataType returns string:
     | 'CHAR'  | 'WCHAR'
     // Complex - Data and time
     | 'DT' | 'DATE_AND_TIME' | 'LDT' | 'DATE_AND_LTIME' | 'DTL'
+;
+
+StringTypeName returns string:
+    'STRING' | 'WSTRING'
 ;
 
 // Declaration/assignment for elementary data types

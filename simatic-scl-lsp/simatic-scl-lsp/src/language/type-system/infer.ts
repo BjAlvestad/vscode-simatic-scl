@@ -86,7 +86,7 @@ function inferTypeRef(node: TypeReference, cache: Map<AstNode, TypeDescription>)
             return createBooleanType();
         }
     } else if (node.string) {
-        if (node.string?.isString || node.string?.isWideString) {
+        if (node.string?.type === "STRING" || node.string?.type ==="WSTRING") {
             return createStringType();
         }
     } else if (node.struct) {
