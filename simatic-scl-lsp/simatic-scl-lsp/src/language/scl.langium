@@ -12,7 +12,6 @@ entry Model:
     ('BEGIN'
         (elements+=SclProgramElement)*
     )?
-    return=ReturnStatement?
     BlockEnd
 ;
 
@@ -148,6 +147,7 @@ SclProgramElement:
     | RepeatStatement
     | ContinueStatemen
     | ExitStatement
+    | ReturnStatement
     | JumpLabel
     | ProgramJump
     | Region
