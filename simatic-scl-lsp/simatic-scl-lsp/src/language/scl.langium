@@ -101,9 +101,11 @@ VariableDeclaration returns NamedElement:
     type=TypeReference
     (
         assignment?=':='
-        (value=Expression
-        | value=ArrayInitialization
-        | value=UdtInitialization)
+        (
+            value=MemberCall
+            | value=ArrayInitialization
+            | value=UdtInitialization
+        )
     )?
     ';'
 ;
@@ -126,17 +128,17 @@ VariableAttribute:
     '{' (name=ID ':=' value=SINGLE_QUOTE_STRING ';'?)+ '}';
 
 ArrayRange:
-    start+=(Expression|'*') ('..' end+=Expression)? (',' start+=(Expression|'*') ('..' end+=Expression)?)*
+    start+=(MemberCall|'*') ('..' end+=MemberCall)? (',' start+=(MemberCall|'*') ('..' end+=MemberCall)?)*
 ;
 
 UdtInitialization:
-    '(' (('(' ')') | udtInitialization+=UdtInitialization | arrayInitialization+=ArrayInitialization | expressions+=Expression)
-    (',' (('(' ')') | udtInitialization+=UdtInitialization | arrayInitialization+=ArrayInitialization | expressions+=Expression) )* ')'
+    '(' (('(' ')') | udtInitialization+=UdtInitialization | arrayInitialization+=ArrayInitialization | expressions+=MemberCall)
+    (',' (('(' ')') | udtInitialization+=UdtInitialization | arrayInitialization+=ArrayInitialization | expressions+=MemberCall) )* ')'
 ;
 
 ArrayInitialization:
-    '[' (('(' ')') | udtInitialization+=UdtInitialization | (NUMBER '(' expressions+=Expression ')' | expressions+=Expression))
-    (',' (('(' ')') |udtInitialization+=UdtInitialization | (NUMBER '(' expressions+=Expression ')' | expressions+=Expression)))* ']'
+    '[' (('(' ')') | udtInitialization+=UdtInitialization | (NUMBER '(' expressions+=MemberCall ')') | expressions+=MemberCall)
+    (',' (('(' ')') | udtInitialization+=UdtInitialization | (NUMBER '(' expressions+=MemberCall ')') | expressions+=MemberCall))* ']'
 ;
 
 // ***********************
