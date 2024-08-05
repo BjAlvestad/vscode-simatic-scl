@@ -226,7 +226,6 @@ Primary infers Expression:
     | StringExpression
     | BooleanExpression
     | FeatureCall
-    | BuiltInFunction
     | TimeExpression
 ;
 
@@ -240,11 +239,6 @@ FeatureCall infers Expression:
         argument=Expression? (',' argument+=Expression)*
 	)?
 	')')?;
-
-//TODO: Consider removing BuiltInFunction entirely, and instead inject some SCL files it can cross-reference, and tereby being covered by FeatureCall
-BuiltInFunction:
-    name=BuiltInFunctionNames '(' argument=Expression? (',' argument+=Expression) ')'
-;
 
 UnaryExpression:
     operator=('NOT' | '-' | '+') value=Expression
@@ -363,10 +357,6 @@ fragment ElementaryType returns string:
 
 fragment DateAndTime returns string:
     'DT' | 'DATE_AND_TIME' | 'LDT' | 'DATE_AND_LTIME' | 'DTL'
-;
-
-BuiltInFunctionNames returns string:
-    'GATHER' | 'SCATTER'
 ;
 
 BlockEnd returns string:
