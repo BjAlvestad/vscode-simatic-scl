@@ -221,6 +221,7 @@ MemberCall infers Expression:
 
 Primary infers Expression:
     '(' Expression ')'
+    | DataType '#'?
     | UnaryExpression
     | NumberExpression
     | StringExpression
@@ -250,7 +251,7 @@ UnaryExpression:
     operator=('NOT' | '-' | '+') value=Expression
 ;
 
-NumberExpression: value=NUMBER;
+NumberExpression: (type=DataType '#')? value=NUMBER;
 StringExpression: value=SINGLE_QUOTE_STRING;
 BooleanExpression: value?='true' | 'false';
 TimeExpression:
