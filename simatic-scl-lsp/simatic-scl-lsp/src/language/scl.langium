@@ -314,7 +314,7 @@ CaseStatement:
         elements+=SclProgramElement*
     )*
     (
-    'ELSE'
+    'ELSE' ':'
         elements+=SclProgramElement*
     )?
     'END_CASE' ';'
