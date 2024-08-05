@@ -314,7 +314,7 @@ CaseLabel:
 ;
 
 CaseLabelRange:
-    (start=MemberCall | start=NUMBER) ('..' (end=MemberCall | end=NUMBER))?
+    (start=MemberCall) ('..' (end=MemberCall))?
 ;
 
 CaseStatement:
