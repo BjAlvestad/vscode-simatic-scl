@@ -112,7 +112,7 @@ VariableDeclaration returns NamedElement:
 UdtRef: udtRef=[BlockStart:DOUBLE_QUOTE_STRING];
 
 StringType:
-    (isString?='STRING' | isWideString?='WSTRING') ('[' size=NUMBER ']')?
+    (isString?='STRING' | isWideString?='WSTRING') ('[' (sizeLiteral=NUMBER | sizeRef=FeatureCall) ']')?
 ;
 
 TypeReference: 
