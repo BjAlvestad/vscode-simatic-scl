@@ -73,12 +73,17 @@ DecBlocks:
     | (Struct ';')  // Struct is used as top level section in UDT
 ;
 
-InputVarDecBlock: type='VAR_INPUT' varDecs+=VariableDeclaration* 'END_VAR';
-OutputVarDecBlock: type='VAR_OUTPUT' varDecs+=VariableDeclaration* 'END_VAR';
-InOutVarDecBlock: type='VAR_IN_OUT' varDecs+=VariableDeclaration* 'END_VAR';
-VarDecBlock: type='VAR' retain?='RETAIN'? varDecs+=VariableDeclaration* 'END_VAR';
-TempVarDecBlock: type='VAR_TEMP' varDecs+=VariableDeclaration* 'END_VAR';
-ConstVarDecBlock: 'VAR' type='CONSTANT' varDecs+=VariableDeclaration* 'END_VAR';
+InputVarDecBlock: type='VAR_INPUT' DecBlockQualifier varDecs+=VariableDeclaration* 'END_VAR';
+OutputVarDecBlock: type='VAR_OUTPUT' DecBlockQualifier varDecs+=VariableDeclaration* 'END_VAR';
+InOutVarDecBlock: type='VAR_IN_OUT' DecBlockQualifier varDecs+=VariableDeclaration* 'END_VAR';
+VarDecBlock: type='VAR' DecBlockQualifier varDecs+=VariableDeclaration* 'END_VAR';
+TempVarDecBlock: type='VAR_TEMP' DecBlockQualifier varDecs+=VariableDeclaration* 'END_VAR';
+ConstVarDecBlock: 'VAR' type='CONSTANT' DecBlockQualifier varDecs+=VariableDeclaration* 'END_VAR';
+
+fragment DecBlockQualifier:
+    dbSpesific?='DB_SPECIFIC'?
+    retain?='RETAIN'?
+;
 
 Struct:
     'STRUCT'
