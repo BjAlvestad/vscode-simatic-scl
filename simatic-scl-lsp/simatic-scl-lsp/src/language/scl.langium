@@ -20,7 +20,7 @@ Person:
 Greeting:
     'Hello' person=[Person:ID] '!';
 
-terminal REGION_TEXT: /REGION [^\r\n]*/;
+terminal REGION_TEXT: /REGION[^\r\n]*/;
 terminal TITLE_TEXT: /TITLE = [^\r\n]*/;
 hidden terminal WS: /\s+/;
 terminal DOUBLE_QUOTE_STRING: /"(\\.|[^"\\])*"/;
