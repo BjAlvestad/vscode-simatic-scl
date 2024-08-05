@@ -310,9 +310,11 @@ ProgramJump:
 ;
 
 CaseLabel:
-    ((var+=MemberCall) | (start+=NUMBER ('..' end+=NUMBER)?))
-    (',' (var+=MemberCall | (start+=NUMBER ('..' end+=NUMBER)?)))*
-    ':'
+    label+=CaseLabelRange (',' label+=CaseLabelRange)* ':'
+;
+
+CaseLabelRange:
+    (start=MemberCall | start=NUMBER) ('..' (end=MemberCall | end=NUMBER))?
 ;
 
 CaseStatement:
