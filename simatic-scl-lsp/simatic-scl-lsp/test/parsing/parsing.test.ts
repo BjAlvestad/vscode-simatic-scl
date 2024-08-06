@@ -105,6 +105,7 @@ describe('Parsing tests', () => {
                 myArrayOfBools :  Array[1..2] of BOOL := [TRUE, False];
                 myArrayOfBools2 :  Array[1..3] of INT := [2(True)];
                 myArrayOfBools3 :  Array[1..30] of INT := [2(True), 13(TRUE)];
+                myArrayOfNegativeInt :  Array[1..3] of INT :=  [-1.0, -0.25, 1.0];
             END_VAR
 
             BEGIN
