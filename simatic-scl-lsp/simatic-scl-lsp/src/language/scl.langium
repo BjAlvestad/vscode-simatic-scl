@@ -50,13 +50,13 @@ BlockAttribute:
 ;
 
 BlockStart:
-    (
+    blockType=(
         'FUNCTION_BLOCK' |
         'FUNCTION' |
         'TYPE' |
         'DATA_BLOCK' |
         'ORGANIZATION_BLOCK'
-    ) ( name=DOUBLE_QUOTE_STRING | name=ID) (':' type=TypeName)?;
+    ) ( name=DOUBLE_QUOTE_STRING | name=ID) (':' returnType=TypeName)?;
 
 Title:
     value=TITLE_TEXT
