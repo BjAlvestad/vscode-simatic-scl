@@ -101,7 +101,7 @@ VariableDeclaration returns NamedElement:
     type=TypeReference
     (
         assignment?=':='
-        (value=Expression
+        (value=InitializationExpression
         | value=ArrayInitialization
         | value=UdtInitialization)
     )?
@@ -129,14 +129,22 @@ ArrayRange:
     start+=(Expression|'*') ('..' end+=Expression)? (',' start+=(Expression|'*') ('..' end+=Expression)?)*
 ;
 
+InitializationExpression:
+    (('+'|'-')? NumberExpression)
+    | StringExpression
+    | BooleanExpression
+    | TimeExpression
+    | FeatureCall
+;
+
 UdtInitialization:
-    '(' (('(' ')') | udtInitialization+=UdtInitialization | arrayInitialization+=ArrayInitialization | expressions+=Expression)
-    (',' (('(' ')') | udtInitialization+=UdtInitialization | arrayInitialization+=ArrayInitialization | expressions+=Expression) )* ')'
+    '(' (('(' ')') | udtInitialization+=UdtInitialization | arrayInitialization+=ArrayInitialization | expressions+=InitializationExpression)
+    (',' (('(' ')') | udtInitialization+=UdtInitialization | arrayInitialization+=ArrayInitialization | expressions+=InitializationExpression) )* ')'
 ;
 
 ArrayInitialization:
-    '[' (('(' ')') | udtInitialization+=UdtInitialization | (NUMBER '(' expressions+=Expression ')' | expressions+=Expression))
-    (',' (('(' ')') |udtInitialization+=UdtInitialization | (NUMBER '(' expressions+=Expression ')' | expressions+=Expression)))* ']'
+    '[' (('(' ')') | udtInitialization+=UdtInitialization | (NUMBER '(' expressions+=InitializationExpression ')' | expressions+=InitializationExpression))
+    (',' (('(' ')') |udtInitialization+=UdtInitialization | (NUMBER '(' expressions+=InitializationExpression ')' | expressions+=InitializationExpression)))* ']'
 ;
 
 // ***********************
@@ -226,7 +234,6 @@ Primary infers Expression:
     | StringExpression
     | BooleanExpression
     | FeatureCall
-    | BuiltInFunction
     | TimeExpression
 ;
 
@@ -237,17 +244,9 @@ FeatureCall infers Expression:
     // Optional function call after referencing an element
     (explicitOperationCall?='('
 	(
-        argument=Expression?
-        |(
-            parameters+=(ID | DOUBLE_QUOTE_STRING) (':=' | '=>') arguments+=Expression
-            (',' parameters+=(ID | DOUBLE_QUOTE_STRING) (':=' | '=>') arguments+=Expression)*
-        )
+        argument=Expression? (',' argument+=Expression)*
 	)?
 	')')?;
-
-BuiltInFunction:
-    name=ID '(' argument=Expression? ')'
-;
 
 UnaryExpression:
     operator=('NOT' | '-' | '+') value=Expression
@@ -314,7 +313,7 @@ CaseLabel:
 ;
 
 CaseLabelRange:
-    (start=MemberCall | start=NUMBER) ('..' (end=MemberCall | end=NUMBER))?
+    (start=MemberCall) ('..' (end=MemberCall))?
 ;
 
 CaseStatement:
