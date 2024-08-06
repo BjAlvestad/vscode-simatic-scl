@@ -42,8 +42,6 @@ export function inferType(node: AstNode | undefined, cache: Map<AstNode, TypeDes
     } else if (isVariableDeclaration(node)) {
         if (node.type) {
             type = inferType(node.type, cache);
-        } else if (node.value) {
-            type = inferType(node.value, cache);
         } else {
             type = createErrorType('No type hint for this element', node);
         }

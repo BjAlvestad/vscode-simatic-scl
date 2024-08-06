@@ -22,6 +22,9 @@ Greeting:
 
 terminal REGION_TEXT: /REGION[^\r\n]*/;
 terminal TITLE_TEXT: /TITLE = [^\r\n]*/;
+terminal UDT_INITIALISATION_LITERAL: /(?<=(:\s+"[^"]+"\s+:=\s*\())[^;\r\n]+(?=(\);))/;
+terminal ARRAY_INITIALISATION_LITERAL: /(?<=([^\]]\]\s+of\s+.*\s+:=\s*\[))[^;\r\n]+(?=(\];))/;
+// terminal ARRAY_INITIALISATION_LITERAL: /(?<=(:\s+Array\[[^\]]\]\s+of\s+.*\s+:=\s*\[))[^;\r\n]+(?=(\];))/;
 hidden terminal WS: /\s+/;
 terminal DOUBLE_QUOTE_STRING: /"(\\.|[^"\\])*"/;
 terminal SINGLE_QUOTE_STRING: /'([^'])*'/;
@@ -102,12 +105,18 @@ VariableDeclaration returns NamedElement:
     (
         assignment?=':='
         (
-            value=MemberCall
-            | value=ArrayInitialization
+            value=InitializationLiteral
+            | value=MemberCall
+            // | value=ArrayInitialization
             // | value=UdtInitialization
         )
     )?
     ';'
+;
+
+InitializationLiteral returns string:
+    ('(' UDT_INITIALISATION_LITERAL ')')
+    | ('[' ARRAY_INITIALISATION_LITERAL ']')
 ;
 
 UdtRef: udtRef=[BlockStart:DOUBLE_QUOTE_STRING];

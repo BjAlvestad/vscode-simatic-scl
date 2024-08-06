@@ -114,12 +114,12 @@ describe('Parsing tests', () => {
 
         const vars = document.parseResult.value.decBlocks[0].varDecs;
         expect(checkDocumentValid(document)).toBeFalsy();
-        expect(vars[0].value?.$type).toEqual("ArrayInitialization")
-        expect(vars[1].value?.$type).toEqual("ArrayInitialization")
-        expect(vars[2].value?.$type).toEqual("ArrayInitialization")
-        expect(vars[3].value?.$type).toEqual("ArrayInitialization")
+        expect(vars[0].value).toEqual("[2#0000_0000_0000_0000_0001_0100_0011_1111]")
+        expect(vars[1].value).toEqual("[TRUE, False]")
+        expect(vars[2].value).toEqual("[2(True)]")
+        expect(vars[3].value).toEqual("[2(True), 13(TRUE)]")
     });
-  
+
     test('parse UDT literal', async () => {
         document = await parse(`
             FUNCTION_BLOCK "FB_MyFunctionBlock"
@@ -132,11 +132,11 @@ describe('Parsing tests', () => {
 
             END_FUNCTION
         `);
-
+        // console.log(document.parseResult.value.decBlocks[0].varDecs)
         const vars = document.parseResult.value.decBlocks[0].varDecs;
         expect(checkDocumentValid(document)).toBeFalsy();
-        expect(vars[0].value?.$type).toEqual("UdtInitialization")
-        expect(vars[1].value?.$type).toEqual("UdtInitialization")
+        expect(vars[0].value).toEqual("(32, 13, 43)")
+        expect(vars[1].value).toEqual("(32, (), TRUE, (), 43)")
     });
   
     test('parse nested UDT literal', async () => {
@@ -153,7 +153,7 @@ describe('Parsing tests', () => {
 
         const vars = document.parseResult.value.decBlocks[0].varDecs;
         expect(checkDocumentValid(document)).toBeFalsy();
-        expect(vars[0].value?.$type).toEqual("UdtInitialization")
+        expect(vars[0].value).toEqual("(32, (), ((), (), (), ()), TRUE, (), 43)")
     });
   
     test('parse array of UDT literals', async () => {
@@ -170,7 +170,7 @@ describe('Parsing tests', () => {
 
         const vars = document.parseResult.value.decBlocks[0].varDecs;
         expect(checkDocumentValid(document)).toBeFalsy();
-        expect(vars[0].value?.$type).toEqual("UdtInitialization")
+        expect(vars[0].value).toEqual("([()], [()], [16#0051])")
     });
 
     test('parse DB from UDT', async () => {
