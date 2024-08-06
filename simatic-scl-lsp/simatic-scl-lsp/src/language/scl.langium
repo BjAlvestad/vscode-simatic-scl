@@ -6,7 +6,7 @@ entry Model:
     (compilerDirective+=CompilerDirective)*
     (blockAttribute+=BlockAttribute)*
     isNonRetain?='NON_RETAIN'?
-    dbFromUdt=[BlockStart:DOUBLE_QUOTE_STRING]?
+    ((isArrayDb?='ARRAY' '[' arrayRange=ArrayRange ']' 'OF')? dbFromUdt=[BlockStart:DOUBLE_QUOTE_STRING]? ';'?)
     decBlocks+=DecBlocks*
     ('BEGIN'
         (elements+=SclProgramElement)*
