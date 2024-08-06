@@ -81,7 +81,7 @@ ConstVarDecBlock: 'VAR' type='CONSTANT' DecBlockQualifier varDecs+=VariableDecla
 
 fragment DecBlockQualifier:
     dbSpesific?='DB_SPECIFIC'?
-    retain?='RETAIN'?
+    retain?=RetainKeywordName?
 ;
 
 Struct:
@@ -92,7 +92,7 @@ Struct:
 
 VariableDeclaration returns NamedElement:
     {infer VariableDeclaration}
-    (name=ID | name=DOUBLE_QUOTE_STRING)
+    (name=ID | name=DOUBLE_QUOTE_STRING | name=KeywordsAllowedElsewhere )
     attributes+=VariableAttribute?
     ('AT' refName=[NamedElement:ID])?
     ':'
@@ -200,7 +200,7 @@ MemberCall infers Expression:
     Primary
 	({infer MemberCall.previous=current} 
     // Member call with function call
-        ("." '#'? (element=[NamedElement:ID] | element=[NamedElement:DOUBLE_QUOTE_STRING]) '^'? (
+        ("." '#'? (element=[NamedElement:ID] | element=[NamedElement:DOUBLE_QUOTE_STRING] | element=[NamedElement:KeywordsAllowedElsewhere]) '^'? (
 		explicitOperationCall?='('
 		(
 		    arguments+=Expression (',' arguments+=Expression)*
@@ -240,7 +240,7 @@ Primary infers Expression:
 //TODO: Handle # prefix for local variables in validation. Optional here, so it can also parse usage in DBs, where there is no prefix.
 FeatureCall infers Expression:
 	{infer MemberCall}
-	'#'? ((element=[NamedElement:ID]) | element=[NamedElement:DOUBLE_QUOTE_STRING]) '^'?
+	'#'? ((element=[NamedElement:ID]) | element=[NamedElement:DOUBLE_QUOTE_STRING] | element=[NamedElement:KeywordsAllowedElsewhere]) '^'?
     // Optional function call after referencing an element
     (explicitOperationCall?='('
 	(
@@ -329,6 +329,10 @@ CaseStatement:
     'END_CASE' ';'
 ;
 
+KeywordsAllowedElsewhere returns string:
+    RetainKeywordName
+;
+
 TypeName returns string:
     DataType 
     | StringTypeName
@@ -366,6 +370,8 @@ fragment ElementaryType returns string:
 fragment DateAndTime returns string:
     'DT' | 'DATE_AND_TIME' | 'LDT' | 'DATE_AND_LTIME' | 'DTL'
 ;
+
+RetainKeywordName returns string: 'Retain';
 
 BlockEnd returns string:
     'END_FUNCTION_BLOCK' |
