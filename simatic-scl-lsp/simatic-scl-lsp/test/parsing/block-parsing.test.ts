@@ -37,7 +37,7 @@ describe('Block parsing tests', () => {
 
         const model = document.parseResult.value;
         expect(checkDocumentValid(document)).toBeFalsy();
-        expect(model.blockStart[0].blockType).toEqual("DATA_BLOCK");
+        expect(model.type).toEqual("DATA_BLOCK");
         expect(model.dbFromUdt?.$refText).toEqual('"FB_MySclFunctionBlock"');
     });
 
@@ -56,7 +56,7 @@ describe('Block parsing tests', () => {
 
         const model = document.parseResult.value;
         expect(checkDocumentValid(document)).toBeFalsy();
-        expect(model.blockStart[0].blockType).toEqual("DATA_BLOCK");
+        expect(model.type).toEqual("DATA_BLOCK");
         expect(model.dbFromUdt?.$refText).toEqual('"U_MyUdt"');
     });
 
@@ -79,7 +79,7 @@ describe('Block parsing tests', () => {
 
         const model = document.parseResult.value;
         expect(checkDocumentValid(document)).toBeFalsy();
-        expect(model.blockStart[0].blockType).toEqual("DATA_BLOCK");
+        expect(model.type).toEqual("DATA_BLOCK");
         expect(model.dbFromUdt?.$refText).toEqual('"U_MyUdt"');
     });
 
@@ -97,7 +97,7 @@ describe('Block parsing tests', () => {
 
         const model = document.parseResult.value;
         expect(checkDocumentValid(document)).toBeFalsy();
-        expect(model.blockStart[0].blockType).toEqual("DATA_BLOCK");
+        expect(model.type).toEqual("DATA_BLOCK");
     });
 
     test('Parse Global DB with two variables declared', async () => {
@@ -119,7 +119,7 @@ describe('Block parsing tests', () => {
 
         const model = document.parseResult.value;
         expect(checkDocumentValid(document)).toBeFalsy();
-        expect(model.blockStart[0].blockType).toEqual("DATA_BLOCK");
+        expect(model.type).toEqual("DATA_BLOCK");
     });
 
     test('Parse Array DB with two values initialized', async () => {
@@ -137,7 +137,7 @@ describe('Block parsing tests', () => {
 
         const model = document.parseResult.value;
         expect(checkDocumentValid(document)).toBeFalsy();
-        expect(model.blockStart[0].blockType).toEqual("DATA_BLOCK");
+        expect(model.type).toEqual("DATA_BLOCK");
         expect(model.dbFromUdt?.$refText).toEqual('"U_MyInputUdt"');
     });
 
@@ -161,7 +161,7 @@ describe('Block parsing tests', () => {
 
         const model = document.parseResult.value;
         expect(checkDocumentValid(document)).toBeFalsy();
-        expect(model.blockStart[0].blockType).toEqual("DATA_BLOCK");
+        expect(model.type).toEqual("DATA_BLOCK");
         expect(model.dbFromBuiltInFunction).toEqual("IEC_TIMER");
     });
 

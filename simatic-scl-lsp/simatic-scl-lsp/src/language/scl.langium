@@ -1,12 +1,12 @@
 grammar Scl
 
 entry Model:
-    blockStart+=BlockStart
+    type=BlockType (name=DOUBLE_QUOTE_STRING | name=ID) (':' returnType=TypeName)?
     title=Title?
     (compilerDirective+=CompilerDirective)*
     (blockAttribute+=BlockAttribute)*
     isNonRetain?='NON_RETAIN'?
-    ((isArrayDb?='ARRAY' '[' arrayRange=ArrayRange ']' 'OF')? (dbFromUdt=[BlockStart:DOUBLE_QUOTE_STRING] | dbFromBuiltInFunction=ID) ';'?)?
+    ((isArrayDb?='ARRAY' '[' arrayRange=ArrayRange ']' 'OF')? (dbFromUdt=[Model:DOUBLE_QUOTE_STRING] | dbFromBuiltInFunction=ID) ';'?)?
     decBlocks+=DecBlocks*
     ('BEGIN'
         (elements+=SclProgramElement)*
@@ -49,14 +49,13 @@ BlockAttribute:
     | ID ':' value=(ID | SINGLE_QUOTE_STRING | NUMBER)
 ;
 
-BlockStart:
-    blockType=(
-        'FUNCTION_BLOCK' |
-        'FUNCTION' |
-        'TYPE' |
-        'DATA_BLOCK' |
-        'ORGANIZATION_BLOCK'
-    ) ( name=DOUBLE_QUOTE_STRING | name=ID) (':' returnType=TypeName)?;
+BlockType returns string:
+    'FUNCTION_BLOCK'
+    | 'FUNCTION'
+    | 'TYPE'
+    | 'DATA_BLOCK'
+    | 'ORGANIZATION_BLOCK'
+;
 
 Title:
     value=TITLE_TEXT
@@ -108,7 +107,7 @@ VariableDeclaration returns NamedElement:
     ';'
 ;
 
-UdtRef: udtRef=[BlockStart:DOUBLE_QUOTE_STRING];
+UdtRef: udtRef=[Model:DOUBLE_QUOTE_STRING];
 
 StringType:
     type=StringTypeName ('[' (sizeLiteral=NUMBER | sizeRef=FeatureCall) ']')?
@@ -240,7 +239,7 @@ Primary infers Expression:
 //TODO: Handle # prefix for local variables in validation. Optional here, so it can also parse usage in DBs, where there is no prefix.
 FeatureCall infers Expression:
 	{infer MemberCall}
-	'#'? ((element=[NamedElement:ID]) | element=[NamedElement:DOUBLE_QUOTE_STRING] | element=[NamedElement:KeywordsAllowedElsewhere]) '^'?
+	'#'? ((element=[NamedElement:ID]) | element=[NamedElement:DOUBLE_QUOTE_STRING] | element=[Model:DOUBLE_QUOTE_STRING] | element=[NamedElement:KeywordsAllowedElsewhere]) '^'?
     // Optional function call after referencing an element
     (explicitOperationCall?='('
 	(
