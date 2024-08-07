@@ -253,7 +253,7 @@ UnaryExpression:
 ;
 
 NumberExpression: (type=TypeName '#')? value=NUMBER;
-StringExpression: value=SINGLE_QUOTE_STRING;
+StringExpression: (type=StringTypeName '#')? value=SINGLE_QUOTE_STRING;
 BooleanExpression: value?='true' | 'false';
 TimeExpression:
     value=(
