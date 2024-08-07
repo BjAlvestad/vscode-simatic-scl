@@ -38,6 +38,7 @@ describe('Block parsing tests', () => {
         const model = document.parseResult.value;
         expect(checkDocumentValid(document)).toBeFalsy();
         expect(model.blockStart[0].blockType).toEqual("DATA_BLOCK");
+        expect(model.dbFromUdt?.$refText).toEqual('"FB_MySclFunctionBlock"');
     });
 
     test('Parse DB created from UDT', async () => {
@@ -56,6 +57,7 @@ describe('Block parsing tests', () => {
         const model = document.parseResult.value;
         expect(checkDocumentValid(document)).toBeFalsy();
         expect(model.blockStart[0].blockType).toEqual("DATA_BLOCK");
+        expect(model.dbFromUdt?.$refText).toEqual('"U_MyUdt"');
     });
 
     test('Parse DB created from UDT, with initialization, aka. start values', async () => {
@@ -78,6 +80,7 @@ describe('Block parsing tests', () => {
         const model = document.parseResult.value;
         expect(checkDocumentValid(document)).toBeFalsy();
         expect(model.blockStart[0].blockType).toEqual("DATA_BLOCK");
+        expect(model.dbFromUdt?.$refText).toEqual('"U_MyUdt"');
     });
 
     test('Parse Global DB with no variables declared', async () => {
@@ -135,6 +138,31 @@ describe('Block parsing tests', () => {
         const model = document.parseResult.value;
         expect(checkDocumentValid(document)).toBeFalsy();
         expect(model.blockStart[0].blockType).toEqual("DATA_BLOCK");
+        expect(model.dbFromUdt?.$refText).toEqual('"U_MyInputUdt"');
+    });
+
+    test('Parse DB of built in type', async () => {
+        document = await parse(`
+            DATA_BLOCK "Close_Timer"
+            {InstructionName := 'IEC_TIMER';
+            LibVersion := '1.0';
+            S7_Optimized_Access := 'TRUE' }
+            AUTHOR : Simatic
+            FAMILY : IEC
+            NAME : IEC_TMR
+            VERSION : 1.0
+            NON_RETAIN
+            IEC_TIMER
+
+            BEGIN
+
+            END_DATA_BLOCK
+        `);
+
+        const model = document.parseResult.value;
+        expect(checkDocumentValid(document)).toBeFalsy();
+        expect(model.blockStart[0].blockType).toEqual("DATA_BLOCK");
+        expect(model.dbFromBuiltInFunction).toEqual("IEC_TIMER");
     });
 
 
