@@ -292,7 +292,7 @@ describe('Parsing tests', () => {
 
             BEGIN
                 #internal1 := 11;
-                "internal2-2" := 22;
+                #"internal2-2" := 22;
             END_FUNCTION
         `);
 
@@ -331,10 +331,10 @@ describe('Parsing tests', () => {
             END_VAR
 
             BEGIN
-                normalStruct.internal77 := 123;
-                "quoteStruct2-2".internal4 := 123;
-                normalStruct."internal123-3" := 123;
-                "quoteStruct2-2"."internal5-6" := 123;
+                #normalStruct.internal77 := 123;
+                #"quoteStruct2-2".internal4 := 123;
+                #normalStruct."internal123-3" := 123;
+                #"quoteStruct2-2"."internal5-6" := 123;
             END_FUNCTION
         `);
 
