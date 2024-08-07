@@ -27,7 +27,6 @@ export class SclScopeProvider extends DefaultScopeProvider {
                 }
                 return EMPTY_SCOPE;
              }
-            
             //** Makes nested scope for structs work */
             const previousType = inferType(previous, new Map());
             if (isStructType(previousType)) {
@@ -37,6 +36,12 @@ export class SclScopeProvider extends DefaultScopeProvider {
             if (isUdtRef(previousType)) {
                 return this.scopeUdtMembers(previousType.literal);
             }
+
+            // if (isBlockStart(previous)) {
+            //     const blockStart = previous as BlockStart;
+                
+            //     return this.scopeBlockMembers(previous)
+            // }
 
             return EMPTY_SCOPE;
         }
@@ -87,4 +92,13 @@ export class SclScopeProvider extends DefaultScopeProvider {
 
         return EMPTY_SCOPE;
     }
+
+    // private scopeBlockMembers(item: BlockStart) {
+    //     const varDecs = item.$container.decBlocks.flatMap(c => c.varDecs);
+    //     if (varDecs) {
+    //         return this.createScopeForNodes(varDecs);
+    //     }
+
+    //     return EMPTY_SCOPE;
+    // }
 }

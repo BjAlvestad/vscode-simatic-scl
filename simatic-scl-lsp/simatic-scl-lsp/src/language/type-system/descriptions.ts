@@ -5,7 +5,8 @@ import {
     Struct,
     NumberExpression,
     StringExpression,
-    UdtRef
+    UdtRef,
+    BlockStart
 } from "../generated/ast.js"
 
 export type TypeDescription =
@@ -16,6 +17,7 @@ export type TypeDescription =
     | NumberTypeDescription
     | FunctionTypeDescription
     | UdtRefTypeDescription
+    | BlockStartTypeDescription
     | StructTypeDescription
     | ErrorType;
 
@@ -116,6 +118,22 @@ export function createFunctionType(returnType: TypeDescription, parameters: Func
 
 export function isFunctionType(item: TypeDescription): item is FunctionTypeDescription {
     return item.$type === "function";
+}
+
+export interface BlockStartTypeDescription {
+    readonly $type: "BlockStart"
+    readonly literal: BlockStart
+}
+
+export function createBlockStartType(literal: BlockStart): BlockStartTypeDescription {
+    return {
+        $type: "BlockStart",
+        literal
+    };
+}
+
+export function isBlockStartType(item: TypeDescription): item is BlockStartTypeDescription {
+    return item.$type === "BlockStart";
 }
 
 export interface UdtRefTypeDescription {

@@ -1,6 +1,6 @@
 import { AstNode } from "langium";
-import { BinaryExpression, isBinaryExpression, isBooleanExpression, isStruct, isMemberCall, isNumberExpression, isStringExpression, isUnaryExpression, isVariableDeclaration, MemberCall, TypeReference, isTypeReference } from "../generated/ast.js";
-import { createBooleanType, createStructType, createErrorType, createNumberType, createStringType, isFunctionType, isStringType, TypeDescription, createUdtRefType } from "./descriptions.js";
+import { BinaryExpression, isBinaryExpression, isBooleanExpression, isStruct, isMemberCall, isNumberExpression, isStringExpression, isUnaryExpression, isVariableDeclaration, MemberCall, TypeReference, isTypeReference, isBlockStart } from "../generated/ast.js";
+import { createBooleanType, createStructType, createErrorType, createNumberType, createStringType, isFunctionType, isStringType, TypeDescription, createUdtRefType, createBlockStartType } from "./descriptions.js";
 
 export function inferType(node: AstNode | undefined, cache: Map<AstNode, TypeDescription>): TypeDescription {
     let type: TypeDescription | undefined;
@@ -32,7 +32,10 @@ export function inferType(node: AstNode | undefined, cache: Map<AstNode, TypeDes
         type = inferTypeRef(node, cache);
     } else if (isMemberCall(node)) {
         type = inferMemberCall(node, cache);
-        if (node.explicitOperationCall) {
+        if (node.globalElement) {
+            console.log("HAS GLOBAL ELEMENT: " + node.globalElement.ref?.name)
+            type = createBlockStartType(node);
+        } else if (node.explicitOperationCall) {
             if (isFunctionType(type)) {
                 type = type.returnType;
             }
