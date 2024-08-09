@@ -1,13 +1,24 @@
-import type { ReferenceInfo, Scope } from 'langium';
+import { DocumentCache, ReferenceInfo, Scope } from 'langium';
 import { EMPTY_SCOPE } from 'langium';
 import { DefaultScopeProvider } from 'langium';
-import { isMemberCall, isUdtRef, MemberCall, Struct, UdtRef } from './generated/ast.js';
+import { isMemberCall, isUdtRef, MemberCall, Model, Struct, UdtRef } from './generated/ast.js';
 import { inferType } from './type-system/infer.js';
 import { isStructType } from './type-system/descriptions.js';
 import { GetAllVarDecsFromModel, GetModelContainerFromContext } from './utils.js';
+import { SclServices } from './scl-module.js';
 
 export class SclScopeProvider extends DefaultScopeProvider {
     skipConsoleLog = true;
+
+    protected readonly availableElementsPerDocumentCache: DocumentCache<
+      string,
+      Model
+    >; // DocumentCache becomes invalidated as soon the corresponding document is updated
+
+    constructor(services: SclServices) {
+      super(services);
+      this.availableElementsPerDocumentCache = new DocumentCache(services.shared);
+    }
 
     /** Context based scope */
     override getScope(context: ReferenceInfo): Scope {
@@ -16,13 +27,25 @@ export class SclScopeProvider extends DefaultScopeProvider {
         if (context.property === 'element') {
             const memberCall = context.container as MemberCall;
             const previous = memberCall.previous;
+            const uri = memberCall.$container?.$container?.$document?.uri;
             this.logTypeInfo(memberCall, this.skipConsoleLog)
 
              /** RETURNS normal scope if it has no previous (i.e. is top level ref) */
             if (!previous) {
                 const model = GetModelContainerFromContext(context);
-                if (model) {
+                console.log("INSIDE !previous")
+                console.log(`uri: ${uri}, model name: ${model?.blockStart.name}`)
+                if (uri && model) {
+                    console.log("INSIDE uri && model")
+                    if (this.availableElementsPerDocumentCache.has(uri, model.blockStart.name)) {
+                        console.log("INSIDE get from cash")
+                        const cashedModel = this.availableElementsPerDocumentCache.get(uri, model.blockStart.name) ?? model;
+                        const allCachedLocalVars = GetAllVarDecsFromModel(cashedModel);
+                        return super.createScopeForNodes(allCachedLocalVars);
+                    }
+                    console.log("Write to cash and get vars in normal way")
                     const allLocalVars = GetAllVarDecsFromModel(model)
+                    this.availableElementsPerDocumentCache.set(uri, model.blockStart.name, model)
                     return super.createScopeForNodes(allLocalVars);
                 }
                 return EMPTY_SCOPE;
