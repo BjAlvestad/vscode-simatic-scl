@@ -1,4 +1,4 @@
-import { DocumentCache, ReferenceInfo, Scope } from 'langium';
+import { AstNode, DocumentCache, ReferenceInfo, Scope } from 'langium';
 import { EMPTY_SCOPE } from 'langium';
 import { DefaultScopeProvider } from 'langium';
 import { isMemberCall, isUdtRef, MemberCall, Model, Struct, UdtRef } from './generated/ast.js';
@@ -27,7 +27,8 @@ export class SclScopeProvider extends DefaultScopeProvider {
         if (context.property === 'element') {
             const memberCall = context.container as MemberCall;
             const previous = memberCall.previous;
-            const uri = memberCall.$container?.$container?.$document?.uri;
+            const topLevelContainer = this.getTopLevelContainer(memberCall)
+            const uri = topLevelContainer.$document?.uri;
             this.logTypeInfo(memberCall, this.skipConsoleLog)
 
              /** RETURNS normal scope if it has no previous (i.e. is top level ref) */
@@ -109,5 +110,15 @@ export class SclScopeProvider extends DefaultScopeProvider {
         }
 
         return EMPTY_SCOPE;
+    }
+
+    private getTopLevelContainer(node: AstNode) {
+        let container = node.$container as AstNode;
+        while(container?.$container)
+        {
+            container = container.$container;
+        }
+
+        return container;
     }
 }
