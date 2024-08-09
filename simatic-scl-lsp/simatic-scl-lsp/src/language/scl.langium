@@ -1,7 +1,7 @@
 grammar Scl
 
 entry Model:
-    blockStart+=BlockStart
+    blockStart=BlockStart
     title=Title?
     (compilerDirective+=CompilerDirective)*
     (blockAttribute+=BlockAttribute)*
