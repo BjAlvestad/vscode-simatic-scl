@@ -1,7 +1,7 @@
 import { AstNode, DocumentCache, ReferenceInfo, Scope } from 'langium';
 import { EMPTY_SCOPE } from 'langium';
 import { DefaultScopeProvider } from 'langium';
-import { isMemberCall, isUdtRef, MemberCall, Model, Struct, UdtRef } from './generated/ast.js';
+import { isMemberCall, isUdtRef, MemberCall, Struct, UdtRef, VariableDeclaration } from './generated/ast.js';
 import { inferType } from './type-system/infer.js';
 import { isStructType } from './type-system/descriptions.js';
 import { GetAllVarDecsFromModel, GetModelContainerFromContext } from './utils.js';
@@ -12,7 +12,7 @@ export class SclScopeProvider extends DefaultScopeProvider {
 
     protected readonly availableElementsPerDocumentCache: DocumentCache<
       string,
-      Model
+      VariableDeclaration[]
     >; // DocumentCache becomes invalidated as soon the corresponding document is updated
 
     constructor(services: SclServices) {
@@ -40,13 +40,12 @@ export class SclScopeProvider extends DefaultScopeProvider {
                     console.log("INSIDE uri && model")
                     if (this.availableElementsPerDocumentCache.has(uri, model.blockStart.name)) {
                         console.log("INSIDE get from cash")
-                        const cashedModel = this.availableElementsPerDocumentCache.get(uri, model.blockStart.name) ?? model;
-                        const allCachedLocalVars = GetAllVarDecsFromModel(cashedModel);
-                        return super.createScopeForNodes(allCachedLocalVars);
+                        const cashedVarDecs = this.availableElementsPerDocumentCache.get(uri, model.blockStart.name);
+                        return cashedVarDecs ? super.createScopeForNodes(cashedVarDecs) : EMPTY_SCOPE;
                     }
                     console.log("Write to cash and get vars in normal way")
                     const allLocalVars = GetAllVarDecsFromModel(model)
-                    this.availableElementsPerDocumentCache.set(uri, model.blockStart.name, model)
+                    this.availableElementsPerDocumentCache.set(uri, model.blockStart.name, allLocalVars)
                     return super.createScopeForNodes(allLocalVars);
                 }
                 return EMPTY_SCOPE;
