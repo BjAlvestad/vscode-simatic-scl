@@ -14,12 +14,6 @@ entry Model:
     BlockEnd
 ;
 
-Person:
-    'person' name=ID;
-
-Greeting:
-    'Hello' person=[Person:ID] '!';
-
 terminal REGION_TEXT: /REGION[^\r\n]*/;
 terminal TITLE_TEXT: /TITLE = [^\r\n]*/;
 hidden terminal WS: /\s+/;
