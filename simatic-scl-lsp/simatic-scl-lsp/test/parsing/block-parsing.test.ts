@@ -165,6 +165,180 @@ describe('Block parsing tests', () => {
         expect(model.dbFromBuiltInFunction).toEqual("IEC_TIMER");
     });
 
+    test('Parse FB', async () => {
+        document = await parse(`
+            FUNCTION_BLOCK "myFB"
+            { S7_Optimized_Access := 'TRUE' }
+            VERSION : 0.1
+
+            BEGIN
+            END_FUNCTION_BLOCK
+        `);
+
+        const model = document.parseResult.value;
+        expect(checkDocumentValid(document)).toBeFalsy();
+        expect(model.blockStart.blockType).toEqual("FUNCTION_BLOCK");
+    });
+
+    test('Parse FB retain', async () => {
+        document = await parse(`
+            FUNCTION_BLOCK "myFBRetain"
+            { S7_Optimized_Access := 'TRUE' }
+            VERSION : 0.1
+            VAR_INPUT RETAIN
+                retain_3 : Bool;
+            END_VAR
+            VAR_INPUT DB_SPECIFIC
+                setInIDB_3 : Bool;
+            END_VAR
+            VAR_INPUT 
+                normalNonRetain_3 : Bool;
+            END_VAR
+
+            VAR_OUTPUT RETAIN
+                retain_2 : Bool;
+            END_VAR
+            VAR_OUTPUT DB_SPECIFIC
+                setInIDB_2 : Bool;
+            END_VAR
+            VAR_OUTPUT 
+                normalNonRetain_2 : Bool;
+            END_VAR
+
+            VAR_IN_OUT RETAIN
+                retain_1 : Bool;
+            END_VAR
+            VAR_IN_OUT DB_SPECIFIC
+                setInIDB_1 : Bool;
+            END_VAR
+            VAR_IN_OUT 
+                normalNonRetain_1 : Bool;
+            END_VAR
+
+            VAR RETAIN
+                "retain" : Bool;
+            END_VAR
+            VAR DB_SPECIFIC
+                setInIDB : Bool;
+            END_VAR
+            VAR 
+                normalNonRetain : Bool;
+            END_VAR
+
+            VAR_TEMP 
+                tempHasNoRetainSetting : Bool;
+            END_VAR
+
+            VAR CONSTANT 
+                constHasNoRetainSetting : Bool;
+            END_VAR
+
+
+            BEGIN
+            END_FUNCTION_BLOCK
+        `);
+
+        const model = document.parseResult.value;
+        expect(checkDocumentValid(document)).toBeFalsy();
+        expect(model.blockStart.blockType).toEqual("FUNCTION_BLOCK");
+    });
+
+    test('Parse FC', async () => {
+        document = await parse(`
+            FUNCTION "myFC" : Void
+            { S7_Optimized_Access := 'TRUE' }
+            VERSION : 0.1
+
+            BEGIN
+            END_FUNCTION
+        `);
+
+        const model = document.parseResult.value;
+        expect(checkDocumentValid(document)).toBeFalsy();
+        expect(model.blockStart.blockType).toEqual("FUNCTION");
+    });
+
+    test('Parse FC with variables', async () => {
+        document = await parse(`
+            FUNCTION "myFC" : Void
+            { S7_Optimized_Access := 'TRUE' }
+            VERSION : 0.1
+            VAR_INPUT 
+                myIn : Bool;
+            END_VAR
+
+            VAR_OUTPUT 
+                myOut : Bool;
+            END_VAR
+
+            VAR_IN_OUT 
+                myInOut : Bool;
+            END_VAR
+
+            VAR_TEMP 
+                myTemp : Bool;
+            END_VAR
+
+            VAR CONSTANT 
+                myConst : Bool;
+            END_VAR
+
+
+            BEGIN
+            END_FUNCTION
+        `);
+
+        const model = document.parseResult.value;
+        expect(checkDocumentValid(document)).toBeFalsy();
+        expect(model.blockStart.blockType).toEqual("FUNCTION");
+    });
+
+    test('Parse UDT', async () => {
+        document = await parse(`
+            TYPE "myEmptyUdt"
+            VERSION : 0.1
+            STRUCT
+            END_STRUCT;
+
+            END_TYPE
+        `);
+
+        const model = document.parseResult.value;
+        expect(checkDocumentValid(document)).toBeFalsy();
+        expect(model.blockStart.blockType).toEqual("TYPE");
+    });
+
+    test('Parse UDT with variable that has default value', async () => {
+        document = await parse(`
+            TYPE "myUdtWithVariable"
+            VERSION : 0.1
+            STRUCT
+                myNumber : DInt;
+            END_STRUCT;
+
+            END_TYPE
+        `);
+
+        const model = document.parseResult.value;
+        expect(checkDocumentValid(document)).toBeFalsy();
+        expect(model.blockStart.blockType).toEqual("TYPE");
+    });
+
+    test('Parse UDT with initialization', async () => {
+        document = await parse(`
+            TYPE "myUdtWithInitialization"
+            VERSION : 0.1
+            STRUCT
+                myInitializedNumber : DInt := 17;
+            END_STRUCT;
+
+            END_TYPE
+        `);
+
+        const model = document.parseResult.value;
+        expect(checkDocumentValid(document)).toBeFalsy();
+        expect(model.blockStart.blockType).toEqual("TYPE");
+    });
 
 });
 
