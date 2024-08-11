@@ -3,7 +3,7 @@ import { EmptyFileSystem, type LangiumDocument } from "langium";
 import { expandToString as s } from "langium/generate";
 import { parseHelper } from "langium/test";
 import { createSclServices } from "../../src/language/scl-module.js";
-import { BinaryExpression, MemberCall, Model, NumberExpression, Region, TimeExpression, isBinaryExpression, isModel } from "../../src/language/generated/ast.js";
+import { BinaryExpression, DbBlock, MemberCall, Model, NumberExpression, Region, TimeExpression, isBinaryExpression, isModel } from "../../src/language/generated/ast.js";
 import { GetAllVarDecsFromModel } from "../../src/language/utils.js";
 
 let services: ReturnType<typeof createSclServices>;
@@ -37,8 +37,8 @@ describe('Block parsing tests', () => {
 
         const model = document.parseResult.value;
         expect(checkDocumentValid(document)).toBeFalsy();
-        expect(model.blockStart.blockType).toEqual("DATA_BLOCK");
-        expect(model.dbFromUdt?.$refText).toEqual('"FB_MySclFunctionBlock"');
+        expect(model.blockType).toEqual("DATA_BLOCK");
+        expect((model as DbBlock).dbFromUdt?.$refText).toEqual('"FB_MySclFunctionBlock"');
     });
 
     test('Parse DB created from UDT', async () => {
@@ -56,8 +56,8 @@ describe('Block parsing tests', () => {
 
         const model = document.parseResult.value;
         expect(checkDocumentValid(document)).toBeFalsy();
-        expect(model.blockStart.blockType).toEqual("DATA_BLOCK");
-        expect(model.dbFromUdt?.$refText).toEqual('"U_MyUdt"');
+        expect(model.blockType).toEqual("DATA_BLOCK");
+        expect((model as DbBlock).dbFromUdt?.$refText).toEqual('"U_MyUdt"');
     });
 
     test('Parse DB created from UDT, with initialization, aka. start values', async () => {
@@ -79,8 +79,8 @@ describe('Block parsing tests', () => {
 
         const model = document.parseResult.value;
         expect(checkDocumentValid(document)).toBeFalsy();
-        expect(model.blockStart.blockType).toEqual("DATA_BLOCK");
-        expect(model.dbFromUdt?.$refText).toEqual('"U_MyUdt"');
+        expect(model.blockType).toEqual("DATA_BLOCK");
+        expect((model as DbBlock).dbFromUdt?.$refText).toEqual('"U_MyUdt"');
     });
 
     test('Parse Global DB with no variables declared', async () => {
@@ -97,7 +97,73 @@ describe('Block parsing tests', () => {
 
         const model = document.parseResult.value;
         expect(checkDocumentValid(document)).toBeFalsy();
-        expect(model.blockStart.blockType).toEqual("DATA_BLOCK");
+        expect(model.blockType).toEqual("DATA_BLOCK");
+    });
+
+    test('Parse Global DB with attributes and no variables declared', async () => {
+        document = await parse(`
+            DATA_BLOCK "myDbWithMetaData"
+            TITLE = myTitle goes here
+            { S7_Optimized_Access := 'TRUE' }
+            AUTHOR : 'myAuthor first last'
+            FAMILY : myFamilyWhereSpacesAreNotAllowed
+            NAME : myUserDefinedIdWhereSpacesAreNotAllowed
+            VERSION : 0.1
+            NON_RETAIN
+            //myComment goes here
+
+            BEGIN
+
+            END_DATA_BLOCK
+        `);
+
+        const model = document.parseResult.value;
+        expect(checkDocumentValid(document)).toBeFalsy();
+        expect(model.blockType).toEqual("DATA_BLOCK");
+    });
+
+    test('Parse Global DB with attributes with no spaces, and no variables declared', async () => {
+        document = await parse(`
+            DATA_BLOCK "myDbWithMetaData_NoSpaces"
+            TITLE = myTitleWithoutSpaces
+            { S7_Optimized_Access := 'TRUE' }
+            AUTHOR : myAuthorWithoutSpaces
+            FAMILY : myFamilyWhereSpacesAreNotAllowed
+            NAME : myUserDefinedIdWhereSpacesAreNotAllowed
+            VERSION : 0.1
+            NON_RETAIN
+            //myCommentWithoutSpaces
+
+            BEGIN
+
+            END_DATA_BLOCK
+        `);
+
+        const model = document.parseResult.value;
+        expect(checkDocumentValid(document)).toBeFalsy();
+        expect(model.blockType).toEqual("DATA_BLOCK");
+    });
+    
+    test('Parse Global DB with attributes containing special symbols', async () => {
+        document = await parse(`
+            DATA_BLOCK "specialCharactersInAttributes"
+            TITLE = myTitle goes here
+            { S7_Optimized_Access := 'TRUE' }
+            AUTHOR : 'myAuthor first/last'
+            FAMILY : 'myFamilyWhereSpacesAreNotAllowed/withSlash'
+            NAME : 'myUserDefinedIdWhereSpacesAreNotAllowed/withSlash'
+            VERSION : 0.1
+            NON_RETAIN
+            //myComment goes here
+
+            BEGIN
+
+            END_DATA_BLOCK
+        `);
+
+        const model = document.parseResult.value;
+        expect(checkDocumentValid(document)).toBeFalsy();
+        expect(model.blockType).toEqual("DATA_BLOCK");
     });
 
     test('Parse Global DB with two variables declared', async () => {
@@ -119,7 +185,53 @@ describe('Block parsing tests', () => {
 
         const model = document.parseResult.value;
         expect(checkDocumentValid(document)).toBeFalsy();
-        expect(model.blockStart.blockType).toEqual("DATA_BLOCK");
+        expect(model.blockType).toEqual("DATA_BLOCK");
+    });
+
+    test('Parse Global DB with 1 dimensional array', async () => {
+        document = await parse(`
+            DATA_BLOCK "myDbWithArray"
+            { S7_Optimized_Access := 'TRUE' }
+            VERSION : 0.1
+            NON_RETAIN
+            VAR 
+                myArray : Array[0..2] of Bool;
+            END_VAR
+
+
+            BEGIN
+            myArray[0] := True;
+            myArray[2] := True;
+
+            END_DATA_BLOCK
+        `);
+
+        const model = document.parseResult.value;
+        expect(checkDocumentValid(document)).toBeFalsy();
+        expect(model.blockType).toEqual("DATA_BLOCK");
+    });
+
+    test('Parse Global DB with 2 dimensional array', async () => {
+        document = await parse(`
+            DATA_BLOCK "myDbWithArray"
+            { S7_Optimized_Access := 'TRUE' }
+            VERSION : 0.1
+            NON_RETAIN
+            VAR 
+                myArray : Array[0..2, 0..2] of Bool;
+            END_VAR
+
+
+            BEGIN
+            myArray[0,0] := True;
+            myArray[2,1] := True;
+
+            END_DATA_BLOCK
+        `);
+
+        const model = document.parseResult.value;
+        expect(checkDocumentValid(document)).toBeFalsy();
+        expect(model.blockType).toEqual("DATA_BLOCK");
     });
 
     test('Parse Array DB with two values initialized', async () => {
@@ -137,8 +249,8 @@ describe('Block parsing tests', () => {
 
         const model = document.parseResult.value;
         expect(checkDocumentValid(document)).toBeFalsy();
-        expect(model.blockStart.blockType).toEqual("DATA_BLOCK");
-        expect(model.dbFromUdt?.$refText).toEqual('"U_MyInputUdt"');
+        expect(model.blockType).toEqual("DATA_BLOCK");
+        expect((model as DbBlock).dbFromUdt?.$refText).toEqual('"U_MyInputUdt"');
     });
 
     test('Parse DB of built in type', async () => {
@@ -161,8 +273,31 @@ describe('Block parsing tests', () => {
 
         const model = document.parseResult.value;
         expect(checkDocumentValid(document)).toBeFalsy();
-        expect(model.blockStart.blockType).toEqual("DATA_BLOCK");
-        expect(model.dbFromBuiltInFunction).toEqual("IEC_TIMER");
+        expect(model.blockType).toEqual("DATA_BLOCK");
+        expect((model as DbBlock).dbFromBuiltInFunction).toEqual("IEC_TIMER");
+    });
+
+    test('Parse DB of built in type - without NON_RETAIN', async () => {
+        document = await parse(`
+            DATA_BLOCK "Close_Timer"
+            {InstructionName := 'IEC_TIMER';
+            LibVersion := '1.0';
+            S7_Optimized_Access := 'TRUE' }
+            AUTHOR : Simatic
+            FAMILY : IEC
+            NAME : IEC_TMR
+            VERSION : 1.0
+            IEC_TIMER
+
+            BEGIN
+
+            END_DATA_BLOCK
+        `);
+
+        const model = document.parseResult.value;
+        expect(checkDocumentValid(document)).toBeFalsy();
+        expect(model.blockType).toEqual("DATA_BLOCK");
+        expect((model as DbBlock).dbFromBuiltInFunction).toEqual("IEC_TIMER");
     });
 
     test('Parse FB', async () => {
@@ -177,7 +312,7 @@ describe('Block parsing tests', () => {
 
         const model = document.parseResult.value;
         expect(checkDocumentValid(document)).toBeFalsy();
-        expect(model.blockStart.blockType).toEqual("FUNCTION_BLOCK");
+        expect(model.blockType).toEqual("FUNCTION_BLOCK");
     });
 
     test('Parse FB retain', async () => {
@@ -240,7 +375,7 @@ describe('Block parsing tests', () => {
 
         const model = document.parseResult.value;
         expect(checkDocumentValid(document)).toBeFalsy();
-        expect(model.blockStart.blockType).toEqual("FUNCTION_BLOCK");
+        expect(model.blockType).toEqual("FUNCTION_BLOCK");
     });
 
     test('Parse FC', async () => {
@@ -255,7 +390,7 @@ describe('Block parsing tests', () => {
 
         const model = document.parseResult.value;
         expect(checkDocumentValid(document)).toBeFalsy();
-        expect(model.blockStart.blockType).toEqual("FUNCTION");
+        expect(model.blockType).toEqual("FUNCTION");
     });
 
     test('Parse FC with variables', async () => {
@@ -290,7 +425,7 @@ describe('Block parsing tests', () => {
 
         const model = document.parseResult.value;
         expect(checkDocumentValid(document)).toBeFalsy();
-        expect(model.blockStart.blockType).toEqual("FUNCTION");
+        expect(model.blockType).toEqual("FUNCTION");
     });
 
     test('Parse UDT', async () => {
@@ -305,7 +440,7 @@ describe('Block parsing tests', () => {
 
         const model = document.parseResult.value;
         expect(checkDocumentValid(document)).toBeFalsy();
-        expect(model.blockStart.blockType).toEqual("TYPE");
+        expect(model.blockType).toEqual("TYPE");
     });
 
     test('Parse UDT with variable that has default value', async () => {
@@ -321,7 +456,7 @@ describe('Block parsing tests', () => {
 
         const model = document.parseResult.value;
         expect(checkDocumentValid(document)).toBeFalsy();
-        expect(model.blockStart.blockType).toEqual("TYPE");
+        expect(model.blockType).toEqual("TYPE");
     });
 
     test('Parse UDT with initialization', async () => {
@@ -337,7 +472,7 @@ describe('Block parsing tests', () => {
 
         const model = document.parseResult.value;
         expect(checkDocumentValid(document)).toBeFalsy();
-        expect(model.blockStart.blockType).toEqual("TYPE");
+        expect(model.blockType).toEqual("TYPE");
     });
 
 });

@@ -2,26 +2,76 @@ grammar Scl
 import "./terminal"
 
 entry Model:
-    blockStart=BlockStart
+    SclBlock
+;
+
+SclBlock: DbBlock | UdtBlock | FbBlock | FcBlock | ObBlock ;
+
+DbBlock:
+    blockType='DATA_BLOCK' ( name=DOUBLE_QUOTE_STRING | name=ID) (':' returnType=TypeName)?
+        blockMetaData=BlockMetadata?
+        isNonRetain?='NON_RETAIN'?
+        ((isArrayDb?='ARRAY' '[' arrayRange=ArrayRange ']' 'OF')? (dbFromUdt=[SclBlock:DOUBLE_QUOTE_STRING] | dbFromBuiltInFunction=ID) ';'?)?
+        decBlocks+=DecBlocks*
+        ('BEGIN'
+            (elements+=DbProgramElement)*
+        )?
+    'END_DATA_BLOCK'
+;
+
+UdtBlock:
+    blockType='TYPE' ( name=DOUBLE_QUOTE_STRING | name=ID) (':' returnType=TypeName)?
+        blockMetaData=BlockMetadata?
+        isNonRetain?='NON_RETAIN'?
+        ((isArrayDb?='ARRAY' '[' arrayRange=ArrayRange ']' 'OF')? (dbFromUdt=[SclBlock:DOUBLE_QUOTE_STRING] | dbFromBuiltInFunction=ID) ';'?)?
+        decBlocks+=DecBlocks*
+        ('BEGIN'
+            (elements+=DbProgramElement)*
+        )?
+    'END_TYPE'
+;
+
+FbBlock:
+    blockType='FUNCTION_BLOCK' ( name=DOUBLE_QUOTE_STRING | name=ID)
+        blockMetaData=BlockMetadata?
+        decBlocks+=DecBlocks*
+        ('BEGIN'
+            (elements+=SclProgramElement)*
+        )?
+    'END_FUNCTION_BLOCK'
+;
+
+FcBlock:
+    blockType='FUNCTION' ( name=DOUBLE_QUOTE_STRING | name=ID) (':' returnType=TypeName)?
+        blockMetaData=BlockMetadata?
+        decBlocks+=DecBlocks*
+        ('BEGIN'
+            (elements+=SclProgramElement)*
+        )?
+    'END_FUNCTION'
+;
+
+ObBlock:
+    blockType='ORGANIZATION_BLOCK' ( name=DOUBLE_QUOTE_STRING | name=ID)
+        blockMetaData=BlockMetadata?
+        decBlocks+=DecBlocks*
+        ('BEGIN'
+            (elements+=SclProgramElement)*
+        )?
+    'END_ORGANIZATION_BLOCK'
+;
+
+BlockMetadata:
     title=Title?
     (compilerDirective+=CompilerDirective)*
-    (blockAttribute+=BlockAttribute)*
-    isNonRetain?='NON_RETAIN'?
-    ((isArrayDb?='ARRAY' '[' arrayRange=ArrayRange ']' 'OF')? (dbFromUdt=[BlockStart:DOUBLE_QUOTE_STRING] | dbFromBuiltInFunction=ID) ';'?)?
-    decBlocks+=DecBlocks*
-    ('BEGIN'
-        (elements+=SclProgramElement)*
-    )?
-    BlockEnd
+    ('AUTHOR' ':' author=(SINGLE_QUOTE_STRING | ID))?
+    ('FAMILY' ':' family=(SINGLE_QUOTE_STRING | ID))?
+    ('NAME' ':' name=(SINGLE_QUOTE_STRING | ID))?
+    ('VERSION' ':' version=NUMBER)?
 ;
 
 CompilerDirective:
     '{'name+=ID ':=' value+=SINGLE_QUOTE_STRING (';' name+=ID ':=' value+=SINGLE_QUOTE_STRING)* ';'? '}';
-
-BlockAttribute:
-    ID '=' value=SINGLE_QUOTE_STRING
-    | ID ':' value=(ID | SINGLE_QUOTE_STRING | NUMBER)
-;
 
 BlockStart:
     blockType=(
@@ -82,7 +132,7 @@ VariableDeclaration returns NamedElement:
     ';'
 ;
 
-UdtRef: udtRef=[BlockStart:DOUBLE_QUOTE_STRING];
+UdtRef: udtRef=[SclBlock:DOUBLE_QUOTE_STRING];
 
 StringType:
     type=StringTypeName ('[' (sizeLiteral=NUMBER | sizeRef=FeatureCall) ']')?
@@ -104,7 +154,7 @@ ArrayRange:
 ;
 
 InitializationExpression:
-    (('+'|'-')? NumberExpression)
+    NumberExpression
     | StringExpression
     | BooleanExpression
     | TimeExpression
@@ -214,7 +264,7 @@ Primary infers Expression:
 //TODO: Handle # prefix for local variables in validation. Optional here, so it can also parse usage in DBs, where there is no prefix.
 FeatureCall infers Expression:
 	{infer MemberCall}
-	(globalElement=[BlockStart:DOUBLE_QUOTE_STRING] | ('#'? (element=[NamedElement:ID] | element=[NamedElement:DOUBLE_QUOTE_STRING])) | element=[NamedElement:KeywordsAllowedElsewhere]) '^'?
+	(globalElement=[SclBlock:DOUBLE_QUOTE_STRING] | ('#'? (element=[NamedElement:ID] | element=[NamedElement:DOUBLE_QUOTE_STRING])) | element=[NamedElement:KeywordsAllowedElsewhere]) '^'?
     // Optional function call after referencing an element
     (explicitOperationCall?='('
 	(
@@ -222,11 +272,50 @@ FeatureCall infers Expression:
 	)?
 	')')?;
 
-UnaryExpression:
-    operator=('NOT' | '-' | '+') value=Expression
+DbProgramElement:
+    ('THIS[' index=NUMBER ']' '.')?
+    element=DbMemberCall
+    (':=' value=(
+        NumberExpressionWithUnit
+        | StringExpression
+        | BooleanExpression
+        | TimeExpression
+        | DOUBLE_QUOTE_STRING
+    ))?
+    ';'
 ;
 
-NumberExpression: (type=TypeName '#')? value=NUMBER;
+DbMemberCall:
+    DbFeatureCall
+	({infer DbMemberCall.previous=current} 
+    // Member call with function call
+        ("." (element=[NamedElement:ID] | element=[NamedElement:DOUBLE_QUOTE_STRING] | element=[NamedElement:KeywordsAllowedElsewhere]) '^'? (
+		arrayAccessCall?='['
+		(
+		    NumberExpressionWithUnit (',' NumberExpressionWithUnit)*
+		)?
+		']')?
+        )
+    )*
+;
+
+DbFeatureCall infers DbMemberCall:
+    {infer DbMemberCall}
+    (element=[NamedElement:ID] | element=[NamedElement:DOUBLE_QUOTE_STRING])
+    (arrayAccessCall?='['
+		(
+		    NumberExpressionWithUnit (',' NumberExpressionWithUnit)*
+		)?
+		']')?
+;
+
+NumberExpressionWithUnit returns string: (TypeName '#')? '-'? NUMBER;
+
+UnaryExpression:
+    operator=('NOT') value=Expression
+;
+
+NumberExpression: (type=TypeName '#')? value=NumberExpressionWithUnary;
 StringExpression: (type=StringTypeName '#')? value=SINGLE_QUOTE_STRING;
 BooleanExpression: value?='true' | 'false';
 TimeExpression:
@@ -237,6 +326,8 @@ TimeExpression:
         DATE_AND_TIME_LITERAL
     )
 ;
+
+NumberExpressionWithUnary returns string: ('-'|'+')? NUMBER;
 
 
 type NamedElement = VariableDeclaration;
