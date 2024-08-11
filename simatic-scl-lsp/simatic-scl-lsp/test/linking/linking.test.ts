@@ -160,6 +160,80 @@ describe('Linking tests', () => {
         `);
     });
 
+    test('linking to element inside array of struct', async () => {
+        document = await parse(`
+            FUNCTION_BLOCK "myFB"
+            VAR
+                myArray : ARRAY[1..5] OF STRUCT
+                    aVar1 : DINT;
+                    aVar2 : DINT;
+                END_STRUCT;
+            END_VAR
+
+            BEGIN
+
+            myArray[1].aVar1;
+
+            END_FUNCTION_BLOCK
+        `);
+
+        const element = document.parseResult.value.elements[0] as MemberCall;
+        expect(
+            checkDocumentValid(document)
+            || element.element?.ref?.name
+        ).toBe(s`
+            aVar1
+        `);
+    });
+
+    test('linking to element inside struct containing array of struct', async () => {
+        document = await parse(`
+            FUNCTION_BLOCK "myFB"
+            VAR
+                myStruct : STRUCT
+                    aStructVar1 : DINT;
+                    aStructVar2 : DINT;
+                    myArray : ARRAY[1..5] OF STRUCT
+                        aArrayVar1 : DINT;
+                        aArrayVar2 : DINT;
+                    END_STRUCT;
+                END_STRUCT;
+            END_VAR
+
+            BEGIN
+
+            myStruct.aStructVar1;
+            myStruct.myArray;
+            myStruct.myArray[1].aArrayVar1;
+
+            END_FUNCTION_BLOCK
+        `);
+
+        const element0 = document.parseResult.value.elements[0] as MemberCall;
+        const element1 = document.parseResult.value.elements[1] as MemberCall;
+        const element2 = document.parseResult.value.elements[2] as MemberCall;
+        expect(
+            checkDocumentValid(document)
+            || element0.element?.ref?.name
+        ).toBe(s`
+            aStructVar1
+        `);
+
+        expect(
+            checkDocumentValid(document)
+            || element1.element?.ref?.name
+        ).toBe(s`
+            myArray
+        `);
+
+        expect(
+            checkDocumentValid(document)
+            || element2.element?.ref?.name
+        ).toBe(s`
+            aArrayVar1
+        `);
+    });
+
 });
 
 function checkDocumentValid(document: LangiumDocument): string | undefined {
