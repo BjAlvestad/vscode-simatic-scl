@@ -2,17 +2,69 @@ grammar Scl
 import "./terminal"
 
 entry Model:
-    blockStart=BlockStart
+    SclBlock
+;
+
+SclBlock: DbBlock | UdtBlock | FbBlock | FcBlock | ObBlock ;
+
+DbBlock:
+    blockType='DATA_BLOCK' ( name=DOUBLE_QUOTE_STRING | name=ID) (':' returnType=TypeName)?
+        blockMetaData=BlockMetadata
+        isNonRetain?='NON_RETAIN'?
+        ((isArrayDb?='ARRAY' '[' arrayRange=ArrayRange ']' 'OF')? (dbFromUdt=[SclBlock:DOUBLE_QUOTE_STRING] | dbFromBuiltInFunction=ID) ';'?)?
+        decBlocks+=DecBlocks*
+        ('BEGIN'
+            (elements+=SclProgramElement)*
+        )?
+    'END_DATA_BLOCK'
+;
+
+UdtBlock:
+    blockType='TYPE' ( name=DOUBLE_QUOTE_STRING | name=ID) (':' returnType=TypeName)?
+        blockMetaData=BlockMetadata
+        isNonRetain?='NON_RETAIN'?
+        ((isArrayDb?='ARRAY' '[' arrayRange=ArrayRange ']' 'OF')? (dbFromUdt=[SclBlock:DOUBLE_QUOTE_STRING] | dbFromBuiltInFunction=ID) ';'?)?
+        decBlocks+=DecBlocks*
+        ('BEGIN'
+            (elements+=SclProgramElement)*
+        )?
+    'END_TYPE'
+;
+
+FbBlock:
+    blockType='FUNCTION_BLOCK' ( name=DOUBLE_QUOTE_STRING | name=ID)
+        blockMetaData=BlockMetadata
+        decBlocks+=DecBlocks*
+        ('BEGIN'
+            (elements+=SclProgramElement)*
+        )?
+    'END_FUNCTION_BLOCK'
+;
+
+FcBlock:
+    blockType='FUNCTION' ( name=DOUBLE_QUOTE_STRING | name=ID) (':' returnType=TypeName)?
+        blockMetaData=BlockMetadata
+        decBlocks+=DecBlocks*
+        ('BEGIN'
+            (elements+=SclProgramElement)*
+        )?
+    'END_FUNCTION'
+;
+
+ObBlock:
+    blockType='ORGANIZATION_BLOCK' ( name=DOUBLE_QUOTE_STRING | name=ID)
+        blockMetaData=BlockMetadata
+        decBlocks+=DecBlocks*
+        ('BEGIN'
+            (elements+=SclProgramElement)*
+        )?
+    'END_ORGANIZATION_BLOCK'
+;
+
+BlockMetadata:
     title=Title?
     (compilerDirective+=CompilerDirective)*
     (blockAttribute+=BlockAttribute)*
-    isNonRetain?='NON_RETAIN'?
-    ((isArrayDb?='ARRAY' '[' arrayRange=ArrayRange ']' 'OF')? (dbFromUdt=[BlockStart:DOUBLE_QUOTE_STRING] | dbFromBuiltInFunction=ID) ';'?)?
-    decBlocks+=DecBlocks*
-    ('BEGIN'
-        (elements+=SclProgramElement)*
-    )?
-    BlockEnd
 ;
 
 CompilerDirective:
@@ -82,7 +134,7 @@ VariableDeclaration returns NamedElement:
     ';'
 ;
 
-UdtRef: udtRef=[BlockStart:DOUBLE_QUOTE_STRING];
+UdtRef: udtRef=[SclBlock:DOUBLE_QUOTE_STRING];
 
 StringType:
     type=StringTypeName ('[' (sizeLiteral=NUMBER | sizeRef=FeatureCall) ']')?
@@ -214,7 +266,7 @@ Primary infers Expression:
 //TODO: Handle # prefix for local variables in validation. Optional here, so it can also parse usage in DBs, where there is no prefix.
 FeatureCall infers Expression:
 	{infer MemberCall}
-	(globalElement=[BlockStart:DOUBLE_QUOTE_STRING] | ('#'? (element=[NamedElement:ID] | element=[NamedElement:DOUBLE_QUOTE_STRING])) | element=[NamedElement:KeywordsAllowedElsewhere]) '^'?
+	(globalElement=[SclBlock:DOUBLE_QUOTE_STRING] | ('#'? (element=[NamedElement:ID] | element=[NamedElement:DOUBLE_QUOTE_STRING])) | element=[NamedElement:KeywordsAllowedElsewhere]) '^'?
     // Optional function call after referencing an element
     (explicitOperationCall?='('
 	(

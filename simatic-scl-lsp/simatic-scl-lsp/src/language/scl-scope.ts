@@ -1,10 +1,10 @@
 import type { ReferenceInfo, Scope } from 'langium';
-import { EMPTY_SCOPE } from 'langium';
+import { AstUtils, EMPTY_SCOPE } from 'langium';
 import { DefaultScopeProvider } from 'langium';
-import { isMemberCall, isUdtRef, MemberCall, Struct, UdtRef } from './generated/ast.js';
+import { isMemberCall, isSclBlock, isUdtRef, MemberCall, Struct, UdtRef } from './generated/ast.js';
 import { inferType } from './type-system/infer.js';
 import { isStructType } from './type-system/descriptions.js';
-import { GetAllVarDecsFromModel, GetModelContainerFromContext } from './utils.js';
+import { GetAllVarDecsFromModel } from './utils.js';
 
 export class SclScopeProvider extends DefaultScopeProvider {
     skipConsoleLog = true;
@@ -20,8 +20,8 @@ export class SclScopeProvider extends DefaultScopeProvider {
 
              /** RETURNS normal scope if it has no previous (i.e. is top level ref) */
             if (!previous) {
-                const model = GetModelContainerFromContext(context);
-                if (model) {
+                const model = AstUtils.findRootNode(context.container);
+                if (isSclBlock(model)) {
                     const allLocalVars = GetAllVarDecsFromModel(model)
                     return super.createScopeForNodes(allLocalVars);
                 }
@@ -80,7 +80,7 @@ export class SclScopeProvider extends DefaultScopeProvider {
     }
 
     private scopeUdtMembers(udtItem: UdtRef) {
-        const varDecs = udtItem.udtRef.ref?.$container.decBlocks.flatMap(c => c.varDecs);
+        const varDecs = udtItem.udtRef.ref?.decBlocks.flatMap(c => c.varDecs);
         if (varDecs) {
             return this.createScopeForNodes(varDecs);
         }

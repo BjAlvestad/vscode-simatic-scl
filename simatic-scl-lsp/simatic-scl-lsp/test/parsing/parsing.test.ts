@@ -3,7 +3,7 @@ import { EmptyFileSystem, type LangiumDocument } from "langium";
 import { expandToString as s } from "langium/generate";
 import { parseHelper } from "langium/test";
 import { createSclServices } from "../../src/language/scl-module.js";
-import { BinaryExpression, MemberCall, Model, NumberExpression, Region, TimeExpression, isBinaryExpression, isModel } from "../../src/language/generated/ast.js";
+import { BinaryExpression, DbBlock, MemberCall, Model, NumberExpression, Region, TimeExpression, isBinaryExpression, isModel } from "../../src/language/generated/ast.js";
 import { GetAllVarDecsFromModel } from "../../src/language/utils.js";
 
 let services: ReturnType<typeof createSclServices>;
@@ -186,7 +186,7 @@ describe('Parsing tests', () => {
             END_DATA_BLOCK
         `);
 
-        const dbFromUdt = document.parseResult.value.dbFromUdt;
+        const dbFromUdt = (document.parseResult.value as DbBlock).dbFromUdt;
         expect(checkDocumentValid(document)).toBeFalsy();
         expect(dbFromUdt?.$refText).toEqual('"MyUDT"')
     });
@@ -547,7 +547,7 @@ describe('Parsing tests', () => {
         checkDocumentValid(document) ||
           s`
           Title:
-            ${document.parseResult.value?.title?.value}
+            ${document.parseResult.value?.blockMetaData.title?.value}
           `
       ).toBe(s`
         Title:
