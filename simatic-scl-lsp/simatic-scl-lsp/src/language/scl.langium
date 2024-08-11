@@ -8,7 +8,7 @@ entry Model:
 SclBlock: DbBlock | UdtBlock | FbBlock | FcBlock | ObBlock ;
 
 DbBlock:
-    blockType='DATA_BLOCK' ( name=DOUBLE_QUOTE_STRING | name=ID) (':' returnType=TypeName)?
+    type='DATA_BLOCK' ( name=DOUBLE_QUOTE_STRING | name=ID) (':' returnType=TypeName)?
         blockMetaData=BlockMetadata?
         isNonRetain?='NON_RETAIN'?
         ((isArrayDb?='ARRAY' '[' arrayRange=ArrayRange ']' 'OF')? (dbFromUdt=[SclBlock:DOUBLE_QUOTE_STRING] | dbFromBuiltInFunction=ID) ';'?)?
@@ -20,7 +20,7 @@ DbBlock:
 ;
 
 UdtBlock:
-    blockType='TYPE' ( name=DOUBLE_QUOTE_STRING | name=ID) (':' returnType=TypeName)?
+    type='TYPE' ( name=DOUBLE_QUOTE_STRING | name=ID) (':' returnType=TypeName)?
         blockMetaData=BlockMetadata?
         isNonRetain?='NON_RETAIN'?
         ((isArrayDb?='ARRAY' '[' arrayRange=ArrayRange ']' 'OF')? (dbFromUdt=[SclBlock:DOUBLE_QUOTE_STRING] | dbFromBuiltInFunction=ID) ';'?)?
@@ -32,7 +32,7 @@ UdtBlock:
 ;
 
 FbBlock:
-    blockType='FUNCTION_BLOCK' ( name=DOUBLE_QUOTE_STRING | name=ID)
+    type='FUNCTION_BLOCK' ( name=DOUBLE_QUOTE_STRING | name=ID)
         blockMetaData=BlockMetadata?
         decBlocks+=DecBlocks*
         ('BEGIN'
@@ -42,7 +42,7 @@ FbBlock:
 ;
 
 FcBlock:
-    blockType='FUNCTION' ( name=DOUBLE_QUOTE_STRING | name=ID) (':' returnType=TypeName)?
+    type='FUNCTION' ( name=DOUBLE_QUOTE_STRING | name=ID) (':' returnType=TypeName)?
         blockMetaData=BlockMetadata?
         decBlocks+=DecBlocks*
         ('BEGIN'
@@ -52,7 +52,7 @@ FcBlock:
 ;
 
 ObBlock:
-    blockType='ORGANIZATION_BLOCK' ( name=DOUBLE_QUOTE_STRING | name=ID)
+    type='ORGANIZATION_BLOCK' ( name=DOUBLE_QUOTE_STRING | name=ID)
         blockMetaData=BlockMetadata?
         decBlocks+=DecBlocks*
         ('BEGIN'
