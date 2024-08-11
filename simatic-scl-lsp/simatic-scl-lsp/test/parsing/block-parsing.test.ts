@@ -100,6 +100,72 @@ describe('Block parsing tests', () => {
         expect(model.blockType).toEqual("DATA_BLOCK");
     });
 
+    test('Parse Global DB with attributes and no variables declared', async () => {
+        document = await parse(`
+            DATA_BLOCK "myDbWithMetaData"
+            TITLE = myTitle goes here
+            { S7_Optimized_Access := 'TRUE' }
+            AUTHOR : 'myAuthor first last'
+            FAMILY : myFamilyWhereSpacesAreNotAllowed
+            NAME : myUserDefinedIdWhereSpacesAreNotAllowed
+            VERSION : 0.1
+            NON_RETAIN
+            //myComment goes here
+
+            BEGIN
+
+            END_DATA_BLOCK
+        `);
+
+        const model = document.parseResult.value;
+        expect(checkDocumentValid(document)).toBeFalsy();
+        expect(model.blockType).toEqual("DATA_BLOCK");
+    });
+
+    test('Parse Global DB with attributes with no spaces, and no variables declared', async () => {
+        document = await parse(`
+            DATA_BLOCK "myDbWithMetaData_NoSpaces"
+            TITLE = myTitleWithoutSpaces
+            { S7_Optimized_Access := 'TRUE' }
+            AUTHOR : myAuthorWithoutSpaces
+            FAMILY : myFamilyWhereSpacesAreNotAllowed
+            NAME : myUserDefinedIdWhereSpacesAreNotAllowed
+            VERSION : 0.1
+            NON_RETAIN
+            //myCommentWithoutSpaces
+
+            BEGIN
+
+            END_DATA_BLOCK
+        `);
+
+        const model = document.parseResult.value;
+        expect(checkDocumentValid(document)).toBeFalsy();
+        expect(model.blockType).toEqual("DATA_BLOCK");
+    });
+    
+    test('Parse Global DB with attributes containing special symbols', async () => {
+        document = await parse(`
+            DATA_BLOCK "specialCharactersInAttributes"
+            TITLE = myTitle goes here
+            { S7_Optimized_Access := 'TRUE' }
+            AUTHOR : 'myAuthor first/last'
+            FAMILY : 'myFamilyWhereSpacesAreNotAllowed/withSlash'
+            NAME : 'myUserDefinedIdWhereSpacesAreNotAllowed/withSlash'
+            VERSION : 0.1
+            NON_RETAIN
+            //myComment goes here
+
+            BEGIN
+
+            END_DATA_BLOCK
+        `);
+
+        const model = document.parseResult.value;
+        expect(checkDocumentValid(document)).toBeFalsy();
+        expect(model.blockType).toEqual("DATA_BLOCK");
+    });
+
     test('Parse Global DB with two variables declared', async () => {
         document = await parse(`
             DATA_BLOCK "DB_MyGlobalDb"

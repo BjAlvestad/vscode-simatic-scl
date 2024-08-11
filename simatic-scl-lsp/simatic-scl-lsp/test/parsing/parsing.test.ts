@@ -535,6 +535,7 @@ describe('Parsing tests', () => {
       document = await parse(`
             FUNCTION_BLOCK "FB_Region"
             TITLE = Some problematic title not placed in string
+            VERSION : 0.1
             VAR 
                 otherVar1 : DINT;
             END_VAR
@@ -547,7 +548,7 @@ describe('Parsing tests', () => {
         checkDocumentValid(document) ||
           s`
           Title:
-            ${document.parseResult.value?.blockMetaData.title?.value}
+            ${document.parseResult.value?.blockMetaData?.title?.value}
           `
       ).toBe(s`
         Title:

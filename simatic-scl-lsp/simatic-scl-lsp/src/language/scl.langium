@@ -9,7 +9,7 @@ SclBlock: DbBlock | UdtBlock | FbBlock | FcBlock | ObBlock ;
 
 DbBlock:
     blockType='DATA_BLOCK' ( name=DOUBLE_QUOTE_STRING | name=ID) (':' returnType=TypeName)?
-        blockMetaData=BlockMetadata
+        blockMetaData=BlockMetadata?
         isNonRetain?='NON_RETAIN'?
         ((isArrayDb?='ARRAY' '[' arrayRange=ArrayRange ']' 'OF')? (dbFromUdt=[SclBlock:DOUBLE_QUOTE_STRING] | dbFromBuiltInFunction=ID) ';'?)?
         decBlocks+=DecBlocks*
@@ -21,7 +21,7 @@ DbBlock:
 
 UdtBlock:
     blockType='TYPE' ( name=DOUBLE_QUOTE_STRING | name=ID) (':' returnType=TypeName)?
-        blockMetaData=BlockMetadata
+        blockMetaData=BlockMetadata?
         isNonRetain?='NON_RETAIN'?
         ((isArrayDb?='ARRAY' '[' arrayRange=ArrayRange ']' 'OF')? (dbFromUdt=[SclBlock:DOUBLE_QUOTE_STRING] | dbFromBuiltInFunction=ID) ';'?)?
         decBlocks+=DecBlocks*
@@ -33,7 +33,7 @@ UdtBlock:
 
 FbBlock:
     blockType='FUNCTION_BLOCK' ( name=DOUBLE_QUOTE_STRING | name=ID)
-        blockMetaData=BlockMetadata
+        blockMetaData=BlockMetadata?
         decBlocks+=DecBlocks*
         ('BEGIN'
             (elements+=SclProgramElement)*
@@ -43,7 +43,7 @@ FbBlock:
 
 FcBlock:
     blockType='FUNCTION' ( name=DOUBLE_QUOTE_STRING | name=ID) (':' returnType=TypeName)?
-        blockMetaData=BlockMetadata
+        blockMetaData=BlockMetadata?
         decBlocks+=DecBlocks*
         ('BEGIN'
             (elements+=SclProgramElement)*
@@ -53,7 +53,7 @@ FcBlock:
 
 ObBlock:
     blockType='ORGANIZATION_BLOCK' ( name=DOUBLE_QUOTE_STRING | name=ID)
-        blockMetaData=BlockMetadata
+        blockMetaData=BlockMetadata?
         decBlocks+=DecBlocks*
         ('BEGIN'
             (elements+=SclProgramElement)*
@@ -64,16 +64,14 @@ ObBlock:
 BlockMetadata:
     title=Title?
     (compilerDirective+=CompilerDirective)*
-    (blockAttribute+=BlockAttribute)*
+    ('AUTHOR' ':' author=(SINGLE_QUOTE_STRING | ID))?
+    ('FAMILY' ':' family=(SINGLE_QUOTE_STRING | ID))?
+    ('NAME' ':' name=(SINGLE_QUOTE_STRING | ID))?
+    ('VERSION' ':' version=NUMBER)?
 ;
 
 CompilerDirective:
     '{'name+=ID ':=' value+=SINGLE_QUOTE_STRING (';' name+=ID ':=' value+=SINGLE_QUOTE_STRING)* ';'? '}';
-
-BlockAttribute:
-    ID '=' value=SINGLE_QUOTE_STRING
-    | ID ':' value=(ID | SINGLE_QUOTE_STRING | NUMBER)
-;
 
 BlockStart:
     blockType=(
