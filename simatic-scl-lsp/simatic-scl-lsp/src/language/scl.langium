@@ -14,7 +14,7 @@ DbBlock:
         ((isArrayDb?='ARRAY' '[' arrayRange=ArrayRange ']' 'OF')? (dbFromUdt=[SclBlock:DOUBLE_QUOTE_STRING] | dbFromBuiltInFunction=ID) ';'?)?
         decBlocks+=DecBlocks*
         ('BEGIN'
-            (elements+=SclProgramElement)*
+            (elements+=DbProgramElement)*
         )?
     'END_DATA_BLOCK'
 ;
@@ -26,7 +26,7 @@ UdtBlock:
         ((isArrayDb?='ARRAY' '[' arrayRange=ArrayRange ']' 'OF')? (dbFromUdt=[SclBlock:DOUBLE_QUOTE_STRING] | dbFromBuiltInFunction=ID) ';'?)?
         decBlocks+=DecBlocks*
         ('BEGIN'
-            (elements+=SclProgramElement)*
+            (elements+=DbProgramElement)*
         )?
     'END_TYPE'
 ;
@@ -271,6 +271,45 @@ FeatureCall infers Expression:
         argument=Expression? (',' argument+=Expression)*
 	)?
 	')')?;
+
+DbProgramElement:
+    ('THIS[' index=NUMBER ']' '.')?
+    element=DbMemberCall
+    (':=' value=(
+        NumberExpressionWithUnit
+        | StringExpression
+        | BooleanExpression
+        | TimeExpression
+        | DOUBLE_QUOTE_STRING
+    ))?
+    ';'
+;
+
+DbMemberCall:
+    DbFeatureCall
+	({infer DbMemberCall.previous=current} 
+    // Member call with function call
+        ("." (element=[NamedElement:ID] | element=[NamedElement:DOUBLE_QUOTE_STRING] | element=[NamedElement:KeywordsAllowedElsewhere]) '^'? (
+		arrayAccessCall?='['
+		(
+		    NumberExpressionWithUnit (',' NumberExpressionWithUnit)*
+		)?
+		']')?
+        )
+    )*
+;
+
+DbFeatureCall infers DbMemberCall:
+    {infer DbMemberCall}
+    (element=[NamedElement:ID] | element=[NamedElement:DOUBLE_QUOTE_STRING])
+    (arrayAccessCall?='['
+		(
+		    NumberExpressionWithUnit (',' NumberExpressionWithUnit)*
+		)?
+		']')?
+;
+
+NumberExpressionWithUnit returns string: (TypeName '#')? '-'? NUMBER;
 
 UnaryExpression:
     operator=('NOT') value=Expression

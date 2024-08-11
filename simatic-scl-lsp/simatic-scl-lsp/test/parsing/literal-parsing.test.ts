@@ -3,7 +3,7 @@ import { EmptyFileSystem, type LangiumDocument } from "langium";
 import { expandToString as s } from "langium/generate";
 import { parseHelper } from "langium/test";
 import { createSclServices } from "../../src/language/scl-module.js";
-import { Model, StringExpression, isModel } from "../../src/language/generated/ast.js";
+import { DbProgramElement, Model, NumberExpression, SclProgramElement, StringExpression, isModel } from "../../src/language/generated/ast.js";
 
 let services: ReturnType<typeof createSclServices>;
 let parse:    ReturnType<typeof parseHelper<Model>>;
@@ -51,6 +51,50 @@ describe('Literal parsing tests', () => {
         expect(model.elements[0].$type).toEqual("StringExpression");
         expect((model.elements[0] as StringExpression).type).toEqual(undefined);
         expect((model.elements[0] as StringExpression).value).toEqual("''");
+    });
+
+    test('Parse number literal in DB', async () => {
+        document = await parse(`
+            DATA_BLOCK "myBlock"
+            BEGIN
+
+            a := 123;
+            b := 123.23;
+            c := -55;
+            d := -55.23;
+
+            END_DATA_BLOCK
+        `);
+
+        const model = document.parseResult.value;
+        expect(checkDocumentValid(document)).toBeFalsy();
+        expect(model.elements[0].$type).toEqual("DbProgramElement");
+        expect((model.elements[0] as DbProgramElement).value).toEqual("123");
+        expect((model.elements[1] as DbProgramElement).value).toEqual("123.23");
+        expect((model.elements[2] as DbProgramElement).value).toEqual("-55");
+        expect((model.elements[3] as DbProgramElement).value).toEqual("-55.23");
+    });
+
+    test('Parse number literal in FB', async () => {
+        document = await parse(`
+            FUNCTION_BLOCK "myBlock"
+            BEGIN
+
+            123;
+            123.23;
+            -55;
+            -55.23;
+
+            END_FUNCTION_BLOCK
+        `);
+        const model = document.parseResult.value;
+        const elements = model.elements as SclProgramElement[];
+        expect(checkDocumentValid(document)).toBeFalsy();
+        expect(model.elements[0].$type).toEqual("NumberExpression");
+        expect((elements[0] as NumberExpression).value).toEqual("123");
+        expect((elements[1] as NumberExpression).value).toEqual("123.23");
+        expect((elements[2] as NumberExpression).value).toEqual("-55");
+        expect((elements[3] as NumberExpression).value).toEqual("-55.23");
     });
 
 

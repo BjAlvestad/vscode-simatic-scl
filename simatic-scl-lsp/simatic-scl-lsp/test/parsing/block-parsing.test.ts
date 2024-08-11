@@ -188,6 +188,52 @@ describe('Block parsing tests', () => {
         expect(model.blockType).toEqual("DATA_BLOCK");
     });
 
+    test('Parse Global DB with 1 dimensional array', async () => {
+        document = await parse(`
+            DATA_BLOCK "myDbWithArray"
+            { S7_Optimized_Access := 'TRUE' }
+            VERSION : 0.1
+            NON_RETAIN
+            VAR 
+                myArray : Array[0..2] of Bool;
+            END_VAR
+
+
+            BEGIN
+            myArray[0] := True;
+            myArray[2] := True;
+
+            END_DATA_BLOCK
+        `);
+
+        const model = document.parseResult.value;
+        expect(checkDocumentValid(document)).toBeFalsy();
+        expect(model.blockType).toEqual("DATA_BLOCK");
+    });
+
+    test('Parse Global DB with 2 dimensional array', async () => {
+        document = await parse(`
+            DATA_BLOCK "myDbWithArray"
+            { S7_Optimized_Access := 'TRUE' }
+            VERSION : 0.1
+            NON_RETAIN
+            VAR 
+                myArray : Array[0..2, 0..2] of Bool;
+            END_VAR
+
+
+            BEGIN
+            myArray[0,0] := True;
+            myArray[2,1] := True;
+
+            END_DATA_BLOCK
+        `);
+
+        const model = document.parseResult.value;
+        expect(checkDocumentValid(document)).toBeFalsy();
+        expect(model.blockType).toEqual("DATA_BLOCK");
+    });
+
     test('Parse Array DB with two values initialized', async () => {
         document = await parse(`
             DATA_BLOCK "MyArrayDB"
