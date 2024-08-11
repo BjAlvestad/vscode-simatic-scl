@@ -154,7 +154,7 @@ ArrayRange:
 ;
 
 InitializationExpression:
-    NumberExpression
+    (('+'|'-')? NumberExpression)
     | StringExpression
     | BooleanExpression
     | TimeExpression
@@ -312,10 +312,10 @@ DbFeatureCall infers DbMemberCall:
 NumberExpressionWithUnit returns string: (TypeName '#')? '-'? NUMBER;
 
 UnaryExpression:
-    operator=('NOT') value=Expression
+    operator=('NOT' | '-' | '+') value=Expression
 ;
 
-NumberExpression: (type=TypeName '#')? value=NumberExpressionWithUnary;
+NumberExpression: (type=TypeName '#')? value=NUMBER;
 StringExpression: (type=StringTypeName '#')? value=SINGLE_QUOTE_STRING;
 BooleanExpression: value?='true' | 'false';
 TimeExpression:
@@ -326,8 +326,6 @@ TimeExpression:
         DATE_AND_TIME_LITERAL
     )
 ;
-
-NumberExpressionWithUnary returns string: ('-'|'+')? NUMBER;
 
 
 type NamedElement = VariableDeclaration;
