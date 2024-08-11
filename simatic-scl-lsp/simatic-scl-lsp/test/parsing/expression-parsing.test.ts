@@ -50,6 +50,145 @@ describe('Expression parsing tests', () => {
         expect(checkDocumentValid(document)).toBeFalsy();
     });
 
+    test('Parse built-in feature call with multiple parameters', async () => {
+        document = await parse(`
+            FUNCTION_BLOCK "myFB"
+            { S7_Optimized_Access := 'TRUE' }
+            VERSION : 0.1
+
+            BEGIN
+            MAX(IN1 := #myVar1, IN2 := #myVar2);
+            END_FUNCTION_BLOCK
+        `);
+
+        const model = document.parseResult.value;
+        expect(checkDocumentValid(document)).toBeFalsy();
+    });
+
+    test('Parse built-in feature call with double-quote formal parameters', async () => {
+        document = await parse(`
+            FUNCTION_BLOCK "myFB"
+            { S7_Optimized_Access := 'TRUE' }
+            VERSION : 0.1
+
+            BEGIN
+            #myFb("PORT" := 32);
+            END_FUNCTION_BLOCK
+        `);
+
+        const model = document.parseResult.value;
+        expect(checkDocumentValid(document)).toBeFalsy();
+    });
+
+    test('Parse built-in feature call with double-quote formal parameters mixed with normal ID', async () => {
+        document = await parse(`
+            FUNCTION_BLOCK "myFB"
+            { S7_Optimized_Access := 'TRUE' }
+            VERSION : 0.1
+
+            BEGIN
+            #myFb(xIn1 := 12, "PORT" := 32);
+            END_FUNCTION_BLOCK
+        `);
+
+        const model = document.parseResult.value;
+        expect(checkDocumentValid(document)).toBeFalsy();
+    });
+
+    test('Parse nested built-in feature calls with multiple parameters', async () => {
+        document = await parse(`
+            FUNCTION_BLOCK "myFB"
+            { S7_Optimized_Access := 'TRUE' }
+            VERSION : 0.1
+
+            BEGIN
+            MAX(IN1 := LOWER_BOUND(ARR := #myArray1, DIM := 1), IN2 := LOWER_BOUND(ARR := #myArray2, DIM := 1));
+            END_FUNCTION_BLOCK
+        `);
+
+        const model = document.parseResult.value;
+        expect(checkDocumentValid(document)).toBeFalsy();
+    });
+
+    test('Parse feature call with multiple parameters', async () => {
+        document = await parse(`
+            FUNCTION_BLOCK "myFB"
+            { S7_Optimized_Access := 'TRUE' }
+            VERSION : 0.1
+
+            BEGIN
+            "myFbInstance1"(yStatus => #status,
+                            xUnit1 := #conveyor1,
+                            xUnit2 := #hpu);
+            END_FUNCTION_BLOCK
+        `);
+
+        const model = document.parseResult.value;
+        expect(checkDocumentValid(document)).toBeFalsy();
+    });
+
+    test('Parse feature call with multiple parameters and expression', async () => {
+        document = await parse(`
+            FUNCTION_BLOCK "myFB"
+            { S7_Optimized_Access := 'TRUE' }
+            VERSION : 0.1
+
+            BEGIN
+            #myOnDelay1(IN := (#mySetPoint > 0.0) AND #isRunning,
+                        PT := #filterTime);
+            END_FUNCTION_BLOCK
+        `);
+
+        const model = document.parseResult.value;
+        expect(checkDocumentValid(document)).toBeFalsy();
+    });
+
+    test('Parse built-in feature call with only argument, no formal parameters', async () => {
+        document = await parse(`
+            FUNCTION_BLOCK "myFB"
+            { S7_Optimized_Access := 'TRUE' }
+            VERSION : 0.1
+
+            BEGIN
+            SQRT_REAL(3);
+            SQRT_REAL(#myNumber);
+            END_FUNCTION_BLOCK
+        `);
+
+        const model = document.parseResult.value;
+        expect(checkDocumentValid(document)).toBeFalsy();
+    });
+
+    test('Parse built-in feature call with only argument expression, no formal parameters', async () => {
+        document = await parse(`
+            FUNCTION_BLOCK "myFB"
+            { S7_Optimized_Access := 'TRUE' }
+            VERSION : 0.1
+
+            BEGIN
+            SQRT_REAL(#myNumber + 3);
+            END_FUNCTION_BLOCK
+        `);
+
+        const model = document.parseResult.value;
+        expect(checkDocumentValid(document)).toBeFalsy();
+    });
+
+    test('Parse nested built-in feature call with only argument, no formal parameters', async () => {
+        document = await parse(`
+            FUNCTION_BLOCK "myFB"
+            { S7_Optimized_Access := 'TRUE' }
+            VERSION : 0.1
+
+            BEGIN
+            SQRT_REAL(#myNumber + SQRT_REAL(#myNumber + 3));
+            END_FUNCTION_BLOCK
+        `);
+
+        const model = document.parseResult.value;
+        expect(checkDocumentValid(document)).toBeFalsy();
+    });
+
 });
 
 function checkDocumentValid(document: LangiumDocument): string | undefined {
