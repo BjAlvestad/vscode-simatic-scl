@@ -41,7 +41,7 @@ describe('Print to log for debug tests', () => {
                 #myVar1 := 11;
                 #myVar2 := 22;
                 #internal2 := 22;
-            END_FUNCTION
+            END_FUNCTION_BLOCK
         `);
 
         const model = document.parseResult.value;

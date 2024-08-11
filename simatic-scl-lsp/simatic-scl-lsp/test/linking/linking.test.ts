@@ -50,7 +50,7 @@ describe('Linking tests', () => {
                 #myVar1 := 11;
                 #myVar2 := 22;
                 #internal2 := 22;
-            END_FUNCTION
+            END_FUNCTION_BLOCK
         `);
 
         const filteredAndMapped = getLeftRefsFromBinaryExpression(document);
@@ -92,7 +92,7 @@ describe('Linking tests', () => {
                 #myStruct.var1InMyStruct := 11;
                 #myStruct.nestedStructInMyStruct.var1InNestedStruct := 11;
                 #myVar2 := 22;
-            END_FUNCTION
+            END_FUNCTION_BLOCK
         `);
 
         const filteredAndMapped = getLeftRefsFromBinaryExpression(document);
@@ -141,7 +141,7 @@ describe('Linking tests', () => {
                 #internal2 := 22;
 
                 return 1234;
-            END_FUNCTION
+            END_FUNCTION_BLOCK
         `);
 
         const filteredAndMapped = getLeftRefsFromBinaryExpression(document);

@@ -37,7 +37,7 @@ describe('Parsing tests', () => {
                 33e-8;
                 40_123E10;
                 3.0E+10;
-            END_FUNCTION
+            END_FUNCTION_BLOCK
         `);
 
         expect(
@@ -71,7 +71,7 @@ describe('Parsing tests', () => {
                 ;
                 22;
                 ;;;
-            END_FUNCTION
+            END_FUNCTION_BLOCK
         `);
 
         expect(checkDocumentValid(document)).toBeFalsy();
@@ -83,7 +83,7 @@ describe('Parsing tests', () => {
 
             BEGIN
                 T#123ms;
-            END_FUNCTION
+            END_FUNCTION_BLOCK
         `);
 
         expect(
@@ -110,7 +110,7 @@ describe('Parsing tests', () => {
 
             BEGIN
 
-            END_FUNCTION
+            END_FUNCTION_BLOCK
         `);
 
         const vars = document.parseResult.value.decBlocks[0].varDecs;
@@ -131,7 +131,7 @@ describe('Parsing tests', () => {
 
             BEGIN
 
-            END_FUNCTION
+            END_FUNCTION_BLOCK
         `);
 
         const vars = document.parseResult.value.decBlocks[0].varDecs;
@@ -149,7 +149,7 @@ describe('Parsing tests', () => {
 
             BEGIN
 
-            END_FUNCTION
+            END_FUNCTION_BLOCK
         `);
 
         const vars = document.parseResult.value.decBlocks[0].varDecs;
@@ -166,7 +166,7 @@ describe('Parsing tests', () => {
 
             BEGIN
 
-            END_FUNCTION
+            END_FUNCTION_BLOCK
         `);
 
         const vars = document.parseResult.value.decBlocks[0].varDecs;
@@ -199,7 +199,7 @@ describe('Parsing tests', () => {
                 11-43;
                 32 - 443.32e3;
                 32+54;
-            END_FUNCTION
+            END_FUNCTION_BLOCK
         `);
 
         // console.log(document.parseResult.value)
@@ -247,7 +247,7 @@ describe('Parsing tests', () => {
                 #myVar1 := 11;
                 #myVar2 := 22;
                 #internal2 := 22;
-            END_FUNCTION
+            END_FUNCTION_BLOCK
         `);
 
         // check for absensce of parser errors the classic way:
@@ -293,7 +293,7 @@ describe('Parsing tests', () => {
             BEGIN
                 #internal1 := 11;
                 #"internal2-2" := 22;
-            END_FUNCTION
+            END_FUNCTION_BLOCK
         `);
 
         const memberCallsFromBinaryExpressions = getLeftRefsFromBinaryExpression(document);
@@ -335,7 +335,7 @@ describe('Parsing tests', () => {
                 #"quoteStruct2-2".internal4 := 123;
                 #normalStruct."internal123-3" := 123;
                 #"quoteStruct2-2"."internal5-6" := 123;
-            END_FUNCTION
+            END_FUNCTION_BLOCK
         `);
 
         const memberCallsFromBinaryExpressions = getLeftRefsFromBinaryExpression(document);
@@ -379,7 +379,7 @@ describe('Parsing tests', () => {
             BEGIN
                 #myInt := 11;
                 #myStruct.myInternal1 := 22;
-            END_FUNCTION
+            END_FUNCTION_BLOCK
         `);
 
         // check for absence of parser errors the classic way:
@@ -448,7 +448,7 @@ describe('Parsing tests', () => {
                 #myInt := 11;
                 #myStruct.myInternal1 := 22;
                 #myStruct.myInnerStruct.myInnerInternal1 := 22;
-            END_FUNCTION
+            END_FUNCTION_BLOCK
         `);
 
         // check for absensce of parser errors the classic way:
