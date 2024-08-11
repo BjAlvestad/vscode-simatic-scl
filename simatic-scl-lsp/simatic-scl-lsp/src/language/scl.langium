@@ -154,7 +154,7 @@ ArrayRange:
 ;
 
 InitializationExpression:
-    (('+'|'-')? NumberExpression)
+    NumberExpression
     | StringExpression
     | BooleanExpression
     | TimeExpression
@@ -273,10 +273,10 @@ FeatureCall infers Expression:
 	')')?;
 
 UnaryExpression:
-    operator=('NOT' | '-' | '+') value=Expression
+    operator=('NOT') value=Expression
 ;
 
-NumberExpression: (type=TypeName '#')? value=NUMBER;
+NumberExpression: (type=TypeName '#')? value=NumberExpressionWithUnary;
 StringExpression: (type=StringTypeName '#')? value=SINGLE_QUOTE_STRING;
 BooleanExpression: value?='true' | 'false';
 TimeExpression:
@@ -287,6 +287,8 @@ TimeExpression:
         DATE_AND_TIME_LITERAL
     )
 ;
+
+NumberExpressionWithUnary returns string: ('-'|'+')? NUMBER;
 
 
 type NamedElement = VariableDeclaration;
