@@ -264,7 +264,7 @@ Primary infers Expression:
 //TODO: Handle # prefix for local variables in validation. Optional here, so it can also parse usage in DBs, where there is no prefix.
 FeatureCall infers Expression:
 	{infer MemberCall}
-	(globalElement=[SclBlock:DOUBLE_QUOTE_STRING] | ('#'? (element=[NamedElement:ID] | element=[NamedElement:DOUBLE_QUOTE_STRING])) | element=[NamedElement:KeywordsAllowedElsewhere]) '^'?
+	('#'? (element=[NamedElement:ID] | element=[NamedElement:DOUBLE_QUOTE_STRING] | element=[NamedElement:KeywordsAllowedElsewhere]) '^'?)
     // Optional function call after referencing an element
     (explicitOperationCall?='('
 	(
@@ -328,7 +328,7 @@ TimeExpression:
 ;
 
 
-type NamedElement = VariableDeclaration;
+type NamedElement = VariableDeclaration | SclBlock;
 
 IfStatement:
     (('IF' | 'ELSIF') condition=Expression 'THEN')

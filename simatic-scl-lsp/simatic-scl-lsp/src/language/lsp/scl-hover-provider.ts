@@ -1,6 +1,6 @@
 import { AstNode } from "langium";
 import { Hover } from "vscode-languageclient";
-import { isStruct, isNamedElement } from "../generated/ast.js";
+import { isStruct, isNamedElement, isSclBlock, isVariableDeclaration } from "../generated/ast.js";
 import { isErrorType, typeToString } from "../type-system/descriptions.js";
 import { inferType } from "../type-system/infer.js";
 import { AstNodeHoverProvider } from "langium/lsp";
@@ -20,7 +20,9 @@ export class SclHoverProvider extends AstNodeHoverProvider {
             if (isErrorType(type)) {
                 return undefined;
             }
-            if (node.type.primitive) {
+            if(isSclBlock(node)) {
+
+            } else if (node.type.primitive) {
                 return {
                     contents: {
                         kind: 'markdown',
@@ -33,7 +35,7 @@ export class SclHoverProvider extends AstNodeHoverProvider {
                     contents: {
                         kind: 'markdown',
                         language: 'scl',
-                        value: `var ${node.name}: STRUCT ${node.type.struct.varDecs.map(v => `\n  ${v.name} : ${v.type.primitive ?? 'STRUCT'}`)}\n(Inferred type is ${typeToString(type)})`
+                        value: `var ${node.name}: STRUCT ${node.type.struct.varDecs.map(v => `\n  ${v.name} : ${isVariableDeclaration(v) ? v.type.primitive : 'STRUCT'}`)}\n(Inferred type is ${typeToString(type)})`
                     }
                 }
             } else if (node.type.udtRef) {
