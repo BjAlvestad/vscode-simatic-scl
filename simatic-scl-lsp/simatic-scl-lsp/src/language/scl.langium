@@ -413,6 +413,8 @@ DataType returns string:
     | 'CHAR'  | 'WCHAR'
     // Complex - Data and time
     | 'DT' | 'DATE_AND_TIME' | 'LDT' | 'DATE_AND_LTIME' | 'DTL'
+    // Misc
+    | 'NULL'
 ;
 
 StringTypeName returns string:
