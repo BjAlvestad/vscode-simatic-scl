@@ -3,7 +3,7 @@ import { EmptyFileSystem, type LangiumDocument } from "langium";
 import { expandToString as s } from "langium/generate";
 import { parseHelper } from "langium/test";
 import { createSclServices } from "../../src/language/scl-module.js";
-import { DbProgramElement, Model, NumberExpression, SclProgramElement, StringExpression, isModel } from "../../src/language/generated/ast.js";
+import { DbProgramElement, Model, NumberExpression, SclProgramElement, StringExpression, UnaryExpression, isModel } from "../../src/language/generated/ast.js";
 
 let services: ReturnType<typeof createSclServices>;
 let parse:    ReturnType<typeof parseHelper<Model>>;
@@ -93,8 +93,8 @@ describe('Literal parsing tests', () => {
         expect(model.elements[0].$type).toEqual("NumberExpression");
         expect((elements[0] as NumberExpression).value).toEqual("123");
         expect((elements[1] as NumberExpression).value).toEqual("123.23");
-        expect((elements[2] as NumberExpression).value).toEqual("-55");
-        expect((elements[3] as NumberExpression).value).toEqual("-55.23");
+        expect(((elements[2] as UnaryExpression).value as NumberExpression).value).toEqual("55");
+        expect(((elements[3] as UnaryExpression).value as NumberExpression).value).toEqual("55.23");
     });
 
 
