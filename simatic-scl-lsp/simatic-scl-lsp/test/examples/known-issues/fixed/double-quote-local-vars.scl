@@ -15,9 +15,9 @@ END_VAR
 
 BEGIN
     #internal1 := 11;
-    "internal2-2" := 22;
+    #"internal2-2" := 22;
     normalStruct.internal77;
-    "quoteStruct2-2".internal4;
+    #"quoteStruct2-2".internal4;
     normalStruct."internal123-3";
-    "quoteStruct2-2"."internal5-6";
-END_FUNCTION
+    #"quoteStruct2-2"."internal5-6";
+END_FUNCTION_BLOCK
