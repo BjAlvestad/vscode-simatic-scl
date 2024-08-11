@@ -165,6 +165,29 @@ describe('Block parsing tests', () => {
         expect((model as DbBlock).dbFromBuiltInFunction).toEqual("IEC_TIMER");
     });
 
+    test('Parse DB of built in type - without NON_RETAIN', async () => {
+        document = await parse(`
+            DATA_BLOCK "Close_Timer"
+            {InstructionName := 'IEC_TIMER';
+            LibVersion := '1.0';
+            S7_Optimized_Access := 'TRUE' }
+            AUTHOR : Simatic
+            FAMILY : IEC
+            NAME : IEC_TMR
+            VERSION : 1.0
+            IEC_TIMER
+
+            BEGIN
+
+            END_DATA_BLOCK
+        `);
+
+        const model = document.parseResult.value;
+        expect(checkDocumentValid(document)).toBeFalsy();
+        expect(model.blockType).toEqual("DATA_BLOCK");
+        expect((model as DbBlock).dbFromBuiltInFunction).toEqual("IEC_TIMER");
+    });
+
     test('Parse FB', async () => {
         document = await parse(`
             FUNCTION_BLOCK "myFB"
