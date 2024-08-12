@@ -36,8 +36,6 @@ export function inferType(node: AstNode | undefined, cache: Map<AstNode, TypeDes
             if (isFunctionType(type)) {
                 type = type.returnType;
             }
-        } else if (node.arrayAccessCall) {
-            type = inferType(node.previous, cache)
         }
     } else if (isVariableDeclaration(node)) {
         if (node.type) {

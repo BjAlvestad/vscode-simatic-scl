@@ -189,6 +189,51 @@ describe('Expression parsing tests', () => {
         expect(checkDocumentValid(document)).toBeFalsy();
     });
 
+    test('Parse array with function call', async () => {
+        document = await parse(`
+            FUNCTION_BLOCK "myFB"
+            { S7_Optimized_Access := 'TRUE' }
+            VERSION : 0.1
+
+            BEGIN
+            #myArray[1](myFunctionInput := 123);
+            END_FUNCTION_BLOCK
+        `);
+
+        const model = document.parseResult.value;
+        expect(checkDocumentValid(document)).toBeFalsy();
+    });
+
+    test('Parse struct with array with function call', async () => {
+        document = await parse(`
+            FUNCTION_BLOCK "myFB"
+            { S7_Optimized_Access := 'TRUE' }
+            VERSION : 0.1
+
+            BEGIN
+            #myStruct.myArray[1](myFunctionInput := 123);
+            END_FUNCTION_BLOCK
+        `);
+
+        const model = document.parseResult.value;
+        expect(checkDocumentValid(document)).toBeFalsy();
+    });
+
+    test('Parse member access in struct, using redundant `#`', async () => {
+        document = await parse(`
+            FUNCTION_BLOCK "myFB"
+            { S7_Optimized_Access := 'TRUE' }
+            VERSION : 0.1
+
+            BEGIN
+            #myStruct.#myVarInsideStruct;
+            END_FUNCTION_BLOCK
+        `);
+
+        const model = document.parseResult.value;
+        expect(checkDocumentValid(document)).toBeFalsy();
+    });
+
 });
 
 function checkDocumentValid(document: LangiumDocument): string | undefined {

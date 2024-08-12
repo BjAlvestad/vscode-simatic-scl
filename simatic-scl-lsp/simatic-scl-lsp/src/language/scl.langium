@@ -220,33 +220,21 @@ Comparison infers Expression:
     MemberCall ({infer BinaryExpression.left=current} operator=('<' | '<=' | '>' | '>=' | '=' | '<>') right=MemberCall)*
 ;
 
+// In SCL we cannot have repeated array calls, and we cannot have ()[n]. But we can have [n]().
 MemberCall infers Expression:
     Primary
 	({infer MemberCall.previous=current} 
-    // Member call with function call
-        ("." '#'? (element=[NamedElement:ID] | element=[NamedElement:DOUBLE_QUOTE_STRING] | element=[NamedElement:KeywordsAllowedElsewhere]) '^'? (
-		explicitOperationCall?='('
-		(
-		    arguments+=Expression (',' arguments+=Expression)*
-		)?
-		')')?
-    // Array access on member
-        | (
-		arrayAccessCall?='['
-		(
-		    arguments+=Expression (',' arguments+=Expression)*
-		)?
-		']') 
-    // Chained function call
-        | (
-		explicitOperationCall?='('
-		(
-		    parameters+=ID (':=' | '=>') arguments+=Expression
-            (',' parameters+=ID (':=' | '=>') arguments+=Expression)*
-		)?
-		')')
-        | (memoryArea=MEMORY_AREA)
-        )
+    // Member call with optional array access and/or with function call.
+    // Note: Parse optional '#'? here since SCL actually allows the # prefix also on member calls.
+    (
+        '.' '#'?
+        (element=[NamedElement:ID] | element=[NamedElement:DOUBLE_QUOTE_STRING] | element=[NamedElement:KeywordsAllowedElsewhere])
+        '^'?
+		(arrayAccessCall?='[' ( arguments+=Expression (',' arguments+=Expression)* )?']')?
+        (explicitOperationCall?='('(arguments+=Expression (',' arguments+=Expression)*)?')')?
+    )
+    // Alternatively memory area access, where `.` is part of terminal.
+    | (memoryArea=MEMORY_AREA)
     )*
 ;
 
@@ -261,16 +249,16 @@ Primary infers Expression:
     | TimeExpression
 ;
 
-//TODO: Handle # prefix for local variables in validation. Optional here, so it can also parse usage in DBs, where there is no prefix.
+//TODO: Handle # prefix for local variables in validation. Optional here, so it can also parse usage in formal parameters in function call, (and DBs), where there is no prefix.
 FeatureCall infers Expression:
 	{infer MemberCall}
-	('#'? (element=[NamedElement:ID] | element=[NamedElement:DOUBLE_QUOTE_STRING] | element=[NamedElement:KeywordsAllowedElsewhere]) '^'?)
-    // Optional function call after referencing an element
-    (explicitOperationCall?='('
-	(
-        argument=Expression? (',' argument+=Expression)*
-	)?
-	')')?;
+	'#'?
+    (element=[NamedElement:ID] | element=[NamedElement:DOUBLE_QUOTE_STRING] | element=[NamedElement:KeywordsAllowedElsewhere])
+    '^'?
+    // Optional array access and/or function call after referencing an element
+    (arrayAccessCall?='[' ( arguments+=Expression (',' arguments+=Expression)* )?']')?
+    (explicitOperationCall?='('(arguments+=Expression (',' arguments+=Expression)*)?')')?
+;
 
 DbProgramElement:
     ('THIS[' index=NUMBER ']' '.')?
