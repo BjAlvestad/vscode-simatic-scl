@@ -4,11 +4,14 @@ VERSION : 0.1
 
 VAR
 	myLocalVar : BOOL;
+	myInternalInstance : "FB_MyTestFB_A";
 END_VAR
 
 BEGIN
 
 	"FC_MyFunction"(myFcInput1 := True);
+
+	#myInternalInstance(xboMyInput1A := 21321);
 	
 END_FUNCTION_BLOCK
 
