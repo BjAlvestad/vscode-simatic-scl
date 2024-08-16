@@ -21,39 +21,21 @@ export class SclScopeProvider extends DefaultScopeProvider {
              /** RETURNS normal scope if it has no previous (i.e. is top level ref) */
             if (!previous) {
                 // This makes auto complete work for formal parameter in function call. But still get red underline for linking error
-                if(isMemberCall(memberCall.$container) && memberCall.$container?.explicitOperationCall) {
-                    if (isVariableDeclaration(memberCall.$container.element.ref)) {
-                        const decBlocks = memberCall.$container.element.ref.type.udtRef?.udtRef.ref?.decBlocks;
-                        if (decBlocks) {
-                            return this.createScopeForNodes(decBlocks.flatMap(c => c.varDecs))
-                        }
-                    }
-                    if (isSclBlock(memberCall.$container.element.ref)) {
-                        const functionRef = memberCall.$container.element.ref;
-                        console.log(functionRef.name)
-                        if (isDbBlock(functionRef) && functionRef.dbFromUdt?.ref) {
-                            return this.createScopeForNodes(functionRef.dbFromUdt.ref.decBlocks.flatMap(c => c.varDecs))
-                        }
-                        return this.createScopeForNodes(functionRef.decBlocks.flatMap(c => c.varDecs))
-                    }
+                let memberCallContainer = memberCall.$container;
+                if(isMemberCall(memberCallContainer)
+                    && memberCallContainer.explicitOperationCall
+                ) {
+                    const scope = this.scopeFormalParameters(memberCallContainer);
+                    if (scope !== undefined) { return scope}
                 }
                 // This fixes linking for formal parameter in function call.
-                if(isMemberCall(memberCall.$container?.$container) && memberCall.$container?.$container.explicitOperationCall) {
-                    if (isVariableDeclaration(memberCall.$container.$container.element.ref)
-                        && memberCall.$containerProperty === 'left'
-                    ) {
-                        const decBlocks = memberCall.$container.$container.element.ref.type.udtRef?.udtRef.ref?.decBlocks;
-                        if (decBlocks) {
-                            return this.createScopeForNodes(decBlocks.flatMap(c => c.varDecs))
-                        }
-                    }
-                    if (isSclBlock(memberCall.$container?.$container.element.ref) && memberCall.$containerProperty === 'left') {
-                        const functionRef = memberCall.$container?.$container.element.ref;
-                        if (isDbBlock(functionRef) && functionRef.dbFromUdt?.ref) {
-                            return this.createScopeForNodes(functionRef.dbFromUdt.ref.decBlocks.flatMap(c => c.varDecs))
-                        }
-                        return this.createScopeForNodes(functionRef.decBlocks.flatMap(c => c.varDecs))
-                    }
+                memberCallContainer = memberCall.$container?.$container;
+                if(isMemberCall(memberCallContainer)
+                    && memberCallContainer.explicitOperationCall
+                    && memberCall.$containerProperty === 'left'
+                ) {
+                    const scope = this.scopeFormalParameters(memberCallContainer);
+                    if (scope !== undefined) { return scope}
                 }
 
                 const model = AstUtils.findRootNode(context.container);
@@ -140,5 +122,23 @@ export class SclScopeProvider extends DefaultScopeProvider {
         }
 
         return EMPTY_SCOPE;
+    }
+
+    private scopeFormalParameters(memberCallContainer: MemberCall) {
+        if (isVariableDeclaration(memberCallContainer.element.ref)) {
+            const decBlocks = memberCallContainer.element.ref.type.udtRef?.udtRef.ref?.decBlocks;
+            if (decBlocks) {
+                return this.createScopeForNodes(decBlocks.flatMap(c => c.varDecs))
+            }
+        }
+        if (isSclBlock(memberCallContainer.element.ref)) {
+            const functionRef = memberCallContainer.element.ref;
+            if (isDbBlock(functionRef) && functionRef.dbFromUdt?.ref) {
+                return this.createScopeForNodes(functionRef.dbFromUdt.ref.decBlocks.flatMap(c => c.varDecs))
+            }
+            return this.createScopeForNodes(functionRef.decBlocks.flatMap(c => c.varDecs))
+        }
+
+        return undefined;
     }
 }
