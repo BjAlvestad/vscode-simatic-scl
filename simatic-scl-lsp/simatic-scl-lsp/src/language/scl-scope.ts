@@ -12,6 +12,16 @@ export class SclScopeProvider extends DefaultScopeProvider {
     /** Context based scope */
     override getScope(context: ReferenceInfo): Scope {
         this.logContextInfo(context, this.skipConsoleLog)
+        // console.log(context.property)
+
+        // if(isMemberCall(context.container.$container?.$container) && context.container.$container?.$container?.explicitOperationCall) {
+        //     console.log("\ncontext.container.$container?.$container:")
+        //     console.log(context.container.$container?.$container)
+        //     console.log("\n")
+        //     // if (isSclBlock(node.element.ref)) {
+        //     //     // return this.createScopeForNodes(node.element.ref.decBlocks.flatMap(c => c.varDecs))
+        //     // }
+        // }
 
         if (context.property === 'element') {
             const memberCall = context.container as MemberCall;
@@ -20,7 +30,41 @@ export class SclScopeProvider extends DefaultScopeProvider {
 
              /** RETURNS normal scope if it has no previous (i.e. is top level ref) */
             if (!previous) {
+                // console.log("reftext:")
+                // console.log(context.reference.$refText)
+                // console.log("\n")
+                // console.log("container:")
+                // console.log(context.container)
+                // console.log("\n")
+                // console.log("container.container.container:")
+                // console.log(context.container.$container?.$container)
+                // console.log("\n")
+
+                // const node = findExplicitOperationCallOrRootNode(context.container);
+                // console.log(node.$type)
+                if(isMemberCall(memberCall.$container) && memberCall.$container?.explicitOperationCall) {
+                    console.log("\nmemberCall.$container:")
+                    console.log(memberCall.$container.$type)
+                    if (isSclBlock(memberCall.$container.element.ref)) {
+                        const functionRef = memberCall.$container.element.ref;
+                        console.log("\nRef:")
+                        console.log(functionRef.$type)
+                        console.log("\n")
+                        return this.createScopeForNodes(functionRef.decBlocks.flatMap(c => c.varDecs))
+                    }
+                    // return this.createScopeForNodes(memberCall.$container.element.ref.   literal.decBlocks.flatMap(c => c.varDecs));;
+                }
+                // if(isMemberCall(memberCall.$container?.$container) && memberCall.$container?.$container?.explicitOperationCall) {
+                //     console.log("\nmemberCall.$container?.$container:")
+                //     console.log(memberCall.$container?.$container)
+                //     console.log("\n")
+                //     // if (isSclBlock(node.element.ref)) {
+                //     //     // return this.createScopeForNodes(node.element.ref.decBlocks.flatMap(c => c.varDecs))
+                //     // }
+                // }
+
                 const model = AstUtils.findRootNode(context.container);
+                // console.log(model)
                 if (isSclBlock(model)) {
                     if (model.$type === "DbBlock" && model.dbFromUdt?.ref) {
                         return super.createScopeForNodes(GetAllVarDecsFromModel(model.dbFromUdt.ref));

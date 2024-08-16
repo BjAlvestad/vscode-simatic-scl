@@ -1,0 +1,14 @@
+FUNCTION_BLOCK "FB_DoesAFcCall"
+{ S7_Optimized_Access := 'TRUE' }
+VERSION : 0.1
+
+VAR
+	myLocalVar : BOOL;
+END_VAR
+
+BEGIN
+
+	"FC_MyFunction"(myFcInput1 := True);
+	
+END_FUNCTION_BLOCK
+
