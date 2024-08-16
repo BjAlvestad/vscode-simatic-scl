@@ -12,7 +12,6 @@ export class SclScopeProvider extends DefaultScopeProvider {
     /** Context based scope */
     override getScope(context: ReferenceInfo): Scope {
         this.logContextInfo(context, this.skipConsoleLog)
-        console.log(context.property)
 
         if (context.property === 'element') {
             const memberCall = context.container as MemberCall;
@@ -24,26 +23,15 @@ export class SclScopeProvider extends DefaultScopeProvider {
 
                 // This makes auto complete work for formal parameter in function call. But still get red underline for linking error
                 if(isMemberCall(memberCall.$container) && memberCall.$container?.explicitOperationCall) {
-                    console.log("\nmemberCall.$container:")
-                    console.log(memberCall.$container.$type)
                     if (isSclBlock(memberCall.$container.element.ref)) {
                         const functionRef = memberCall.$container.element.ref;
-                        console.log("\nRef:")
-                        console.log(functionRef.$type)
-                        console.log("\n")
                         return this.createScopeForNodes(functionRef.decBlocks.flatMap(c => c.varDecs))
                     }
                 }
-                
-                // This fixes linking for formal parameter. But it is also possible to add it to right hand side of `:=`.
+                // This fixes linking for formal parameter in function call.
                 if(isMemberCall(memberCall.$container?.$container) && memberCall.$container?.$container.explicitOperationCall) {
-                    console.log("\nmemberCall.$container?.$container:")
-                    console.log(memberCall.$container?.$container.$type)
-                    if (isSclBlock(memberCall.$container?.$container.element.ref)) {
+                    if (isSclBlock(memberCall.$container?.$container.element.ref) && memberCall.$containerProperty === 'left') {
                         const functionRef = memberCall.$container?.$container.element.ref;
-                        console.log("\nRef:")
-                        console.log(functionRef.$type)
-                        console.log("\n")
                         return this.createScopeForNodes(functionRef.decBlocks.flatMap(c => c.varDecs))
                     }
                 }
@@ -60,9 +48,6 @@ export class SclScopeProvider extends DefaultScopeProvider {
                 }
                 return EMPTY_SCOPE;
              }
-            
-            console.log("Has previous")
-
 
             //** Makes nested scope for structs work */
             const previousType = inferType(previous, new Map());
