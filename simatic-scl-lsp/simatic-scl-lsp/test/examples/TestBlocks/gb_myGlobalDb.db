@@ -1,0 +1,20 @@
+DATA_BLOCK "gb_myGlobalDb"
+NON_RETAIN
+
+VAR 
+    otherStatus : "U_Status";
+    aStruct : STRUCT
+        good : DINT;
+        intenal2 : DINT;
+        intenal3 : DINT;
+        myInternal4NestedStruct : STRUCT
+            nestedIntenal1 : DINT;
+            nestedIntenal2 : DINT;
+        END_STRUCT;
+        intenal5 : DINT;
+    END_STRUCT;
+END_VAR
+
+BEGIN
+
+END_DATA_BLOCK

@@ -3,7 +3,7 @@ import { AstUtils, EMPTY_SCOPE } from 'langium';
 import { DefaultScopeProvider } from 'langium';
 import { isMemberCall, isSclBlock, isUdtRef, MemberCall, SclBlock, Struct, UdtRef } from './generated/ast.js';
 import { inferType } from './type-system/infer.js';
-import { isStructType } from './type-system/descriptions.js';
+import { isGlobalDbBlockType, isInstanceDbBlockType, isStructType } from './type-system/descriptions.js';
 import { GetAllVarDecsFromModel } from './utils.js';
 
 export class SclScopeProvider extends DefaultScopeProvider {
@@ -38,6 +38,19 @@ export class SclScopeProvider extends DefaultScopeProvider {
 
             if (isUdtRef(previousType)) {
                 return this.scopeUdtMembers(previousType.literal);
+            }
+
+            if (isInstanceDbBlockType(previousType)) {
+                if (previousType.literal.dbFromUdt?.ref?.decBlocks) {
+                    return this.createScopeForNodes(previousType.literal.dbFromUdt?.ref?.decBlocks.flatMap(c => c.varDecs))
+                //TODO: Implement for dbFromBuiltInFunction as well (part outside of scope not yet implemented, where it references built in, hence the commented out code blow wil not work yet)
+                // } else if (previousType.literal.dbFromBuiltInFunction?.ref?.decBlocks) {
+                //     return this.createScopeForNodes(previousType.literal.dbFromBuiltInFunction?.ref?.decBlocks.flatMap(c => c.varDecs))
+                }
+            }
+
+            if (isGlobalDbBlockType(previousType)) {
+                return this.createScopeForNodes(previousType.literal.decBlocks.flatMap(c => c.varDecs));
             }
 
             return EMPTY_SCOPE;

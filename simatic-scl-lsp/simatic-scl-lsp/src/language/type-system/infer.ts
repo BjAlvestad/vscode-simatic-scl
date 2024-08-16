@@ -1,6 +1,6 @@
 import { AstNode } from "langium";
-import { BinaryExpression, isBinaryExpression, isBooleanExpression, isStruct, isMemberCall, isNumberExpression, isStringExpression, isUnaryExpression, isVariableDeclaration, MemberCall, TypeReference, isTypeReference } from "../generated/ast.js";
-import { createBooleanType, createStructType, createErrorType, createNumberType, createStringType, isFunctionType, isStringType, TypeDescription, createUdtRefType } from "./descriptions.js";
+import { BinaryExpression, isBinaryExpression, isBooleanExpression, isStruct, isMemberCall, isNumberExpression, isStringExpression, isUnaryExpression, isVariableDeclaration, MemberCall, TypeReference, isTypeReference, isSclBlock, isDbBlock } from "../generated/ast.js";
+import { createBooleanType, createStructType, createErrorType, createNumberType, createStringType, isFunctionType, isStringType, TypeDescription, createUdtRefType, createSclBlockType, createInstanceDbBlockType, createGlobalDbBlockType } from "./descriptions.js";
 
 export function inferType(node: AstNode | undefined, cache: Map<AstNode, TypeDescription>): TypeDescription {
     let type: TypeDescription | undefined;
@@ -28,6 +28,16 @@ export function inferType(node: AstNode | undefined, cache: Map<AstNode, TypeDes
     //         type: inferType(e.type, cache)
     //     }));
     //     type = createFunctionType(returnType, parameters);
+    } else if (isSclBlock(node)) {
+        if (isDbBlock(node)) {
+            if(node.dbFromUdt || node.dbFromBuiltInFunction) {
+                type = createInstanceDbBlockType(node);
+            } else {
+                type = createGlobalDbBlockType(node);
+            }
+        } else {
+            type = createSclBlockType(node);
+        }
     } else if (isTypeReference(node)) {
         type = inferTypeRef(node, cache);
     } else if (isMemberCall(node)) {

@@ -1,0 +1,27 @@
+FUNCTION "FC_MyFunction"
+{ S7_Optimized_Access := 'TRUE' }
+VERSION : 0.1
+   VAR_INPUT 
+      myFcInput1 { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : BOOL;
+      myFcInput2 { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Bool;   // Comment for xboMyInput2A
+      myFcInput3 : Bool;   // Comment for xboMyInput3A
+   END_VAR
+
+   VAR_IN_OUT 
+      myFcInOut { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Bool;   // Comment for xyboMyInOut1A
+   END_VAR
+
+   VAR_TEMP 
+      myFcTemp1 : DINT;
+      myFcTemp2 : DINT;
+   END_VAR
+
+
+BEGIN
+	
+	#myFcTemp1 := 123.23 + 2;
+	
+	return 2313;
+	
+END_FUNCTION
+
