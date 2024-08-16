@@ -1,7 +1,7 @@
 import type { ReferenceInfo, Scope } from 'langium';
 import { AstUtils, EMPTY_SCOPE } from 'langium';
 import { DefaultScopeProvider } from 'langium';
-import { isMemberCall, isSclBlock, isUdtRef, MemberCall, Struct, UdtRef } from './generated/ast.js';
+import { isMemberCall, isSclBlock, isUdtRef, MemberCall, SclBlock, Struct, UdtRef } from './generated/ast.js';
 import { inferType } from './type-system/infer.js';
 import { isStructType } from './type-system/descriptions.js';
 import { GetAllVarDecsFromModel } from './utils.js';
@@ -23,6 +23,8 @@ export class SclScopeProvider extends DefaultScopeProvider {
                 const model = AstUtils.findRootNode(context.container);
                 if (isSclBlock(model)) {
                     const allLocalVars = GetAllVarDecsFromModel(model)
+                    const allRelevantBlocks = this.indexManager.allElements(SclBlock).filter(e => e.type === 'DbBlock' || e.type === 'FcBlock').map(e => (e.node as SclBlock));
+                    allLocalVars.push(...allRelevantBlocks)
                     return super.createScopeForNodes(allLocalVars);
                 }
                 return EMPTY_SCOPE;
