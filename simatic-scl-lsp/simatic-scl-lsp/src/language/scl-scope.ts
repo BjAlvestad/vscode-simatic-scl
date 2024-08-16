@@ -1,7 +1,7 @@
 import type { ReferenceInfo, Scope } from 'langium';
 import { AstUtils, EMPTY_SCOPE } from 'langium';
 import { DefaultScopeProvider } from 'langium';
-import { isMemberCall, isSclBlock, isUdtRef, MemberCall, SclBlock, Struct, UdtRef } from './generated/ast.js';
+import { isDbBlock, isMemberCall, isSclBlock, isUdtRef, MemberCall, SclBlock, Struct, UdtRef } from './generated/ast.js';
 import { inferType } from './type-system/infer.js';
 import { isGlobalDbBlockType, isInstanceDbBlockType, isStructType } from './type-system/descriptions.js';
 import { GetAllVarDecsFromModel } from './utils.js';
@@ -20,11 +20,13 @@ export class SclScopeProvider extends DefaultScopeProvider {
 
              /** RETURNS normal scope if it has no previous (i.e. is top level ref) */
             if (!previous) {
-
                 // This makes auto complete work for formal parameter in function call. But still get red underline for linking error
                 if(isMemberCall(memberCall.$container) && memberCall.$container?.explicitOperationCall) {
                     if (isSclBlock(memberCall.$container.element.ref)) {
                         const functionRef = memberCall.$container.element.ref;
+                        if (isDbBlock(functionRef) && functionRef.dbFromUdt?.ref) {
+                            return this.createScopeForNodes(functionRef.dbFromUdt.ref.decBlocks.flatMap(c => c.varDecs))
+                        }
                         return this.createScopeForNodes(functionRef.decBlocks.flatMap(c => c.varDecs))
                     }
                 }
@@ -32,6 +34,9 @@ export class SclScopeProvider extends DefaultScopeProvider {
                 if(isMemberCall(memberCall.$container?.$container) && memberCall.$container?.$container.explicitOperationCall) {
                     if (isSclBlock(memberCall.$container?.$container.element.ref) && memberCall.$containerProperty === 'left') {
                         const functionRef = memberCall.$container?.$container.element.ref;
+                        if (isDbBlock(functionRef) && functionRef.dbFromUdt?.ref) {
+                            return this.createScopeForNodes(functionRef.dbFromUdt.ref.decBlocks.flatMap(c => c.varDecs))
+                        }
                         return this.createScopeForNodes(functionRef.decBlocks.flatMap(c => c.varDecs))
                     }
                 }
