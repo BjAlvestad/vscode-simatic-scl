@@ -1,9 +1,9 @@
 import type { ReferenceInfo, Scope } from 'langium';
 import { AstUtils, EMPTY_SCOPE } from 'langium';
 import { DefaultScopeProvider } from 'langium';
-import { isMemberCall, isSclBlock, isUdtRef, MemberCall, Struct, UdtRef } from './generated/ast.js';
+import { isMemberCall, isSclBlock, isUdtRef, MemberCall, SclBlock, Struct, UdtRef } from './generated/ast.js';
 import { inferType } from './type-system/infer.js';
-import { isStructType } from './type-system/descriptions.js';
+import { isGlobalDbBlockType, isInstanceDbBlockType, isStructType } from './type-system/descriptions.js';
 import { GetAllVarDecsFromModel } from './utils.js';
 
 export class SclScopeProvider extends DefaultScopeProvider {
@@ -22,7 +22,12 @@ export class SclScopeProvider extends DefaultScopeProvider {
             if (!previous) {
                 const model = AstUtils.findRootNode(context.container);
                 if (isSclBlock(model)) {
+                    if (model.$type === "DbBlock" && model.dbFromUdt?.ref) {
+                        return super.createScopeForNodes(GetAllVarDecsFromModel(model.dbFromUdt.ref));
+                    }
                     const allLocalVars = GetAllVarDecsFromModel(model)
+                    const allRelevantBlocks = this.indexManager.allElements(SclBlock).filter(e => e.type === 'DbBlock' || e.type === 'FcBlock').map(e => (e.node as SclBlock));
+                    allLocalVars.push(...allRelevantBlocks)
                     return super.createScopeForNodes(allLocalVars);
                 }
                 return EMPTY_SCOPE;
@@ -36,6 +41,19 @@ export class SclScopeProvider extends DefaultScopeProvider {
 
             if (isUdtRef(previousType)) {
                 return this.scopeUdtMembers(previousType.literal);
+            }
+
+            if (isInstanceDbBlockType(previousType)) {
+                if (previousType.literal.dbFromUdt?.ref?.decBlocks) {
+                    return this.createScopeForNodes(previousType.literal.dbFromUdt?.ref?.decBlocks.flatMap(c => c.varDecs))
+                //TODO: Implement for dbFromBuiltInFunction as well (part outside of scope not yet implemented, where it references built in, hence the commented out code blow wil not work yet)
+                // } else if (previousType.literal.dbFromBuiltInFunction?.ref?.decBlocks) {
+                //     return this.createScopeForNodes(previousType.literal.dbFromBuiltInFunction?.ref?.decBlocks.flatMap(c => c.varDecs))
+                }
+            }
+
+            if (isGlobalDbBlockType(previousType)) {
+                return this.createScopeForNodes(previousType.literal.decBlocks.flatMap(c => c.varDecs));
             }
 
             return EMPTY_SCOPE;

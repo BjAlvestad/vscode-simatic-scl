@@ -5,7 +5,9 @@ import {
     Struct,
     NumberExpression,
     StringExpression,
-    UdtRef
+    UdtRef,
+    SclBlock,
+    DbBlock
 } from "../generated/ast.js"
 
 export type TypeDescription =
@@ -17,6 +19,9 @@ export type TypeDescription =
     | FunctionTypeDescription
     | UdtRefTypeDescription
     | StructTypeDescription
+    | SclBlockTypeDescription
+    | InstanceDbBlockTypeDescription
+    | GlobalDbBlockTypeDescription
     | ErrorType;
 
 export interface NilTypeDescription {
@@ -148,6 +153,54 @@ export function createStructType(literal: Struct): StructTypeDescription {
 
 export function isStructType(item: TypeDescription): item is StructTypeDescription {
     return item.$type === "Struct";
+}
+
+export interface SclBlockTypeDescription {
+    readonly $type: "SclBlock"
+    readonly literal: SclBlock
+}
+
+export function createSclBlockType(literal: SclBlock): SclBlockTypeDescription {
+    return {
+        $type: "SclBlock",
+        literal
+    };
+}
+
+export function isSclBlockType(item: TypeDescription): item is SclBlockTypeDescription {
+    return item.$type === "SclBlock";
+}
+
+export interface InstanceDbBlockTypeDescription {
+    readonly $type: "InstanceDbBlock"
+    readonly literal: DbBlock
+}
+
+export function createInstanceDbBlockType(literal: DbBlock): InstanceDbBlockTypeDescription {
+    return {
+        $type: "InstanceDbBlock",
+        literal
+    };
+}
+
+export function isInstanceDbBlockType(item: TypeDescription): item is InstanceDbBlockTypeDescription {
+    return item.$type === "InstanceDbBlock";
+}
+
+export interface GlobalDbBlockTypeDescription {
+    readonly $type: "GlobalDbBlock"
+    readonly literal: DbBlock
+}
+
+export function createGlobalDbBlockType(literal: DbBlock): GlobalDbBlockTypeDescription {
+    return {
+        $type: "GlobalDbBlock",
+        literal
+    };
+}
+
+export function isGlobalDbBlockType(item: TypeDescription): item is GlobalDbBlockTypeDescription {
+    return item.$type === "GlobalDbBlock";
 }
 
 export interface ErrorType {

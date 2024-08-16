@@ -26,7 +26,11 @@ VERSION : 0.1
 
 
 BEGIN
+	"MyDB".critical;
+	"gb_myGlobalDb".aStruct.intenal2;
 	
+	"FC_MyFunction"();
+
 	#otherStatus.good := TRUE;
 
 	(*
