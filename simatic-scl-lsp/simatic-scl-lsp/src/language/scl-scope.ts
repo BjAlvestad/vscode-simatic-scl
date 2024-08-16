@@ -12,7 +12,7 @@ export class SclScopeProvider extends DefaultScopeProvider {
     /** Context based scope */
     override getScope(context: ReferenceInfo): Scope {
         this.logContextInfo(context, this.skipConsoleLog)
-        // console.log(context.property)
+        console.log(context.property)
 
         // if(isMemberCall(context.container.$container?.$container) && context.container.$container?.$container?.explicitOperationCall) {
         //     console.log("\ncontext.container.$container?.$container:")
@@ -30,6 +30,7 @@ export class SclScopeProvider extends DefaultScopeProvider {
 
              /** RETURNS normal scope if it has no previous (i.e. is top level ref) */
             if (!previous) {
+                console.log("Inside !previous")
                 // console.log("reftext:")
                 // console.log(context.reference.$refText)
                 // console.log("\n")
@@ -42,6 +43,8 @@ export class SclScopeProvider extends DefaultScopeProvider {
 
                 // const node = findExplicitOperationCallOrRootNode(context.container);
                 // console.log(node.$type)
+
+                // This makes auto complete work for formal parameter in function call. But still get red underline for linking error
                 if(isMemberCall(memberCall.$container) && memberCall.$container?.explicitOperationCall) {
                     console.log("\nmemberCall.$container:")
                     console.log(memberCall.$container.$type)
@@ -53,6 +56,20 @@ export class SclScopeProvider extends DefaultScopeProvider {
                         return this.createScopeForNodes(functionRef.decBlocks.flatMap(c => c.varDecs))
                     }
                     // return this.createScopeForNodes(memberCall.$container.element.ref.   literal.decBlocks.flatMap(c => c.varDecs));;
+                }
+                
+                // This fixes linking for formal parameter. But it is also possible to add it to right hand side of `:=`.
+                if(isMemberCall(memberCall.$container?.$container) && memberCall.$container?.$container.explicitOperationCall) {
+                    console.log("\nmemberCall.$container?.$container:")
+                    console.log(memberCall.$container?.$container.$type)
+                    if (isSclBlock(memberCall.$container?.$container.element.ref)) {
+                        const functionRef = memberCall.$container?.$container.element.ref;
+                        console.log("\nRef:")
+                        console.log(functionRef.$type)
+                        console.log("\n")
+                        return this.createScopeForNodes(functionRef.decBlocks.flatMap(c => c.varDecs))
+                    }
+                    // return this.createScopeForNodes(memberCall.$container?.$container.element.ref.   literal.decBlocks.flatMap(c => c.varDecs));;
                 }
                 // if(isMemberCall(memberCall.$container?.$container) && memberCall.$container?.$container?.explicitOperationCall) {
                 //     console.log("\nmemberCall.$container?.$container:")
@@ -77,6 +94,9 @@ export class SclScopeProvider extends DefaultScopeProvider {
                 return EMPTY_SCOPE;
              }
             
+            console.log("Has previous")
+
+
             //** Makes nested scope for structs work */
             const previousType = inferType(previous, new Map());
             if (isStructType(previousType)) {
