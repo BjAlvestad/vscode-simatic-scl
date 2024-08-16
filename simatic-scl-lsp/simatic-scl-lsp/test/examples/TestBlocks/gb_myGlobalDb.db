@@ -17,4 +17,6 @@ END_VAR
 
 BEGIN
 
+otherStatus.critical;
+
 END_DATA_BLOCK

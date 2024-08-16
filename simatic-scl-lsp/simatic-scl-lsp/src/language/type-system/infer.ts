@@ -1,5 +1,5 @@
 import { AstNode } from "langium";
-import { BinaryExpression, isBinaryExpression, isBooleanExpression, isStruct, isMemberCall, isNumberExpression, isStringExpression, isUnaryExpression, isVariableDeclaration, MemberCall, TypeReference, isTypeReference, isSclBlock, isDbBlock } from "../generated/ast.js";
+import { BinaryExpression, isBinaryExpression, isBooleanExpression, isStruct, isMemberCall, isNumberExpression, isStringExpression, isUnaryExpression, isVariableDeclaration, MemberCall, TypeReference, isTypeReference, isSclBlock, isDbBlock, isDbMemberCall, DbMemberCall } from "../generated/ast.js";
 import { createBooleanType, createStructType, createErrorType, createNumberType, createStringType, isFunctionType, isStringType, TypeDescription, createUdtRefType, createSclBlockType, createInstanceDbBlockType, createGlobalDbBlockType } from "./descriptions.js";
 
 export function inferType(node: AstNode | undefined, cache: Map<AstNode, TypeDescription>): TypeDescription {
@@ -40,6 +40,8 @@ export function inferType(node: AstNode | undefined, cache: Map<AstNode, TypeDes
         }
     } else if (isTypeReference(node)) {
         type = inferTypeRef(node, cache);
+    } else if (isDbMemberCall(node)) {
+        type = inferDbMemberCall(node, cache);
     } else if (isMemberCall(node)) {
         type = inferMemberCall(node, cache);
         if (node.explicitOperationCall) {
@@ -114,6 +116,14 @@ function inferTypeRef(node: TypeReference, cache: Map<AstNode, TypeDescription>)
     //     return createFunctionType(returnType, parameters);
     }
     return createErrorType('Could not infer type for this reference', node);
+}
+
+function inferDbMemberCall(node: DbMemberCall, cache: Map<AstNode, TypeDescription>): TypeDescription {
+    const element = node.element?.ref;
+    if (element) {
+        return inferType(element, cache);
+    }
+    return createErrorType('Could not infer type for element ' + node.element?.$refText, node);
 }
 
 function inferMemberCall(node: MemberCall, cache: Map<AstNode, TypeDescription>): TypeDescription {
