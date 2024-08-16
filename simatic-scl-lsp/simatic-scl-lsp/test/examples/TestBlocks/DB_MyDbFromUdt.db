@@ -5,4 +5,6 @@ NON_RETAIN
 
 BEGIN
 
+critical := false;
+
 END_DATA_BLOCK

@@ -22,6 +22,9 @@ export class SclScopeProvider extends DefaultScopeProvider {
             if (!previous) {
                 const model = AstUtils.findRootNode(context.container);
                 if (isSclBlock(model)) {
+                    if (model.$type === "DbBlock" && model.dbFromUdt?.ref) {
+                        return super.createScopeForNodes(GetAllVarDecsFromModel(model.dbFromUdt.ref));
+                    }
                     const allLocalVars = GetAllVarDecsFromModel(model)
                     const allRelevantBlocks = this.indexManager.allElements(SclBlock).filter(e => e.type === 'DbBlock' || e.type === 'FcBlock').map(e => (e.node as SclBlock));
                     allLocalVars.push(...allRelevantBlocks)
