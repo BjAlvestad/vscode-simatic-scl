@@ -1,4 +1,4 @@
-DATA_BLOCK "MyDB"
+DATA_BLOCK "DB_MyDbFromUdt"
 NON_RETAIN
 
 "U_Status"
