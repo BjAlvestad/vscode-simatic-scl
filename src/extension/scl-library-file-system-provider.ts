@@ -13,18 +13,19 @@ export class SclLibraryFileSystemProvider implements vscode.FileSystemProvider {
 
     stat(uri: vscode.Uri): vscode.FileStat {
         const date = Date.now();
+        const library = builtinLibrary.uriMap[uri.path];
         return {
             ctime: date,
             mtime: date,
-            size: Buffer.from(builtinLibrary.REAL_TO_UDINT).length,
+            size: Buffer.from(library).length,
             type: vscode.FileType.File
         };
     }
 
     readFile(uri: vscode.Uri): Uint8Array {
-        // We could return different libraries based on the URI
-        // We have only one, so we always return the same
-        return new Uint8Array(Buffer.from(builtinLibrary.REAL_TO_UDINT));
+        // Return different libraries based on the URI
+        const library = builtinLibrary.uriMap[uri.path];
+        return new Uint8Array(Buffer.from(library));
     }
 
     // The following class members only serve to satisfy the interface
