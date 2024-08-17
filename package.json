@@ -1,5 +1,5 @@
 {
-    "name": "simatic-scl-lsp",
+    "name": "vscode-simatic-scl",
     "publisher": "BjAlvestad",
     "description": "TIA Portal SCL language support",
     "version": "0.0.3",
@@ -7,7 +7,7 @@
         "type": "git",
         "url": "https://github.com/BjAlvestad/vscode-simatic-scl.git"
     },
-    "homepage": "https://github.com/BjAlvestad/vscode-simatic-scl/blob/main/simatic-scl-lsp/simatic-scl-lsp/README.md",
+    "homepage": "https://github.com/BjAlvestad/vscode-simatic-scl/blob/main/README.md",
     "files": [
         "out/**",
         "syntaxes/**"
