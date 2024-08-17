@@ -1,9 +1,10 @@
 import { type Module, inject } from 'langium';
-import { createDefaultModule, createDefaultSharedModule, type DefaultSharedModuleContext, type LangiumServices, type LangiumSharedServices, type PartialLangiumServices } from 'langium/lsp';
+import { createDefaultModule, createDefaultSharedModule, PartialLangiumSharedServices, type DefaultSharedModuleContext, type LangiumServices, type LangiumSharedServices, type PartialLangiumServices } from 'langium/lsp';
 import { SclGeneratedModule, SclGeneratedSharedModule } from './generated/module.js';
 import { SclValidator, registerValidationChecks } from './scl-validator.js';
 import { SclScopeProvider } from './scl-scope.js';
 import { SclHoverProvider } from './lsp/scl-hover-provider.js';
+import { SclIndexManager } from './scl-index-manager.js';
 
 /**
  * Declaration of custom services - add your own service classes here.
@@ -34,7 +35,13 @@ export const SclModule: Module<SclServices, PartialLangiumServices & SclAddedSer
     },
     lsp: {
         HoverProvider: (services) => new SclHoverProvider(services)
-    },
+    }
+};
+
+export const SclSharedModule: Module<LangiumSharedServices, PartialLangiumSharedServices> = {
+    workspace: {
+        IndexManager: (services) => new SclIndexManager(services)
+    }
 };
 
 /**
@@ -58,7 +65,8 @@ export function createSclServices(context: DefaultSharedModuleContext): {
 } {
     const shared = inject(
         createDefaultSharedModule(context),
-        SclGeneratedSharedModule
+        SclGeneratedSharedModule,
+        SclSharedModule
     );
     const Scl = inject(
         createDefaultModule({ shared }),
