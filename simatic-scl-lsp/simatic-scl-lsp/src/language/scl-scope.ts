@@ -1,7 +1,7 @@
 import type { ReferenceInfo, Scope } from 'langium';
 import { AstUtils, EMPTY_SCOPE } from 'langium';
 import { DefaultScopeProvider } from 'langium';
-import { isMemberCall, isSclBlock, isUdtRef, MemberCall, SclBlock, Struct, UdtRef } from './generated/ast.js';
+import { isDbBlock, isMemberCall, isSclBlock, isUdtRef, isVariableDeclaration, MemberCall, SclBlock, Struct, UdtRef } from './generated/ast.js';
 import { inferType } from './type-system/infer.js';
 import { isGlobalDbBlockType, isInstanceDbBlockType, isStructType } from './type-system/descriptions.js';
 import { GetAllVarDecsFromModel } from './utils.js';
@@ -20,6 +20,24 @@ export class SclScopeProvider extends DefaultScopeProvider {
 
              /** RETURNS normal scope if it has no previous (i.e. is top level ref) */
             if (!previous) {
+                // This makes auto complete work for formal parameter in function call. But still get red underline for linking error
+                let memberCallContainer = memberCall.$container;
+                if(isMemberCall(memberCallContainer)
+                    && memberCallContainer.explicitOperationCall
+                ) {
+                    const scope = this.scopeFormalParameters(memberCallContainer);
+                    if (scope !== undefined) { return scope}
+                }
+                // This fixes linking for formal parameter in function call.
+                memberCallContainer = memberCall.$container?.$container;
+                if(isMemberCall(memberCallContainer)
+                    && memberCallContainer.explicitOperationCall
+                    && memberCall.$containerProperty === 'left'
+                ) {
+                    const scope = this.scopeFormalParameters(memberCallContainer);
+                    if (scope !== undefined) { return scope}
+                }
+
                 const model = AstUtils.findRootNode(context.container);
                 if (isSclBlock(model)) {
                     if (model.$type === "DbBlock" && model.dbFromUdt?.ref) {
@@ -104,5 +122,23 @@ export class SclScopeProvider extends DefaultScopeProvider {
         }
 
         return EMPTY_SCOPE;
+    }
+
+    private scopeFormalParameters(memberCallContainer: MemberCall) {
+        if (isVariableDeclaration(memberCallContainer.element.ref)) {
+            const decBlocks = memberCallContainer.element.ref.type.udtRef?.udtRef.ref?.decBlocks;
+            if (decBlocks) {
+                return this.createScopeForNodes(decBlocks.flatMap(c => c.varDecs))
+            }
+        }
+        if (isSclBlock(memberCallContainer.element.ref)) {
+            const functionRef = memberCallContainer.element.ref;
+            if (isDbBlock(functionRef) && functionRef.dbFromUdt?.ref) {
+                return this.createScopeForNodes(functionRef.dbFromUdt.ref.decBlocks.flatMap(c => c.varDecs))
+            }
+            return this.createScopeForNodes(functionRef.decBlocks.flatMap(c => c.varDecs))
+        }
+
+        return undefined;
     }
 }
