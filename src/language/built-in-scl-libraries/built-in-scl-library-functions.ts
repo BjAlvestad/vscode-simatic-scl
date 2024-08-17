@@ -1,0 +1,15 @@
+export const UDINT_TO_TIME = `
+FUNCTION UDINT_TO_TIME : Time
+VERSION : 0.1
+
+BEGIN
+END_FUNCTION
+`.trimStart();
+
+export const REAL_TO_UDINT = `
+FUNCTION REAL_TO_UDINT : UDINT
+VERSION : 0.1
+
+BEGIN
+END_FUNCTION
+`.trimStart();
