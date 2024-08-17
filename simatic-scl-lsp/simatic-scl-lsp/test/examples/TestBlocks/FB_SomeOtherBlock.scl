@@ -1,4 +1,4 @@
-FUNCTION_BLOCK "FB_MyTestFB_A"
+FUNCTION_BLOCK "FB_SomeOtherBlock"
 { S7_Optimized_Access := 'TRUE' }
 VERSION : 0.1
    VAR_INPUT 
@@ -26,7 +26,7 @@ VERSION : 0.1
 
 
 BEGIN
-	"MyDB".critical;
+	"DB_MyDbFromUdt".critical;
 	"gb_myGlobalDb".aStruct.intenal2;
 	
 	"FC_MyFunction"();
