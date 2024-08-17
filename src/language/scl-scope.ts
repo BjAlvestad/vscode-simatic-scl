@@ -5,6 +5,7 @@ import { isDbBlock, isMemberCall, isSclBlock, isUdtRef, isVariableDeclaration, M
 import { inferType } from './type-system/infer.js';
 import { isGlobalDbBlockType, isInstanceDbBlockType, isStructType } from './type-system/descriptions.js';
 import { GetAllVarDecsFromModel } from './utils.js';
+import { isBuiltInFunctionWithoutParameters } from './built-in-scl-libraries/built-in-scl-library-functions.js'
 
 export class SclScopeProvider extends DefaultScopeProvider {
     skipConsoleLog = true;
@@ -24,6 +25,7 @@ export class SclScopeProvider extends DefaultScopeProvider {
                 let memberCallContainer = memberCall.$container;
                 if(isMemberCall(memberCallContainer)
                     && memberCallContainer.explicitOperationCall
+                    && !isBuiltInFunctionWithoutParameters(memberCallContainer.element.$refText)
                 ) {
                     const scope = this.scopeFormalParameters(memberCallContainer);
                     if (scope !== undefined) { return scope}
