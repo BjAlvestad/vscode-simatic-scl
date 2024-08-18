@@ -5,13 +5,40 @@ It is still in early development, and ***not ready for use***, but cross referen
 
 The following major things have not been implemented yet:
 
-- Cross reference to DBs, parameters or built in functions.
+- Several built in functions not yet added (but framework for built-ins and many functions were added in 0.0.4).
+  - Add struct or function types for
+    - GEOADDR
+    - TCON_Configured
+    - RampFunction (seems like it is actually a functionBlock not just struct)
+    - Program_Alarm ()
+    - Get_Name
+    - etc... See "Data type" in TIA Portal for full list of things that should be handled, in addition to "Instructions"
+- Parsing of tag declarations (in xml file), and thus also linking to tags.
+- Parsing of nested multi-line comments.
+- Assigning value to local function name (which is an allowed alternative to returning a value in SCL)
 - Cashing (so performance will be very poor on larger projects).
 - Syntax highlighting (currently only keywords are highlighted).
 
 It is also limited to using 4GB RAM in VS Code, so it is not able to open extremely large projects.
 
 ## Changelog
+
+### v0.0.4
+
+- Add data types `NULL`, `DB_ANY`, `BCD16`, `BCD32`, `VARIANT`, `ANY`, `POINTER`, `HW_*`.
+- Add/fix scoping for DBs.
+- Add/fix scoping/linking of formal parameters.
+- Add framework for builtin functions, and add several built in FCs and FBs:
+  - Add several built in functions that can be called from expressions:
+    - All *CONVERT* and *T_CONV* functions, like `INT_TO_WORD` etc. Added 433 conversion functions in total.
+    - Misc others with only a single *IN* or *OUT* parameter, like `GATHER`, `SCATTER`, `RD_SYS_T`, `TIME_TCK`, `LEN`.
+    - Misc with various in/out parameters, like `RESET_TIMER`, `Ack_Alarms`, `CONCAT`, `FIND`, `REPLACE`, `ATH`, `MOVE_BLK_VARIANT`, `VariantGet`, `VariantPut`, `LOWER_BOUND`, `UPPER_BOUND`, `TypeOf`, `TypeOfElements`, `CountOfElements`, `Deserialize`, `Serialize`, `FILL_BLK`, `GATHER_BLK`, `SCATTER_BLK`, `IS_NULL`, `NOT_NULL`, `IS_ARRAY`.
+    - Math functions `MIN`, `MAX`, `MIN_REAL`, `MAX_REAL`.
+  - Add scoping/linking for built-in functions/instructions, and add built in functions for:
+    - Bit logic operations: `R_TRIG` and `F_TRIG`.
+    - Timer operations: `TP_TIME`, `TON_TIME`,`TOF_TIME`,`TONR_TIME`.
+- Misc other fixes.
+- (Major rewrite/refactor of Grammar for SCL.)
 
 ### v0.0.3
 
