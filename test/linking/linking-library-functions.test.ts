@@ -256,6 +256,56 @@ describe('Linking library functions tests', () => {
         `);
     });
 
+    test('linking misc builtin math functions', async () => {
+        document = await parse(`
+            FUNCTION_BLOCK "FB_MyFunctionBlock"
+            VERSION : 0.1
+
+            VAR
+
+            END_VAR
+
+            BEGIN
+                MIN();
+                MAX();
+                MIN_REAL();
+                MAX_REAL();
+            END_FUNCTION_BLOCK
+        `);
+
+        const sclBlock = document.parseResult.value;
+        const element0 = sclBlock.elements[0] as MemberCall;
+        const element1 = sclBlock.elements[1] as MemberCall;
+        const element2 = sclBlock.elements[2] as MemberCall;
+        const element3 = sclBlock.elements[3] as MemberCall;
+    
+        expect(
+            checkDocumentValid(document) || s`
+                refText:
+                    ${element0.element?.$refText}();
+                    ${element1.element?.$refText}();
+                    ${element2.element?.$refText}();
+                    ${element3.element?.$refText}();
+                ref.name:
+                    ${element0.element?.ref?.name}();
+                    ${element1.element?.ref?.name}();
+                    ${element2.element?.ref?.name}();
+                    ${element3.element?.ref?.name}();
+            `
+        ).toBe(s`
+            refText:
+                MIN();
+                MAX();
+                MIN_REAL();
+                MAX_REAL();
+            ref.name:
+                MIN();
+                MAX();
+                MIN_REAL();
+                MAX_REAL();
+        `);
+    });
+
     test('linking misc built in functions', async () => {
         document = await parse(`
             FUNCTION_BLOCK "FB_MyFunctionBlock"

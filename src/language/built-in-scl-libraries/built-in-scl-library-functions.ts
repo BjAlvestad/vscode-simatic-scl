@@ -536,6 +536,11 @@ export const VariantGet = createGeneralFunction('VariantGet', ['SRC : VARIANT'],
 export const VariantPut = createGeneralFunction('VariantPut', ['SRC : ANY'], ['DST : VARIANT'], undefined, 'Void');
 export const LOWER_BOUND = createGeneralFunction('LOWER_BOUND', ['ARR : ARRAY[*] of ANY', 'DIM : UDINT'], undefined, undefined, 'DINT');
 export const UPPER_BOUND = createGeneralFunction('UPPER_BOUND', ['ARR : ARRAY[*] of ANY', 'DIM : UDINT'], undefined, undefined, 'DINT');
+// Math functions
+export const MIN = createGeneralFunction('MIN', ['IN1 : INT', 'IN2 : INT', 'IN3 : INT', 'IN4 : INT', 'INn : INT'], undefined, undefined, 'INT');
+export const MAX = createGeneralFunction('MAX', ['IN1 : INT', 'IN2 : INT', 'IN3 : INT', 'IN4 : INT', 'INn : INT'], undefined, undefined, 'INT');
+export const MIN_REAL = createGeneralFunction('MIN_REAL', ['IN1 : REAL', 'IN2 : REAL', 'IN3 : REAL', 'IN4 : REAL', 'INn : REAL'], undefined, undefined, 'REAL');
+export const MAX_REAL = createGeneralFunction('MAX_REAL', ['IN1 : REAL', 'IN2 : REAL', 'IN3 : REAL', 'IN4 : REAL', 'INn : REAL'], undefined, undefined, 'REAL');
 
 function createGeneralFunction(name: string, inputs?: string[], outputs?: string[], inOuts?: string[], returnType?: string): string {
     return `
@@ -1017,6 +1022,11 @@ export const uriMap: { [K: string]: string } = {
     '/builtinLibrary.VariantPut.scl': VariantPut,
     '/builtinLibrary.LOWER_BOUND.scl': LOWER_BOUND,
     '/builtinLibrary.UPPER_BOUND.scl': UPPER_BOUND,
+    // Math functions
+    '/builtinLibrary.MIN.scl': MIN,
+    '/builtinLibrary.MAX.scl': MAX,
+    '/builtinLibrary.MIN_REAL.scl': MIN_REAL,
+    '/builtinLibrary.MAX_REAL.scl': MAX_REAL,
  };
 
 // List of functions that does not use formal parameters, so that e.g. scope calculation
