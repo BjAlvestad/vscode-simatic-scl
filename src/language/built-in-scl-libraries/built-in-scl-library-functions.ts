@@ -489,6 +489,29 @@ function createConvertFunction(from: string, to: string): string {
     `.trimStart();
 }
 
+// Builtin functions with an IN and an OUT parameter
+
+export const GATHER = createInOutFunction('GATHER', 'ARRAY[*] of BOOL', 'WORD')
+export const SCATTER = createInOutFunction('SCATTER', 'WORD', 'ARRAY[*] of BOOL')
+
+function createInOutFunction(name: string, inType: string, outType: string): string {
+    return `
+    FUNCTION ${name} : Void
+    VERSION : 0.1
+
+    VAR_INPUT
+        IN: ${inType};
+    END_VAR
+
+    VAR_OUTPUT
+        OUT: ${outType};
+    END_VAR
+
+    BEGIN
+    END_FUNCTION
+    `.trimStart();
+}
+
 // scl-workspace-manager.ts and scl-library-file-system-provider.ts use this map to register
 // the libraries as documents, and to provide correct document for navigation in VS Code.
 // With this we avoid make changes in three different locations when adding new function.
@@ -928,6 +951,9 @@ export const uriMap: { [K: string]: string } = {
     '/builtinLibrary.WORD_TO_LTOD.scl': WORD_TO_LTOD,
     '/builtinLibrary.WORD_TO_TIME.scl': WORD_TO_TIME,
     '/builtinLibrary.WORD_TO_TOD.scl': WORD_TO_TOD,
+    // Builtin functions with an IN and an OUT parameter
+    '/builtinLibrary.GATHER.scl': GATHER,
+    '/builtinLibrary.SCATTER.scl': SCATTER,
  };
 
 // List of functions that does not use formal parameters, so that e.g. scope calculation

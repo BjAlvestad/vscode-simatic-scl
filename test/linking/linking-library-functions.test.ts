@@ -159,6 +159,66 @@ describe('Linking library functions tests', () => {
         `);
     });
 
+    test('linking GATHER and SCATTER function call with in and out parameter', async () => {
+        document = await parse(`
+            FUNCTION_BLOCK "FB_MyFunctionBlock"
+            VERSION : 0.1
+
+            VAR
+                myArray: ARRAY[*] of BOOL;
+                myWord : Word;
+            END_VAR
+
+            BEGIN
+                GATHER(IN := #myArray,
+                       OUT => #myWord);
+                SCATTER(IN := #myWord,
+                        OUT => #myArray);
+            END_FUNCTION_BLOCK
+        `);
+
+        const sclBlock = document.parseResult.value;
+        const element0 = sclBlock.elements[0] as MemberCall;
+        const e0formalParameter0 = (element0.arguments[0] as BinaryExpression).left as MemberCall;
+        const e0formalParameter1 = (element0.arguments[1] as BinaryExpression).left as MemberCall;
+        const element1 = sclBlock.elements[1] as MemberCall;
+        const e1formalParameter0 = (element1.arguments[0] as BinaryExpression).left as MemberCall;
+        const e1formalParameter1 = (element1.arguments[1] as BinaryExpression).left as MemberCall;
+        expect(
+            checkDocumentValid(document) || s`
+                refText:
+                    ${element0.element?.$refText}
+                    ${e0formalParameter0.element.$refText}
+                    ${e0formalParameter1.element.$refText}
+                    ${element1.element?.$refText}
+                    ${e1formalParameter0.element.$refText}
+                    ${e1formalParameter1.element.$refText}
+                ref.name:
+                    ${element0.element?.ref?.name}
+                    ${e0formalParameter0.element.ref?.name ?? "Could not resolve formal parameter"}
+                    ${e0formalParameter1.element.ref?.name ?? "Could not resolve formal parameter"}
+                    ${element1.element?.ref?.name}
+                    ${e1formalParameter0.element.ref?.name ?? "Could not resolve formal parameter"}
+                    ${e1formalParameter1.element.ref?.name ?? "Could not resolve formal parameter"}
+            `
+        ).toBe(s`
+            refText:
+                GATHER
+                IN
+                OUT
+                SCATTER
+                IN
+                OUT
+            ref.name:
+                GATHER
+                IN
+                OUT
+                SCATTER
+                IN
+                OUT
+        `);
+    });
+
 });
 
 function checkDocumentValid(document: LangiumDocument): string | undefined {
