@@ -283,6 +283,8 @@ describe('Linking library functions tests', () => {
                 MOVE_BLK_VARIANT();
                 VariantGet();
                 VariantPut();
+                LOWER_BOUND();
+                UPPER_BOUND();
             END_FUNCTION_BLOCK
         `);
 
@@ -303,6 +305,8 @@ describe('Linking library functions tests', () => {
         const element8 = sclBlock.elements[8] as MemberCall;
         const element9 = sclBlock.elements[9] as MemberCall;
         const element10 = sclBlock.elements[10] as MemberCall;
+        const element11 = sclBlock.elements[11] as MemberCall;
+        const element12 = sclBlock.elements[12] as MemberCall;
     
         expect(
             checkDocumentValid(document) || s`
@@ -319,6 +323,8 @@ describe('Linking library functions tests', () => {
                     ${element8.element?.$refText}
                     ${element9.element?.$refText}
                     ${element10.element?.$refText}
+                    ${element11.element?.$refText}
+                    ${element12.element?.$refText}
 
                 ref.name:
                     ${element0.element?.ref?.name}
@@ -333,6 +339,8 @@ describe('Linking library functions tests', () => {
                     ${element8.element?.ref?.name}
                     ${element9.element?.ref?.name}
                     ${element10.element?.ref?.name}
+                    ${element11.element?.ref?.name}
+                    ${element12.element?.ref?.name}
 
             `
         ).toBe(s`
@@ -349,6 +357,8 @@ describe('Linking library functions tests', () => {
                 MOVE_BLK_VARIANT
                 VariantGet
                 VariantPut
+                LOWER_BOUND
+                UPPER_BOUND
 
             ref.name:
                 RESET_TIMER
@@ -363,6 +373,8 @@ describe('Linking library functions tests', () => {
                 MOVE_BLK_VARIANT
                 VariantGet
                 VariantPut
+                LOWER_BOUND
+                UPPER_BOUND
 
         `);
     });

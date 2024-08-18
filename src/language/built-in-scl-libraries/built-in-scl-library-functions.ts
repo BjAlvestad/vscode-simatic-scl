@@ -534,6 +534,8 @@ export const MOVE_BLK_VARIANT = createGeneralFunction('MOVE_BLK_VARIANT',
 );
 export const VariantGet = createGeneralFunction('VariantGet', ['SRC : VARIANT'], ['DST : ANY'], undefined, 'Void');
 export const VariantPut = createGeneralFunction('VariantPut', ['SRC : ANY'], ['DST : VARIANT'], undefined, 'Void');
+export const LOWER_BOUND = createGeneralFunction('LOWER_BOUND', ['ARR : ARRAY[*] of ANY', 'DIM : UDINT'], undefined, undefined, 'DINT');
+export const UPPER_BOUND = createGeneralFunction('UPPER_BOUND', ['ARR : ARRAY[*] of ANY', 'DIM : UDINT'], undefined, undefined, 'DINT');
 
 function createGeneralFunction(name: string, inputs?: string[], outputs?: string[], inOuts?: string[], returnType?: string): string {
     return `
@@ -1013,6 +1015,8 @@ export const uriMap: { [K: string]: string } = {
     '/builtinLibrary.MOVE_BLK_VARIANT.scl': MOVE_BLK_VARIANT,
     '/builtinLibrary.VariantGet.scl': VariantGet,
     '/builtinLibrary.VariantPut.scl': VariantPut,
+    '/builtinLibrary.LOWER_BOUND.scl': LOWER_BOUND,
+    '/builtinLibrary.UPPER_BOUND.scl': UPPER_BOUND,
  };
 
 // List of functions that does not use formal parameters, so that e.g. scope calculation
