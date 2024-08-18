@@ -2,12 +2,14 @@ import type { LanguageClientOptions, ServerOptions} from 'vscode-languageclient/
 import type * as vscode from 'vscode';
 import * as path from 'node:path';
 import { LanguageClient, TransportKind } from 'vscode-languageclient/node.js';
+import { SclLibraryFileSystemProvider } from './scl-library-file-system-provider.js';
 
 let client: LanguageClient;
 
 // This function is called when the extension is activated.
 export function activate(context: vscode.ExtensionContext): void {
     client = startLanguageClient(context);
+    SclLibraryFileSystemProvider.register(context);
 }
 
 // This function is called when the extension is deactivated.

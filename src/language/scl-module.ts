@@ -5,6 +5,7 @@ import { SclValidator, registerValidationChecks } from './scl-validator.js';
 import { SclScopeProvider } from './scl-scope.js';
 import { SclHoverProvider } from './lsp/scl-hover-provider.js';
 import { SclIndexManager } from './scl-index-manager.js';
+import { SclWorkspaceManager } from './scl-workspace-manager.js';
 
 /**
  * Declaration of custom services - add your own service classes here.
@@ -40,7 +41,8 @@ export const SclModule: Module<SclServices, PartialLangiumServices & SclAddedSer
 
 export const SclSharedModule: Module<LangiumSharedServices, PartialLangiumSharedServices> = {
     workspace: {
-        IndexManager: (services) => new SclIndexManager(services)
+        IndexManager: (services) => new SclIndexManager(services),
+        WorkspaceManager: (services) => new SclWorkspaceManager(services)
     }
 };
 

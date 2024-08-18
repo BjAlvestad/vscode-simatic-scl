@@ -403,6 +403,9 @@ DataType returns string:
     | 'DT' | 'DATE_AND_TIME' | 'LDT' | 'DATE_AND_LTIME' | 'DTL'
     // Misc
     | 'NULL'
+    | 'DB_ANY'
+    | 'BCD16' | 'BCD32'
+    | 'VARIANT' | 'ANY' | 'POINTER'
 ;
 
 StringTypeName returns string:
