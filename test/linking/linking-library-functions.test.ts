@@ -278,6 +278,11 @@ describe('Linking library functions tests', () => {
                 CONCAT();
                 FIND();
                 REPLACE();
+
+                ATH();
+                MOVE_BLK_VARIANT();
+                VariantGet();
+                VariantPut();
             END_FUNCTION_BLOCK
         `);
 
@@ -293,6 +298,12 @@ describe('Linking library functions tests', () => {
         const element4 = sclBlock.elements[4] as MemberCall;
         const element5 = sclBlock.elements[5] as MemberCall;
         const element6 = sclBlock.elements[6] as MemberCall;
+        
+        const element7 = sclBlock.elements[7] as MemberCall;  // ATH();
+        const element8 = sclBlock.elements[8] as MemberCall;
+        const element9 = sclBlock.elements[9] as MemberCall;
+        const element10 = sclBlock.elements[10] as MemberCall;
+    
         expect(
             checkDocumentValid(document) || s`
                 refText:
@@ -303,6 +314,12 @@ describe('Linking library functions tests', () => {
                     ${element4.element?.$refText}
                     ${element5.element?.$refText}
                     ${element6.element?.$refText}
+                    
+                    ${element7.element?.$refText}
+                    ${element8.element?.$refText}
+                    ${element9.element?.$refText}
+                    ${element10.element?.$refText}
+
                 ref.name:
                     ${element0.element?.ref?.name}
                     ${element1.element?.ref?.name}(${e1formalParameter0.element.ref?.name ?? "Could not resolve formal parameter"})
@@ -311,6 +328,12 @@ describe('Linking library functions tests', () => {
                     ${element4.element?.ref?.name}
                     ${element5.element?.ref?.name}
                     ${element6.element?.ref?.name}
+                    
+                    ${element7.element?.ref?.name}
+                    ${element8.element?.ref?.name}
+                    ${element9.element?.ref?.name}
+                    ${element10.element?.ref?.name}
+
             `
         ).toBe(s`
             refText:
@@ -321,6 +344,12 @@ describe('Linking library functions tests', () => {
                 CONCAT
                 FIND
                 REPLACE
+                
+                ATH
+                MOVE_BLK_VARIANT
+                VariantGet
+                VariantPut
+
             ref.name:
                 RESET_TIMER
                 RESET_TIMER(TIMER)
@@ -329,6 +358,12 @@ describe('Linking library functions tests', () => {
                 CONCAT
                 FIND
                 REPLACE
+
+                ATH
+                MOVE_BLK_VARIANT
+                VariantGet
+                VariantPut
+
         `);
     });
 

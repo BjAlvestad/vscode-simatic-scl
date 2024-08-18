@@ -527,6 +527,13 @@ export const Ack_Alarms = createGeneralFunction(
 export const CONCAT = createGeneralFunction('CONCAT', ['IN1 : STRING', 'IN2 : STRING'], undefined, undefined, 'STRING');
 export const FIND = createGeneralFunction('FIND', ['IN1 : STRING', 'IN2 : STRING'], undefined, undefined, 'INT');
 export const REPLACE = createGeneralFunction('REPLACE', ['IN1 : STRING', 'IN2 : STRING', 'L : INT', 'P : INT'], undefined, undefined, 'STRING');
+export const ATH = createGeneralFunction('ATH', ['IN : POINTER', 'N : WORD'], ['RET_VAL : WORD', 'OUT : POINTER'], undefined, 'WORD');
+export const MOVE_BLK_VARIANT = createGeneralFunction('MOVE_BLK_VARIANT',
+    ['SRC : VARIANT', 'COUNT : UDINT', 'SRC_INDEX : DINT', 'DEST_INDEX : DINT'],
+    ['DEST : VARIANT'], undefined, 'INT'
+);
+export const VariantGet = createGeneralFunction('VariantGet', ['SRC : VARIANT'], ['DST : ANY'], undefined, 'Void');
+export const VariantPut = createGeneralFunction('VariantPut', ['SRC : ANY'], ['DST : VARIANT'], undefined, 'Void');
 
 function createGeneralFunction(name: string, inputs?: string[], outputs?: string[], inOuts?: string[], returnType?: string): string {
     return `
@@ -1002,6 +1009,10 @@ export const uriMap: { [K: string]: string } = {
     '/builtinLibrary.CONCAT.scl': CONCAT,
     '/builtinLibrary.FIND.scl': FIND,
     '/builtinLibrary.REPLACE.scl': REPLACE,
+    '/builtinLibrary.ATH.scl': ATH,
+    '/builtinLibrary.MOVE_BLK_VARIANT.scl': MOVE_BLK_VARIANT,
+    '/builtinLibrary.VariantGet.scl': VariantGet,
+    '/builtinLibrary.VariantPut.scl': VariantPut,
  };
 
 // List of functions that does not use formal parameters, so that e.g. scope calculation
