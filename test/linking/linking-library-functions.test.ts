@@ -341,6 +341,7 @@ describe('Linking library functions tests', () => {
                 Deserialize();
                 Serialize();
                 FILL_BLK();
+                GATHER_BLK();
                 SCATTER_BLK();
                 IS_NULL();
                 NOT_NULL();
@@ -377,6 +378,7 @@ describe('Linking library functions tests', () => {
         const element20 = sclBlock.elements[20] as MemberCall;
         const element21 = sclBlock.elements[21] as MemberCall;
         const element22 = sclBlock.elements[22] as MemberCall;
+        const element23 = sclBlock.elements[23] as MemberCall;
     
         expect(
             checkDocumentValid(document) || s`
@@ -405,6 +407,7 @@ describe('Linking library functions tests', () => {
                     ${element20.element?.$refText}();
                     ${element21.element?.$refText}();
                     ${element22.element?.$refText}();
+                    ${element23.element?.$refText}();
 
                 ref.name:
                     ${element0.element?.ref?.name}
@@ -431,6 +434,7 @@ describe('Linking library functions tests', () => {
                     ${element20.element?.ref?.name}();
                     ${element21.element?.ref?.name}();
                     ${element22.element?.ref?.name}();
+                    ${element23.element?.ref?.name}();
 
             `
         ).toBe(s`
@@ -455,6 +459,7 @@ describe('Linking library functions tests', () => {
                 Deserialize();
                 Serialize();
                 FILL_BLK();
+                GATHER_BLK();
                 SCATTER_BLK();
                 IS_NULL();
                 NOT_NULL();
@@ -481,6 +486,7 @@ describe('Linking library functions tests', () => {
                 Deserialize();
                 Serialize();
                 FILL_BLK();
+                GATHER_BLK();
                 SCATTER_BLK();
                 IS_NULL();
                 NOT_NULL();

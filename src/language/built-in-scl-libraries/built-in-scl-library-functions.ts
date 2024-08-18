@@ -494,6 +494,7 @@ function createConvertFunction(from: string, to: string): string {
 export const GATHER = createInOutFunction('GATHER', 'ARRAY[*] of BOOL', 'WORD', 'Void')
 export const SCATTER = createInOutFunction('SCATTER', 'WORD', 'ARRAY[*] of BOOL', 'Void')
 export const RD_SYS_T = createInOutFunction('RD_SYS_T', undefined, 'DT', 'INT')
+export const TIME_TCK = createInOutFunction('TIME_TCK', undefined, undefined, 'TIME')
 export const LEN = createInOutFunction('LEN', 'STRING', undefined, 'INT')
 
 function createInOutFunction(name: string, inType?: string, outType?: string, returnType?: string): string {
@@ -542,6 +543,7 @@ export const CountOfElements = createGeneralFunction('CountOfElements', ['OPERAN
 export const Deserialize = createGeneralFunction('Deserialize', ['SRC_ARRAY : ARRAY[*] of BYTE'], undefined, ['DEST_VARIABLE : ANY', 'POS : DINT'], 'INT');
 export const Serialize = createGeneralFunction('Serialize', ['SRC_VARIABLE : ANY'], undefined, ['DEST_ARRAY : ARRAY[*] of BYTE', 'POS : DINT'], 'INT');
 export const FILL_BLK = createGeneralFunction('FILL_BLK', ['IN : ANY', 'COUNT : UINT'], ['OUT : ANY'], undefined, 'Void');
+export const GATHER_BLK = createGeneralFunction('GATHER_BLK', ['IN : ANY', 'COUNT_OUT : UINT'], ['OUT : ANY'], undefined, 'Void');
 export const SCATTER_BLK = createGeneralFunction('SCATTER_BLK', ['IN : ANY', 'COUNT_IN : UINT'], ['OUT : ANY'], undefined, 'Void');
 export const IS_NULL = createGeneralFunction('IS_NULL', ['OPERAND : VARIANT'], undefined, undefined, 'BOOL');
 export const NOT_NULL = createGeneralFunction('NOT_NULL', ['OPERAND : VARIANT'], undefined, undefined, 'BOOL');
@@ -1019,6 +1021,7 @@ export const uriMap: { [K: string]: string } = {
     '/builtinLibrary.GATHER.scl': GATHER,
     '/builtinLibrary.SCATTER.scl': SCATTER,
     '/builtinLibrary.RD_SYS_T.scl': RD_SYS_T,
+    '/builtinLibrary.TIME_TCK.scl': TIME_TCK,
     '/builtinLibrary.LEN.scl': LEN,
     // Builtin functions with various in/out parameters
     '/builtinLibrary.RESET_TIMER.scl': RESET_TIMER,
@@ -1038,6 +1041,7 @@ export const uriMap: { [K: string]: string } = {
     '/builtinLibrary.Deserialize.scl': Deserialize,
     '/builtinLibrary.Serialize.scl': Serialize,
     '/builtinLibrary.FILL_BLK.scl': FILL_BLK,
+    '/builtinLibrary.GATHER_BLK.scl': GATHER_BLK,
     '/builtinLibrary.SCATTER_BLK.scl': SCATTER_BLK,
     '/builtinLibrary.IS_NULL.scl': IS_NULL,
     '/builtinLibrary.NOT_NULL.scl': NOT_NULL,
@@ -1491,6 +1495,7 @@ const functionsWithoutFormalParameter: Set<string> = new Set<string>([
     'WORD_TO_TOD',
     // Builtin functions with only an IN or OUT parameter
     'RD_SYS_T',
+    'TIME_TCK',
     'LEN',
     // Builtin functions a single in, out of in_out parameter, but with special name
     'RESET_TIMER',
