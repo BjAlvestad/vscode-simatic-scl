@@ -132,7 +132,7 @@ VariableDeclaration returns NamedElement:
     ';'
 ;
 
-UdtRef: udtRef=[SclBlock:DOUBLE_QUOTE_STRING];
+UdtRef: udtRef=[SclBlock:DOUBLE_QUOTE_STRING] | udtRef=[SclBlock:ID];
 
 StringType:
     type=StringTypeName ('[' (sizeLiteral=NUMBER | sizeRef=FeatureCall) ']')?
@@ -143,7 +143,6 @@ TypeReference:
     | primitive=DataType
     | struct=Struct
     | string=StringType
-    | builtIn=ID
 ;
 
 VariableAttribute:
