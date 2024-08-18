@@ -495,6 +495,108 @@ describe('Linking library functions tests', () => {
         `);
     });
 
+    test('linking function blocks for bit logic operations', async () => {
+        document = await parse(`
+            FUNCTION_BLOCK "FB_MyFunctionBlock"
+            VERSION : 0.1
+
+            VAR
+                myRTrig: R_TRIG;
+                myFTrig: F_TRIG;
+            END_VAR
+
+            BEGIN
+                myRTrig(CLK := True);
+                myFTrig(CLK := True);
+            END_FUNCTION_BLOCK
+        `);
+
+        const sclBlock = document.parseResult.value;
+        const element0 = sclBlock.elements[0] as MemberCall;
+        const e0formalParameter0 = (element0.arguments[0] as BinaryExpression).left as MemberCall;
+        const element1 = sclBlock.elements[1] as MemberCall;
+        const e1formalParameter0 = (element1.arguments[0] as BinaryExpression).left as MemberCall;
+    
+        expect(
+            checkDocumentValid(document) || s`
+                refText:
+                    ${element0.element?.$refText}(${e0formalParameter0.element.$refText});
+                    ${element1.element?.$refText}(${e1formalParameter0.element.$refText});
+                ref.name:
+                    ${element0.element?.ref?.name}(${e0formalParameter0.element.ref?.name});
+                    ${element1.element?.ref?.name}(${e1formalParameter0.element.ref?.name});
+            `
+        ).toBe(s`
+            refText:
+                myRTrig(CLK);
+                myFTrig(CLK);
+            ref.name:
+                myRTrig(CLK);
+                myFTrig(CLK);
+        `);
+    });
+
+    test('linking function blocks for timer operations', async () => {
+        document = await parse(`
+            FUNCTION_BLOCK "FB_MyFunctionBlock"
+            VERSION : 0.1
+
+            VAR
+                myTpTimer: TP_TIME;
+                myTonTimer: TON_TIME;
+                myTofTimer: TOF_TIME;
+                myTonrTimer: TONR_TIME;
+            END_VAR
+
+            BEGIN
+                myTpTimer(IN := True, PT := 12);
+                myTonTimer(IN := True, PT := 12);
+                myTofTimer(IN := True, PT := 12);
+                myTonrTimer(IN := True, PT := 12);
+            END_FUNCTION_BLOCK
+        `);
+
+        const sclBlock = document.parseResult.value;
+        const element0 = sclBlock.elements[0] as MemberCall;
+        const e0formalParameter0 = (element0.arguments[0] as BinaryExpression).left as MemberCall;
+        const e0formalParameter1 = (element0.arguments[1] as BinaryExpression).left as MemberCall;
+        const element1 = sclBlock.elements[1] as MemberCall;
+        const e1formalParameter0 = (element1.arguments[0] as BinaryExpression).left as MemberCall;
+        const e1formalParameter1 = (element1.arguments[1] as BinaryExpression).left as MemberCall;
+        const element2 = sclBlock.elements[2] as MemberCall;
+        const e2formalParameter0 = (element2.arguments[0] as BinaryExpression).left as MemberCall;
+        const e2formalParameter1 = (element2.arguments[1] as BinaryExpression).left as MemberCall;
+        const element3 = sclBlock.elements[3] as MemberCall;
+        const e3formalParameter0 = (element3.arguments[0] as BinaryExpression).left as MemberCall;
+        const e3formalParameter1 = (element3.arguments[1] as BinaryExpression).left as MemberCall;
+    
+        expect(
+            checkDocumentValid(document) || s`
+                refText:
+                    ${element0.element?.$refText}(${e0formalParameter0.element.$refText}, ${e0formalParameter1.element.$refText});
+                    ${element1.element?.$refText}(${e1formalParameter0.element.$refText}, ${e1formalParameter1.element.$refText});
+                    ${element2.element?.$refText}(${e2formalParameter0.element.$refText}, ${e2formalParameter1.element.$refText});
+                    ${element3.element?.$refText}(${e3formalParameter0.element.$refText}, ${e3formalParameter1.element.$refText});
+                ref.name:
+                    ${element0.element?.ref?.name}(${e0formalParameter0.element.ref?.name}, ${e0formalParameter1.element.ref?.name});
+                    ${element1.element?.ref?.name}(${e1formalParameter0.element.ref?.name}, ${e1formalParameter1.element.ref?.name});
+                    ${element2.element?.ref?.name}(${e2formalParameter0.element.ref?.name}, ${e2formalParameter1.element.ref?.name});
+                    ${element3.element?.ref?.name}(${e3formalParameter0.element.ref?.name}, ${e3formalParameter1.element.ref?.name});
+            `
+        ).toBe(s`
+            refText:
+                myTpTimer(IN, PT);
+                myTonTimer(IN, PT);
+                myTofTimer(IN, PT);
+                myTonrTimer(IN, PT);
+            ref.name:
+                myTpTimer(IN, PT);
+                myTonTimer(IN, PT);
+                myTofTimer(IN, PT);
+                myTonrTimer(IN, PT);
+        `);
+    });
+
 });
 
 function checkDocumentValid(document: LangiumDocument): string | undefined {

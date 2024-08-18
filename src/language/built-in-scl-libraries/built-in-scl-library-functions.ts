@@ -578,6 +578,48 @@ function createGeneralFunction(name: string, inputs?: string[], outputs?: string
     `.trimStart();
 }
 
+// ***************************
+// ****  Function blocks  ****
+// ***************************
+
+// Bit logic operations:
+export const R_TRIG = createGeneralFunctionBlock('R_TRIG', ['CLK : BOOL'], ['Q : BOOL'], undefined,);
+export const F_TRIG = createGeneralFunctionBlock('F_TRIG', ['CLK : BOOL'], ['Q : BOOL'], undefined,);
+
+// Timer operations:
+export const TP_TIME = createGeneralFunctionBlock('TP_TIME', ['IN : BOOL', 'PT : TIME'], ['Q : BOOL', 'ET : TIME'], undefined,);
+export const TON_TIME = createGeneralFunctionBlock('TON_TIME', ['IN : BOOL', 'PT : TIME'], ['Q : BOOL', 'ET : TIME'], undefined,);
+export const TOF_TIME = createGeneralFunctionBlock('TOF_TIME', ['IN : BOOL', 'PT : TIME'], ['Q : BOOL', 'ET : TIME'], undefined,);
+export const TONR_TIME = createGeneralFunctionBlock('TONR_TIME', ['IN : BOOL', 'R : BOOL', 'PT : TIME'], ['Q : BOOL', 'ET : TIME'], undefined,);
+
+function createGeneralFunctionBlock(name: string, inputs?: string[], outputs?: string[], inOuts?: string[]): string {
+    return `
+    FUNCTION_BLOCK ${name}
+    VERSION : 0.1
+    ${inputs ?
+    `VAR_INPUT
+        ${inputs.join(';\n        ')};
+    END_VAR
+    ` : ''}
+    ${outputs ?
+    `VAR_OUTPUT
+        ${outputs.join(';\n        ')};
+    END_VAR
+    ` : ''}
+    ${inOuts ?
+    `VAR_IN_OUT
+        ${inOuts.join(';\n        ')};
+    END_VAR
+    ` : ''}
+    BEGIN
+    END_FUNCTION_BLOCK
+    `.trimStart();
+}
+
+// *****************************
+// ****  Register builtins  ****
+// *****************************
+
 // scl-workspace-manager.ts and scl-library-file-system-provider.ts use this map to register
 // the libraries as documents, and to provide correct document for navigation in VS Code.
 // With this we avoid make changes in three different locations when adding new function.
@@ -1051,6 +1093,15 @@ export const uriMap: { [K: string]: string } = {
     '/builtinLibrary.MAX.scl': MAX,
     '/builtinLibrary.MIN_REAL.scl': MIN_REAL,
     '/builtinLibrary.MAX_REAL.scl': MAX_REAL,
+    // ****  Function blocks  ****
+    // Bit logic operations:
+    '/builtinLibrary.R_TRIG.scl': R_TRIG,
+    '/builtinLibrary.F_TRIG.scl': F_TRIG,
+    // Timer operations:
+    '/builtinLibrary.TP_TIME.scl': TP_TIME,
+    '/builtinLibrary.TON_TIME.scl': TON_TIME,
+    '/builtinLibrary.TOF_TIME.scl': TOF_TIME,
+    '/builtinLibrary.TONR_TIME.scl': TONR_TIME,
  };
 
 // List of functions that does not use formal parameters, so that e.g. scope calculation
