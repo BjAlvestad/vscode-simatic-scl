@@ -405,6 +405,7 @@ DataType returns string:
     | 'NULL'
     | 'DB_ANY'
     | 'BCD16' | 'BCD32'
+    | 'VARIANT' | 'ANY' | 'POINTER'
 ;
 
 StringTypeName returns string:
