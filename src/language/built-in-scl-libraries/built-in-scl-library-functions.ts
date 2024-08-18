@@ -538,6 +538,14 @@ export const LOWER_BOUND = createGeneralFunction('LOWER_BOUND', ['ARR : ARRAY[*]
 export const UPPER_BOUND = createGeneralFunction('UPPER_BOUND', ['ARR : ARRAY[*] of ANY', 'DIM : UDINT'], undefined, undefined, 'DINT');
 export const TypeOf = createGeneralFunction('TypeOf', ['OPERAND : VARIANT'], undefined, undefined, 'ANY');
 export const TypeOfElements = createGeneralFunction('TypeOfElements', ['OPERAND : VARIANT'], undefined, undefined, 'ANY');
+export const CountOfElements = createGeneralFunction('CountOfElements', ['OPERAND : VARIANT'], undefined, undefined, 'UDINT');
+export const Deserialize = createGeneralFunction('Deserialize', ['SRC_ARRAY : ARRAY[*] of BYTE'], undefined, ['DEST_VARIABLE : ANY', 'POS : DINT'], 'INT');
+export const Serialize = createGeneralFunction('Serialize', ['SRC_VARIABLE : ANY'], undefined, ['DEST_ARRAY : ARRAY[*] of BYTE', 'POS : DINT'], 'INT');
+export const FILL_BLK = createGeneralFunction('FILL_BLK', ['IN : ANY', 'COUNT : UINT'], ['OUT : ANY'], undefined, 'Void');
+export const SCATTER_BLK = createGeneralFunction('SCATTER_BLK', ['IN : ANY', 'COUNT_IN : UINT'], ['OUT : ANY'], undefined, 'Void');
+export const IS_NULL = createGeneralFunction('IS_NULL', ['OPERAND : VARIANT'], undefined, undefined, 'BOOL');
+export const NOT_NULL = createGeneralFunction('NOT_NULL', ['OPERAND : VARIANT'], undefined, undefined, 'BOOL');
+export const IS_ARRAY = createGeneralFunction('IS_ARRAY', ['OPERAND : VARIANT'], undefined, undefined, 'BOOL');
 // Math functions
 export const MIN = createGeneralFunction('MIN', ['IN1 : INT', 'IN2 : INT', 'IN3 : INT', 'IN4 : INT', 'INn : INT'], undefined, undefined, 'INT');
 export const MAX = createGeneralFunction('MAX', ['IN1 : INT', 'IN2 : INT', 'IN3 : INT', 'IN4 : INT', 'INn : INT'], undefined, undefined, 'INT');
@@ -1026,6 +1034,14 @@ export const uriMap: { [K: string]: string } = {
     '/builtinLibrary.UPPER_BOUND.scl': UPPER_BOUND,
     '/builtinLibrary.TypeOf.scl': TypeOf,
     '/builtinLibrary.TypeOfElements.scl': TypeOfElements,
+    '/builtinLibrary.CountOfElements.scl': CountOfElements,
+    '/builtinLibrary.Deserialize.scl': Deserialize,
+    '/builtinLibrary.Serialize.scl': Serialize,
+    '/builtinLibrary.FILL_BLK.scl': FILL_BLK,
+    '/builtinLibrary.SCATTER_BLK.scl': SCATTER_BLK,
+    '/builtinLibrary.IS_NULL.scl': IS_NULL,
+    '/builtinLibrary.NOT_NULL.scl': NOT_NULL,
+    '/builtinLibrary.IS_ARRAY.scl': IS_ARRAY,
     // Math functions
     '/builtinLibrary.MIN.scl': MIN,
     '/builtinLibrary.MAX.scl': MAX,
@@ -1480,6 +1496,10 @@ const functionsWithoutFormalParameter: Set<string> = new Set<string>([
     'RESET_TIMER',
     'TypeOf',
     'TypeOfElements',
+    'CountOfElements',
+    'IS_NULL',
+    'NOT_NULL',
+    'IS_ARRAY',
 ]);
 
  export function isBuiltInFunction(functionName: string): boolean {

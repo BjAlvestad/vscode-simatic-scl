@@ -337,6 +337,14 @@ describe('Linking library functions tests', () => {
                 UPPER_BOUND();
                 TypeOf();
                 TypeOfElements();
+                CountOfElements();
+                Deserialize();
+                Serialize();
+                FILL_BLK();
+                SCATTER_BLK();
+                IS_NULL();
+                NOT_NULL();
+                IS_ARRAY();
             END_FUNCTION_BLOCK
         `);
 
@@ -361,6 +369,14 @@ describe('Linking library functions tests', () => {
         const element12 = sclBlock.elements[12] as MemberCall;
         const element13 = sclBlock.elements[13] as MemberCall;  // TypeOf();
         const element14 = sclBlock.elements[14] as MemberCall;
+        const element15 = sclBlock.elements[15] as MemberCall;  // CountOfElements
+        const element16 = sclBlock.elements[16] as MemberCall;
+        const element17 = sclBlock.elements[17] as MemberCall;
+        const element18 = sclBlock.elements[18] as MemberCall;
+        const element19 = sclBlock.elements[19] as MemberCall;
+        const element20 = sclBlock.elements[20] as MemberCall;
+        const element21 = sclBlock.elements[21] as MemberCall;
+        const element22 = sclBlock.elements[22] as MemberCall;
     
         expect(
             checkDocumentValid(document) || s`
@@ -381,6 +397,14 @@ describe('Linking library functions tests', () => {
                     ${element12.element?.$refText}
                     ${element13.element?.$refText}();
                     ${element14.element?.$refText}();
+                    ${element15.element?.$refText}();
+                    ${element16.element?.$refText}();
+                    ${element17.element?.$refText}();
+                    ${element18.element?.$refText}();
+                    ${element19.element?.$refText}();
+                    ${element20.element?.$refText}();
+                    ${element21.element?.$refText}();
+                    ${element22.element?.$refText}();
 
                 ref.name:
                     ${element0.element?.ref?.name}
@@ -399,6 +423,14 @@ describe('Linking library functions tests', () => {
                     ${element12.element?.ref?.name}
                     ${element13.element?.ref?.name}();
                     ${element14.element?.ref?.name}();
+                    ${element15.element?.ref?.name}();
+                    ${element16.element?.ref?.name}();
+                    ${element17.element?.ref?.name}();
+                    ${element18.element?.ref?.name}();
+                    ${element19.element?.ref?.name}();
+                    ${element20.element?.ref?.name}();
+                    ${element21.element?.ref?.name}();
+                    ${element22.element?.ref?.name}();
 
             `
         ).toBe(s`
@@ -419,6 +451,14 @@ describe('Linking library functions tests', () => {
                 UPPER_BOUND
                 TypeOf();
                 TypeOfElements();
+                CountOfElements();
+                Deserialize();
+                Serialize();
+                FILL_BLK();
+                SCATTER_BLK();
+                IS_NULL();
+                NOT_NULL();
+                IS_ARRAY();
 
             ref.name:
                 RESET_TIMER
@@ -437,6 +477,14 @@ describe('Linking library functions tests', () => {
                 UPPER_BOUND
                 TypeOf();
                 TypeOfElements();
+                CountOfElements();
+                Deserialize();
+                Serialize();
+                FILL_BLK();
+                SCATTER_BLK();
+                IS_NULL();
+                NOT_NULL();
+                IS_ARRAY();
 
         `);
     });
