@@ -264,11 +264,16 @@ describe('Linking library functions tests', () => {
             VAR
                 myIecTimer: DINT;  // dummy type IecTimer
                 errorCode : INT;
+                hasError : BOOL;
+                statusWord : WORD;
             END_VAR
 
             BEGIN
                 RESET_TIMER(#myIecTimer);
                 RESET_TIMER(TIMER := #myIecTimer);
+                Ack_Alarms(MODE := 1,
+                           ERROR => #hasError,
+                           STATUS => #statusWord);
             END_FUNCTION_BLOCK
         `);
 
@@ -276,22 +281,30 @@ describe('Linking library functions tests', () => {
         const element0 = sclBlock.elements[0] as MemberCall;
         const element1 = sclBlock.elements[1] as MemberCall;
         const e1formalParameter0 = (element1.arguments[0] as BinaryExpression).left as MemberCall;
+        const element2 = sclBlock.elements[2] as MemberCall;
+        const e2formalParameter0 = ((element2.arguments[0] as BinaryExpression).left as MemberCall).element;
+        const e2formalParameter1 = ((element2.arguments[1] as BinaryExpression).left as MemberCall).element;
+        const e2formalParameter2 = ((element2.arguments[2] as BinaryExpression).left as MemberCall).element;
         expect(
             checkDocumentValid(document) || s`
                 refText:
                     ${element0.element?.$refText}
                     ${element1.element?.$refText}(${e1formalParameter0.element.$refText})
+                    ${element2.element?.$refText}(${e2formalParameter0.$refText}, ${e2formalParameter1.$refText}, ${e2formalParameter2.$refText})
                 ref.name:
                     ${element0.element?.ref?.name}
                     ${element1.element?.ref?.name}(${e1formalParameter0.element.ref?.name ?? "Could not resolve formal parameter"})
+                    ${element2.element?.ref?.name}(${e2formalParameter0.ref?.name}, ${e2formalParameter1.ref?.name}, ${e2formalParameter2.ref?.name})
             `
         ).toBe(s`
             refText:
                 RESET_TIMER
                 RESET_TIMER(TIMER)
+                Ack_Alarms(MODE, ERROR, STATUS)
             ref.name:
                 RESET_TIMER
                 RESET_TIMER(TIMER)
+                Ack_Alarms(MODE, ERROR, STATUS)
         `);
     });
 

@@ -516,25 +516,31 @@ function createInOutFunction(name: string, inType?: string, outType?: string, re
 
 // Builtin functions with various in/out parameters
 
-export const RESET_TIMER = createGeneralFunction('RESET_TIMER', undefined, undefined, 'TIMER : TIME;','Void')  // Actually not TIME type but IEC_TIMER, TON_TIME etc.
+export const RESET_TIMER = createGeneralFunction('RESET_TIMER', undefined, undefined, ['TIMER : TIME'],'Void')  // Actually not TIME type but IEC_TIMER, TON_TIME etc.
+export const Ack_Alarms = createGeneralFunction(
+    'Ack_Alarms',
+    ['MODE : UINT'],
+    ['ERROR : BOOL', 'STATUS : WORD'],
+    undefined,
+    'Void')
 
-function createGeneralFunction(name: string, inputs?: string, outputs?: string, inOuts?: string, returnType?: string): string {
+function createGeneralFunction(name: string, inputs?: string[], outputs?: string[], inOuts?: string[], returnType?: string): string {
     return `
     FUNCTION ${name} : ${returnType ?? 'Void'}
     VERSION : 0.1
     ${inputs ?
     `VAR_INPUT
-        ${inputs}
+        ${inputs.join(';\n        ')};
     END_VAR
     ` : ''}
     ${outputs ?
     `VAR_OUTPUT
-        ${outputs}
+        ${outputs.join(';\n        ')};
     END_VAR
     ` : ''}
     ${inOuts ?
     `VAR_IN_OUT
-        ${inOuts}
+        ${inOuts.join(';\n        ')};
     END_VAR
     ` : ''}
     BEGIN
@@ -987,6 +993,7 @@ export const uriMap: { [K: string]: string } = {
     '/builtinLibrary.RD_SYS_T.scl': RD_SYS_T,
     // Builtin functions with various in/out parameters
     '/builtinLibrary.RESET_TIMER.scl': RESET_TIMER,
+    '/builtinLibrary.Ack_Alarms.scl': Ack_Alarms,
  };
 
 // List of functions that does not use formal parameters, so that e.g. scope calculation
