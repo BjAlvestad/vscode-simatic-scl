@@ -335,6 +335,8 @@ describe('Linking library functions tests', () => {
                 VariantPut();
                 LOWER_BOUND();
                 UPPER_BOUND();
+                TypeOf();
+                TypeOfElements();
             END_FUNCTION_BLOCK
         `);
 
@@ -357,6 +359,8 @@ describe('Linking library functions tests', () => {
         const element10 = sclBlock.elements[10] as MemberCall;
         const element11 = sclBlock.elements[11] as MemberCall;
         const element12 = sclBlock.elements[12] as MemberCall;
+        const element13 = sclBlock.elements[13] as MemberCall;  // TypeOf();
+        const element14 = sclBlock.elements[14] as MemberCall;
     
         expect(
             checkDocumentValid(document) || s`
@@ -375,6 +379,8 @@ describe('Linking library functions tests', () => {
                     ${element10.element?.$refText}
                     ${element11.element?.$refText}
                     ${element12.element?.$refText}
+                    ${element13.element?.$refText}();
+                    ${element14.element?.$refText}();
 
                 ref.name:
                     ${element0.element?.ref?.name}
@@ -391,6 +397,8 @@ describe('Linking library functions tests', () => {
                     ${element10.element?.ref?.name}
                     ${element11.element?.ref?.name}
                     ${element12.element?.ref?.name}
+                    ${element13.element?.ref?.name}();
+                    ${element14.element?.ref?.name}();
 
             `
         ).toBe(s`
@@ -409,6 +417,8 @@ describe('Linking library functions tests', () => {
                 VariantPut
                 LOWER_BOUND
                 UPPER_BOUND
+                TypeOf();
+                TypeOfElements();
 
             ref.name:
                 RESET_TIMER
@@ -425,6 +435,8 @@ describe('Linking library functions tests', () => {
                 VariantPut
                 LOWER_BOUND
                 UPPER_BOUND
+                TypeOf();
+                TypeOfElements();
 
         `);
     });

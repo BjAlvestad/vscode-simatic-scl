@@ -536,6 +536,8 @@ export const VariantGet = createGeneralFunction('VariantGet', ['SRC : VARIANT'],
 export const VariantPut = createGeneralFunction('VariantPut', ['SRC : ANY'], ['DST : VARIANT'], undefined, 'Void');
 export const LOWER_BOUND = createGeneralFunction('LOWER_BOUND', ['ARR : ARRAY[*] of ANY', 'DIM : UDINT'], undefined, undefined, 'DINT');
 export const UPPER_BOUND = createGeneralFunction('UPPER_BOUND', ['ARR : ARRAY[*] of ANY', 'DIM : UDINT'], undefined, undefined, 'DINT');
+export const TypeOf = createGeneralFunction('TypeOf', ['OPERAND : VARIANT'], undefined, undefined, 'ANY');
+export const TypeOfElements = createGeneralFunction('TypeOfElements', ['OPERAND : VARIANT'], undefined, undefined, 'ANY');
 // Math functions
 export const MIN = createGeneralFunction('MIN', ['IN1 : INT', 'IN2 : INT', 'IN3 : INT', 'IN4 : INT', 'INn : INT'], undefined, undefined, 'INT');
 export const MAX = createGeneralFunction('MAX', ['IN1 : INT', 'IN2 : INT', 'IN3 : INT', 'IN4 : INT', 'INn : INT'], undefined, undefined, 'INT');
@@ -1022,6 +1024,8 @@ export const uriMap: { [K: string]: string } = {
     '/builtinLibrary.VariantPut.scl': VariantPut,
     '/builtinLibrary.LOWER_BOUND.scl': LOWER_BOUND,
     '/builtinLibrary.UPPER_BOUND.scl': UPPER_BOUND,
+    '/builtinLibrary.TypeOf.scl': TypeOf,
+    '/builtinLibrary.TypeOfElements.scl': TypeOfElements,
     // Math functions
     '/builtinLibrary.MIN.scl': MIN,
     '/builtinLibrary.MAX.scl': MAX,
@@ -1474,6 +1478,8 @@ const functionsWithoutFormalParameter: Set<string> = new Set<string>([
     'LEN',
     // Builtin functions a single in, out of in_out parameter, but with special name
     'RESET_TIMER',
+    'TypeOf',
+    'TypeOfElements',
 ]);
 
  export function isBuiltInFunction(functionName: string): boolean {
