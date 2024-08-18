@@ -405,6 +405,8 @@ DataType returns string:
     | 'DB_ANY'
     | 'BCD16' | 'BCD32'
     | 'VARIANT' | 'ANY' | 'POINTER'
+    | 'HW_ANY' | 'HW_DEVICE' | 'HW_DPMASTER' | 'HW_DPSLAVE' | 'HW_HSC' | 'HW_IEPORT' | 'HW_INTERFACE'
+    | 'HW_IO' | 'HW_IOSYSTEM' | 'HW_MODULE' | 'HW_PTO' | 'HW_PWM' | 'HW_SUBMODULE'
 ;
 
 StringTypeName returns string:
