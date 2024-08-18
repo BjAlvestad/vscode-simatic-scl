@@ -218,6 +218,43 @@ describe('Linking library functions tests', () => {
                 OUT
         `);
     });
+    
+    test('linking RD_SYS_T with out parameter', async () => {
+        document = await parse(`
+            FUNCTION_BLOCK "FB_MyFunctionBlock"
+            VERSION : 0.1
+
+            VAR
+                cpuDateTime: DT;
+                errorCode : INT;
+            END_VAR
+
+            BEGIN
+               RD_SYS_T(OUT => #cpuDateTime);  // #errorCode := RD_SYS_T(OUT => #cpuDateTime);
+            END_FUNCTION_BLOCK
+        `);
+
+        const sclBlock = document.parseResult.value;
+        const element0 = sclBlock.elements[0] as MemberCall;
+        const e0formalParameter0 = (element0.arguments[0] as BinaryExpression).left as MemberCall;
+        expect(
+            checkDocumentValid(document) || s`
+                refText:
+                    ${element0.element?.$refText}
+                    ${e0formalParameter0.element.$refText}
+                ref.name:
+                    ${element0.element?.ref?.name}
+                    ${e0formalParameter0.element.ref?.name ?? "Could not resolve formal parameter"}
+            `
+        ).toBe(s`
+            refText:
+                RD_SYS_T
+                OUT
+            ref.name:
+                RD_SYS_T
+                OUT
+        `);
+    });
 
 });
 

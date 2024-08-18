@@ -489,24 +489,26 @@ function createConvertFunction(from: string, to: string): string {
     `.trimStart();
 }
 
-// Builtin functions with an IN and an OUT parameter
+// Builtin functions with an IN and/or an OUT parameter
 
-export const GATHER = createInOutFunction('GATHER', 'ARRAY[*] of BOOL', 'WORD')
-export const SCATTER = createInOutFunction('SCATTER', 'WORD', 'ARRAY[*] of BOOL')
+export const GATHER = createInOutFunction('GATHER', 'ARRAY[*] of BOOL', 'WORD', 'Void')
+export const SCATTER = createInOutFunction('SCATTER', 'WORD', 'ARRAY[*] of BOOL', 'Void')
+export const RD_SYS_T = createInOutFunction('RD_SYS_T', undefined, 'DT', 'INT')
 
-function createInOutFunction(name: string, inType: string, outType: string): string {
+function createInOutFunction(name: string, inType?: string, outType?: string, returnType?: string): string {
     return `
-    FUNCTION ${name} : Void
+    FUNCTION ${name} : ${returnType ?? 'Void'}
     VERSION : 0.1
-
-    VAR_INPUT
+    ${inType ?
+    `VAR_INPUT
         IN: ${inType};
     END_VAR
-
-    VAR_OUTPUT
+    ` : ''}
+    ${outType ?
+    `VAR_OUTPUT
         OUT: ${outType};
     END_VAR
-
+    ` : ''}
     BEGIN
     END_FUNCTION
     `.trimStart();
@@ -951,9 +953,10 @@ export const uriMap: { [K: string]: string } = {
     '/builtinLibrary.WORD_TO_LTOD.scl': WORD_TO_LTOD,
     '/builtinLibrary.WORD_TO_TIME.scl': WORD_TO_TIME,
     '/builtinLibrary.WORD_TO_TOD.scl': WORD_TO_TOD,
-    // Builtin functions with an IN and an OUT parameter
+    // Builtin functions with an IN or an OUT parameter
     '/builtinLibrary.GATHER.scl': GATHER,
     '/builtinLibrary.SCATTER.scl': SCATTER,
+    '/builtinLibrary.RD_SYS_T.scl': RD_SYS_T,
  };
 
 // List of functions that does not use formal parameters, so that e.g. scope calculation
@@ -1396,6 +1399,8 @@ const functionsWithoutFormalParameter: Set<string> = new Set<string>([
     'WORD_TO_LTOD',
     'WORD_TO_TIME',
     'WORD_TO_TOD',
+    // Builtin functions with only an IN or OUT parameter
+    'RD_SYS_T',
 ]);
 
  export function isBuiltInFunction(functionName: string): boolean {
