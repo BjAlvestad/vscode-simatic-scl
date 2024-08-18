@@ -56,6 +56,44 @@ describe('Linking library functions tests', () => {
         `);
     });
 
+    test('linking function call without optional single parameters', async () => {
+        document = await parse(`
+            FUNCTION_BLOCK "FB_MyFunctionBlock"
+            VERSION : 0.1
+
+            BEGIN
+                UDINT_TO_TIME(IN := 100); 
+                REAL_TO_UDINT(IN := 1000.0); 
+            END_FUNCTION_BLOCK
+        `);
+
+        const sclBlock = document.parseResult.value;
+        const element0 = sclBlock.elements[0] as MemberCall;
+        const element1 = sclBlock.elements[1] as MemberCall;
+        const formalParameter1 = (element1.arguments[0] as BinaryExpression).left as MemberCall;
+        expect(
+            checkDocumentValid(document) || s`
+                refText:
+                    ${element0.element?.$refText}
+                    ${element1.element?.$refText}
+                    ${formalParameter1.element.$refText}
+                ref.name:
+                    ${element0.element?.ref?.name}
+                    ${element1.element?.ref?.name}
+                    ${formalParameter1.element.ref?.name ?? "Could not resolve formal parameter"}
+            `
+        ).toBe(s`
+            refText:
+                UDINT_TO_TIME
+                REAL_TO_UDINT
+                IN
+            ref.name:
+                UDINT_TO_TIME
+                REAL_TO_UDINT
+                IN
+        `);
+    });
+
     test('linking nested function call without parameters - nested function is first element', async () => {
         document = await parse(`
             FUNCTION_BLOCK "FB_MyFunctionBlock"

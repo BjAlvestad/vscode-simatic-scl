@@ -480,6 +480,10 @@ function createConvertFunction(from: string, to: string): string {
     FUNCTION ${from}_TO_${to} : ${to}
     VERSION : 0.1
 
+    VAR_INPUT
+        IN: ${from};
+    END_VAR
+
     BEGIN
     END_FUNCTION
     `.trimStart();
@@ -928,6 +932,8 @@ export const uriMap: { [K: string]: string } = {
 
 // List of functions that does not use formal parameters, so that e.g. scope calculation
 // will not incorrectly limit scope in the formal parameter position of function call.
+//TODO: Remove later and instead implement general solution. **Any** function that only has
+// a single formal parameter is allowed to omit it. Also applies to user created functions.
 const functionsWithoutFormalParameter: Set<string> = new Set<string>([
     // Built in CONVERT functions
     'BCD16_TO_INT',
