@@ -494,6 +494,7 @@ function createConvertFunction(from: string, to: string): string {
 export const GATHER = createInOutFunction('GATHER', 'ARRAY[*] of BOOL', 'WORD', 'Void')
 export const SCATTER = createInOutFunction('SCATTER', 'WORD', 'ARRAY[*] of BOOL', 'Void')
 export const RD_SYS_T = createInOutFunction('RD_SYS_T', undefined, 'DT', 'INT')
+export const LEN = createInOutFunction('LEN', 'STRING', undefined, 'INT')
 
 function createInOutFunction(name: string, inType?: string, outType?: string, returnType?: string): string {
     return `
@@ -523,6 +524,9 @@ export const Ack_Alarms = createGeneralFunction(
     ['ERROR : BOOL', 'STATUS : WORD'],
     undefined,
     'Void')
+export const CONCAT = createGeneralFunction('CONCAT', ['IN1 : STRING', 'IN2 : STRING'], undefined, undefined, 'STRING');
+export const FIND = createGeneralFunction('FIND', ['IN1 : STRING', 'IN2 : STRING'], undefined, undefined, 'INT');
+export const REPLACE = createGeneralFunction('REPLACE', ['IN1 : STRING', 'IN2 : STRING', 'L : INT', 'P : INT'], undefined, undefined, 'STRING');
 
 function createGeneralFunction(name: string, inputs?: string[], outputs?: string[], inOuts?: string[], returnType?: string): string {
     return `
@@ -991,9 +995,13 @@ export const uriMap: { [K: string]: string } = {
     '/builtinLibrary.GATHER.scl': GATHER,
     '/builtinLibrary.SCATTER.scl': SCATTER,
     '/builtinLibrary.RD_SYS_T.scl': RD_SYS_T,
+    '/builtinLibrary.LEN.scl': LEN,
     // Builtin functions with various in/out parameters
     '/builtinLibrary.RESET_TIMER.scl': RESET_TIMER,
     '/builtinLibrary.Ack_Alarms.scl': Ack_Alarms,
+    '/builtinLibrary.CONCAT.scl': CONCAT,
+    '/builtinLibrary.FIND.scl': FIND,
+    '/builtinLibrary.REPLACE.scl': REPLACE,
  };
 
 // List of functions that does not use formal parameters, so that e.g. scope calculation
@@ -1438,6 +1446,7 @@ const functionsWithoutFormalParameter: Set<string> = new Set<string>([
     'WORD_TO_TOD',
     // Builtin functions with only an IN or OUT parameter
     'RD_SYS_T',
+    'LEN',
     // Builtin functions a single in, out of in_out parameter, but with special name
     'RESET_TIMER',
 ]);

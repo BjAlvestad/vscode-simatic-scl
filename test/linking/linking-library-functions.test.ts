@@ -274,6 +274,10 @@ describe('Linking library functions tests', () => {
                 Ack_Alarms(MODE := 1,
                            ERROR => #hasError,
                            STATUS => #statusWord);
+                LEN('abc');
+                CONCAT();
+                FIND();
+                REPLACE();
             END_FUNCTION_BLOCK
         `);
 
@@ -285,26 +289,46 @@ describe('Linking library functions tests', () => {
         const e2formalParameter0 = ((element2.arguments[0] as BinaryExpression).left as MemberCall).element;
         const e2formalParameter1 = ((element2.arguments[1] as BinaryExpression).left as MemberCall).element;
         const e2formalParameter2 = ((element2.arguments[2] as BinaryExpression).left as MemberCall).element;
+        const element3 = sclBlock.elements[3] as MemberCall;
+        const element4 = sclBlock.elements[4] as MemberCall;
+        const element5 = sclBlock.elements[5] as MemberCall;
+        const element6 = sclBlock.elements[6] as MemberCall;
         expect(
             checkDocumentValid(document) || s`
                 refText:
                     ${element0.element?.$refText}
                     ${element1.element?.$refText}(${e1formalParameter0.element.$refText})
                     ${element2.element?.$refText}(${e2formalParameter0.$refText}, ${e2formalParameter1.$refText}, ${e2formalParameter2.$refText})
+                    ${element3.element?.$refText}
+                    ${element4.element?.$refText}
+                    ${element5.element?.$refText}
+                    ${element6.element?.$refText}
                 ref.name:
                     ${element0.element?.ref?.name}
                     ${element1.element?.ref?.name}(${e1formalParameter0.element.ref?.name ?? "Could not resolve formal parameter"})
                     ${element2.element?.ref?.name}(${e2formalParameter0.ref?.name}, ${e2formalParameter1.ref?.name}, ${e2formalParameter2.ref?.name})
+                    ${element3.element?.ref?.name}
+                    ${element4.element?.ref?.name}
+                    ${element5.element?.ref?.name}
+                    ${element6.element?.ref?.name}
             `
         ).toBe(s`
             refText:
                 RESET_TIMER
                 RESET_TIMER(TIMER)
                 Ack_Alarms(MODE, ERROR, STATUS)
+                LEN
+                CONCAT
+                FIND
+                REPLACE
             ref.name:
                 RESET_TIMER
                 RESET_TIMER(TIMER)
                 Ack_Alarms(MODE, ERROR, STATUS)
+                LEN
+                CONCAT
+                FIND
+                REPLACE
         `);
     });
 
