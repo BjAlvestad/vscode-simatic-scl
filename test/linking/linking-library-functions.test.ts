@@ -256,6 +256,45 @@ describe('Linking library functions tests', () => {
         `);
     });
 
+    test('linking misc built in functions', async () => {
+        document = await parse(`
+            FUNCTION_BLOCK "FB_MyFunctionBlock"
+            VERSION : 0.1
+
+            VAR
+                myIecTimer: DINT;  // dummy type IecTimer
+                errorCode : INT;
+            END_VAR
+
+            BEGIN
+                RESET_TIMER(#myIecTimer);
+                RESET_TIMER(TIMER := #myIecTimer);
+            END_FUNCTION_BLOCK
+        `);
+
+        const sclBlock = document.parseResult.value;
+        const element0 = sclBlock.elements[0] as MemberCall;
+        const element1 = sclBlock.elements[1] as MemberCall;
+        const e1formalParameter0 = (element1.arguments[0] as BinaryExpression).left as MemberCall;
+        expect(
+            checkDocumentValid(document) || s`
+                refText:
+                    ${element0.element?.$refText}
+                    ${element1.element?.$refText}(${e1formalParameter0.element.$refText})
+                ref.name:
+                    ${element0.element?.ref?.name}
+                    ${element1.element?.ref?.name}(${e1formalParameter0.element.ref?.name ?? "Could not resolve formal parameter"})
+            `
+        ).toBe(s`
+            refText:
+                RESET_TIMER
+                RESET_TIMER(TIMER)
+            ref.name:
+                RESET_TIMER
+                RESET_TIMER(TIMER)
+        `);
+    });
+
 });
 
 function checkDocumentValid(document: LangiumDocument): string | undefined {

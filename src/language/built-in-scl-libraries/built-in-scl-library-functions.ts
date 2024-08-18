@@ -514,6 +514,34 @@ function createInOutFunction(name: string, inType?: string, outType?: string, re
     `.trimStart();
 }
 
+// Builtin functions with various in/out parameters
+
+export const RESET_TIMER = createGeneralFunction('RESET_TIMER', undefined, undefined, 'TIMER : TIME;','Void')  // Actually not TIME type but IEC_TIMER, TON_TIME etc.
+
+function createGeneralFunction(name: string, inputs?: string, outputs?: string, inOuts?: string, returnType?: string): string {
+    return `
+    FUNCTION ${name} : ${returnType ?? 'Void'}
+    VERSION : 0.1
+    ${inputs ?
+    `VAR_INPUT
+        ${inputs}
+    END_VAR
+    ` : ''}
+    ${outputs ?
+    `VAR_OUTPUT
+        ${outputs}
+    END_VAR
+    ` : ''}
+    ${inOuts ?
+    `VAR_IN_OUT
+        ${inOuts}
+    END_VAR
+    ` : ''}
+    BEGIN
+    END_FUNCTION
+    `.trimStart();
+}
+
 // scl-workspace-manager.ts and scl-library-file-system-provider.ts use this map to register
 // the libraries as documents, and to provide correct document for navigation in VS Code.
 // With this we avoid make changes in three different locations when adding new function.
@@ -957,6 +985,8 @@ export const uriMap: { [K: string]: string } = {
     '/builtinLibrary.GATHER.scl': GATHER,
     '/builtinLibrary.SCATTER.scl': SCATTER,
     '/builtinLibrary.RD_SYS_T.scl': RD_SYS_T,
+    // Builtin functions with various in/out parameters
+    '/builtinLibrary.RESET_TIMER.scl': RESET_TIMER,
  };
 
 // List of functions that does not use formal parameters, so that e.g. scope calculation
@@ -1401,6 +1431,8 @@ const functionsWithoutFormalParameter: Set<string> = new Set<string>([
     'WORD_TO_TOD',
     // Builtin functions with only an IN or OUT parameter
     'RD_SYS_T',
+    // Builtin functions a single in, out of in_out parameter, but with special name
+    'RESET_TIMER',
 ]);
 
  export function isBuiltInFunction(functionName: string): boolean {
