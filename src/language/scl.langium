@@ -23,8 +23,10 @@ UdtBlock:
     type='TYPE' ( name=DOUBLE_QUOTE_STRING | name=ID) (':' returnType=TypeName)?
         blockMetaData=BlockMetadata?
         isNonRetain?='NON_RETAIN'?
-        ((isArrayDb?='ARRAY' '[' arrayRange=ArrayRange ']' 'OF')? (dbFromUdt=[SclBlock:DOUBLE_QUOTE_STRING] | dbFromBuiltInFunction=ID) ';'?)?
-        decBlocks+=DecBlocks*
+        (
+            ((isArrayDb?='ARRAY' '[' arrayRange=ArrayRange ']' 'OF')? (dbFromUdt=[SclBlock:DOUBLE_QUOTE_STRING] | dbFromBuiltInFunction=ID) ';'?)?
+            | decBlocks+=UdtVarDecBlock*
+        )
         ('BEGIN'
             (elements+=DbProgramElement)*
         )?
@@ -93,7 +95,6 @@ DecBlocks:
     | VarDecBlock
     | TempVarDecBlock
     | ConstVarDecBlock
-    | (Struct ';')  // Struct is used as top level section in UDT
 ;
 
 InputVarDecBlock: type='VAR_INPUT' DecBlockQualifier varDecs+=VariableDeclaration* 'END_VAR';
@@ -102,6 +103,8 @@ InOutVarDecBlock: type='VAR_IN_OUT' DecBlockQualifier varDecs+=VariableDeclarati
 VarDecBlock: type='VAR' DecBlockQualifier varDecs+=VariableDeclaration* 'END_VAR';
 TempVarDecBlock: type='VAR_TEMP' DecBlockQualifier varDecs+=VariableDeclaration* 'END_VAR';
 ConstVarDecBlock: 'VAR' type='CONSTANT' DecBlockQualifier varDecs+=VariableDeclaration* 'END_VAR';
+
+UdtVarDecBlock: 'STRUCT' varDecs+=VariableDeclaration* 'END_STRUCT' ';';
 
 fragment DecBlockQualifier:
     dbSpesific?='DB_SPECIFIC'?
