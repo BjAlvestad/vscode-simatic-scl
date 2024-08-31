@@ -1,7 +1,7 @@
 import type { ReferenceInfo, Scope } from 'langium';
 import { AstUtils, EMPTY_SCOPE } from 'langium';
 import { DefaultScopeProvider } from 'langium';
-import { isDbBlock, isMemberCall, isSclBlock, isUdtRef, isVariableDeclaration, MemberCall, SclBlock, Struct, UdtRef } from './generated/ast.js';
+import { isDbBlock, isMemberCall, isSclBlock, isUdtRef, isVariableDeclaration, MemberCall, Model, SclBlock, Struct, UdtRef } from './generated/ast.js';
 import { inferType } from './type-system/infer.js';
 import { isGlobalDbBlockType, isInstanceDbBlockType, isStructType } from './type-system/descriptions.js';
 import { GetAllVarDecsFromModel } from './utils.js';
@@ -9,6 +9,21 @@ import { isBuiltInFunctionWithoutParameters } from './built-in-scl-libraries/bui
 
 export class SclScopeProvider extends DefaultScopeProvider {
     skipConsoleLog = true;
+
+    protected override getGlobalScope(referenceType: string, _context: ReferenceInfo): Scope {
+        switch (_context.container.$type) {
+            case 'UdtRef':
+            case 'DbBlock':
+                const typeBlocks = this.indexManager.allElements(SclBlock).filter(e => e.type === 'UdtBlock' || e.type === 'FbBlock').map(e => (e.node as SclBlock));
+                return this.createScopeForNodes(typeBlocks);
+            case 'MemberCall':
+            case 'DbMemberCall':
+                const callableBlocks = this.indexManager.allElements(SclBlock).filter(e => e.type === 'DbBlock' || e.type === 'FcBlock').map(e => (e.node as SclBlock));
+                return this.createScopeForNodes(callableBlocks);
+            default:
+                return EMPTY_SCOPE;
+        }
+    }
 
     /** Context based scope */
     override getScope(context: ReferenceInfo): Scope {
@@ -45,10 +60,8 @@ export class SclScopeProvider extends DefaultScopeProvider {
                     if (model.$type === "DbBlock" && model.dbFromUdt?.ref) {
                         return super.createScopeForNodes(GetAllVarDecsFromModel(model.dbFromUdt.ref));
                     }
-                    const allLocalVars = GetAllVarDecsFromModel(model)
-                    const allRelevantBlocks = this.indexManager.allElements(SclBlock).filter(e => e.type === 'DbBlock' || e.type === 'FcBlock').map(e => (e.node as SclBlock));
-                    allLocalVars.push(...allRelevantBlocks)
-                    return super.createScopeForNodes(allLocalVars);
+
+                    return this.createScopeForLocalVarsAndGlobalBlocks(model, context);
                 }
                 return EMPTY_SCOPE;
              }
@@ -142,5 +155,14 @@ export class SclScopeProvider extends DefaultScopeProvider {
         }
 
         return undefined;
+    }
+
+    private createScopeForLocalVarsAndGlobalBlocks(model: Model, context: ReferenceInfo) {
+        const allLocalVars = this.createScopeForNodes(GetAllVarDecsFromModel(model));
+
+        const referenceType = this.reflection.getReferenceType(context);
+        let scopeFromGlobal: Scope = this.getGlobalScope(referenceType, context);
+
+        return this.createScope(allLocalVars.getAllElements(), scopeFromGlobal);
     }
 }
