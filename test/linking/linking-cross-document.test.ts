@@ -128,7 +128,7 @@ describe('Linking cross document tests', () => {
         `, {documentUri: "file:///gb_MyGlobalDb.scl"});
 
         document = await parse(`
-            FUNCTION_BLOCK "FB_MyFB"
+            FUNCTION_BLOCK "FB_MyFB2"
             VERSION : 0.1
             
             VAR 
@@ -141,7 +141,7 @@ describe('Linking cross document tests', () => {
             "gb_MyGlobalDb".myOtherVar;
 
             END_FUNCTION_BLOCK
-        `, {documentUri: "file:///FB_MyFB.scl"});
+        `, {documentUri: "file:///FB_MyFB2.scl"});
 
         const fbDockDirectParseResults = document?.parseResult.value;
         const element0 = fbDockDirectParseResults.elements[0] as MemberCall;

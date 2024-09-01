@@ -1,4 +1,4 @@
-import type { ReferenceInfo, Scope } from 'langium';
+import { DocumentCache, MapScope, ReferenceInfo, Scope } from 'langium';
 import { AstUtils, EMPTY_SCOPE } from 'langium';
 import { DefaultScopeProvider } from 'langium';
 import { isDbBlock, isMemberCall, isSclBlock, isUdtRef, isVariableDeclaration, MemberCall, Model, SclBlock, Struct, UdtRef } from './generated/ast.js';
@@ -6,25 +6,44 @@ import { inferType } from './type-system/infer.js';
 import { isGlobalDbBlockType, isInstanceDbBlockType, isStructType } from './type-system/descriptions.js';
 import { GetAllVarDecsFromModel } from './utils.js';
 import { isBuiltInFunctionWithoutParameters } from './built-in-scl-libraries/built-in-scl-library-functions.js'
+import { SclServices } from './scl-module.js';
 
 export class SclScopeProvider extends DefaultScopeProvider {
     skipConsoleLog = true;
+
+    protected readonly scopeCache: DocumentCache<
+      string,
+      Scope
+    >; // DocumentCache becomes invalidated as soon the corresponding document is updated
+
+    constructor(services: SclServices) {
+        super(services);
+        this.scopeCache = new DocumentCache(services.shared);
+      }
 
     protected override getGlobalScope(referenceType: string, _context: ReferenceInfo): Scope {
         switch (_context.container.$type) {
             case 'UdtRef':
             case 'DbBlock':
-                const typeBlocks = this.indexManager.allElements(SclBlock).filter(e => e.type === 'UdtBlock' || e.type === 'FbBlock').map(e => (e.node as SclBlock));
-                return this.createScopeForNodes(typeBlocks);
+                return this.globalScopeCache.get(
+                    referenceType,
+                    () => new MapScope(
+                        this.indexManager.allElements(SclBlock).filter(e => e.type === 'UdtBlock' || e.type === 'FbBlock')
+                    )
+                );
             case 'MemberCall':
             case 'DbMemberCall':
-                const callableBlocks = this.indexManager.allElements(SclBlock).filter(e => e.type === 'DbBlock' || e.type === 'FcBlock').map(e => (e.node as SclBlock));
-                return this.createScopeForNodes(callableBlocks);
+                return this.globalScopeCache.get(
+                    referenceType,
+                    () => new MapScope(
+                        this.indexManager.allElements(SclBlock).filter(e => e.type === 'DbBlock' || e.type === 'FcBlock')
+                    )
+                );
             default:
                 return EMPTY_SCOPE;
         }
     }
-
+    
     /** Context based scope */
     override getScope(context: ReferenceInfo): Scope {
         this.logContextInfo(context, this.skipConsoleLog)
@@ -41,24 +60,30 @@ export class SclScopeProvider extends DefaultScopeProvider {
                 if(isMemberCall(memberCallContainer)
                     && memberCallContainer.explicitOperationCall
                     && !isBuiltInFunctionWithoutParameters(memberCallContainer.element.$refText)
+                    && memberCallContainer.element.ref?.name
                 ) {
-                    const scope = this.scopeFormalParameters(memberCallContainer);
-                    if (scope !== undefined) { return scope}
+                    const uri = AstUtils.findRootNode(memberCallContainer).$document!.uri.toString();
+                    const scope = this.scopeCache.get(memberCallContainer.element.ref?.name, uri, () => this.scopeFormalParameters(memberCallContainer as MemberCall));
+                    if (scope !== EMPTY_SCOPE) { return scope}
                 }
                 // This fixes linking for formal parameter in function call.
                 memberCallContainer = memberCall.$container?.$container;
                 if(isMemberCall(memberCallContainer)
                     && memberCallContainer.explicitOperationCall
                     && memberCall.$containerProperty === 'left'
+                    && memberCallContainer.element.ref?.name
                 ) {
-                    const scope = this.scopeFormalParameters(memberCallContainer);
-                    if (scope !== undefined) { return scope}
+                    const uri = AstUtils.findRootNode(memberCallContainer).$document!.uri.toString();
+                    const scope = this.scopeCache.get(memberCallContainer.element.ref?.name, uri, () => this.scopeFormalParameters(memberCallContainer as MemberCall));
+                    if (scope !== EMPTY_SCOPE) { return scope}
                 }
 
                 const model = AstUtils.findRootNode(context.container);
                 if (isSclBlock(model)) {
                     if (model.$type === "DbBlock" && model.dbFromUdt?.ref) {
-                        return super.createScopeForNodes(GetAllVarDecsFromModel(model.dbFromUdt.ref));
+                        const uri = AstUtils.findRootNode(model.dbFromUdt?.ref).$document!.uri.toString();
+                        const scope = this.scopeCache.get(model.dbFromUdt.ref.name, uri, () => super.createScopeForNodes(GetAllVarDecsFromModel(model.dbFromUdt?.ref as SclBlock)));
+                        return scope;
                     }
 
                     return this.createScopeForLocalVarsAndGlobalBlocks(model, context);
@@ -69,16 +94,21 @@ export class SclScopeProvider extends DefaultScopeProvider {
             //** Makes nested scope for structs work */
             const previousType = inferType(previous, new Map());
             if (isStructType(previousType)) {
-                return this.scopeStructMembers(previousType.literal);
+                const uri = AstUtils.findRootNode(previousType.literal).$document!.uri.toString();
+                return this.scopeCache.get(previousType.literal.$container.$container.name, uri, () => this.scopeStructMembers(previousType.literal));
             }
 
             if (isUdtRef(previousType)) {
-                return this.scopeUdtMembers(previousType.literal);
+                const uri = AstUtils.findRootNode(previousType.literal).$document!.uri.toString();
+                return this.scopeCache.get(previousType.literal.$container.$container.name, uri, () => this.scopeUdtMembers(previousType.literal));
             }
 
             if (isInstanceDbBlockType(previousType)) {
                 if (previousType.literal.dbFromUdt?.ref?.decBlocks) {
-                    return this.createScopeForNodes(previousType.literal.dbFromUdt?.ref?.decBlocks.flatMap(c => c.varDecs))
+                    const dbRef = previousType.literal.dbFromUdt?.ref;
+                    const uri = AstUtils.findRootNode(dbRef).$document!.uri.toString();
+                    return this.scopeCache.get(dbRef.name, uri, () => this.createScopeForNodes(dbRef.decBlocks.flatMap(c => c.varDecs)));
+
                 //TODO: Implement for dbFromBuiltInFunction as well (part outside of scope not yet implemented, where it references built in, hence the commented out code blow wil not work yet)
                 // } else if (previousType.literal.dbFromBuiltInFunction?.ref?.decBlocks) {
                 //     return this.createScopeForNodes(previousType.literal.dbFromBuiltInFunction?.ref?.decBlocks.flatMap(c => c.varDecs))
@@ -86,7 +116,8 @@ export class SclScopeProvider extends DefaultScopeProvider {
             }
 
             if (isGlobalDbBlockType(previousType)) {
-                return this.createScopeForNodes(previousType.literal.decBlocks.flatMap(c => c.varDecs));
+                const uri = AstUtils.findRootNode(previousType.literal).$document!.uri.toString();
+                return this.scopeCache.get(previousType.literal.name, uri, () => this.createScopeForNodes(previousType.literal.decBlocks.flatMap(c => c.varDecs)));
             }
 
             return EMPTY_SCOPE;
@@ -139,7 +170,10 @@ export class SclScopeProvider extends DefaultScopeProvider {
         return EMPTY_SCOPE;
     }
 
-    private scopeFormalParameters(memberCallContainer: MemberCall) {
+    private scopeFormalParameters(memberCallContainer: MemberCall | undefined) {
+        if (!memberCallContainer) {
+            return EMPTY_SCOPE;
+        }
         if (isVariableDeclaration(memberCallContainer.element.ref)) {
             const decBlocks = memberCallContainer.element.ref.type.udtRef?.udtRef.ref?.decBlocks;
             if (decBlocks) {
@@ -154,11 +188,12 @@ export class SclScopeProvider extends DefaultScopeProvider {
             return this.createScopeForNodes(functionRef.decBlocks.flatMap(c => c.varDecs))
         }
 
-        return undefined;
+        return EMPTY_SCOPE;
     }
 
     private createScopeForLocalVarsAndGlobalBlocks(model: Model, context: ReferenceInfo) {
-        const allLocalVars = this.createScopeForNodes(GetAllVarDecsFromModel(model));
+        const uri = AstUtils.findRootNode(model).$document!.uri.toString();
+        const allLocalVars = this.scopeCache.get(model.name, uri, () => this.createScopeForNodes(GetAllVarDecsFromModel(model)));
 
         const referenceType = this.reflection.getReferenceType(context);
         let scopeFromGlobal: Scope = this.getGlobalScope(referenceType, context);
