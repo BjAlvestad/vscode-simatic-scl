@@ -1,10 +1,12 @@
 import {
     AstNode,
     DefaultWorkspaceManager,
+    FileSystemNode,
     LangiumDocument,
     LangiumDocumentFactory,
+    UriUtils,
 } from "langium";
-import { WorkspaceFolder } from 'vscode-languageserver';
+import { WorkspaceFolder } from 'vscode-languageserver-types';
 import { URI } from "vscode-uri";
 import * as builtinLibrary from './built-in-scl-libraries/built-in-scl-library-functions.js'
 import { LangiumSharedServices } from "langium/lsp";
@@ -28,5 +30,19 @@ export class SclWorkspaceManager extends DefaultWorkspaceManager {
             const fullUri = 'builtin://' + key;
             collector(this.documentFactory.fromString(builtinLibrary.uriMap[key], URI.parse(fullUri)));
         }
+    }
+
+    protected override includeEntry(_workspaceFolder: WorkspaceFolder, entry: FileSystemNode, fileExtensions: string[]): boolean {
+        const name = UriUtils.basename(entry.uri);
+        if (name.startsWith('.')) {
+            return false;
+        }
+        if (entry.isDirectory) {
+            return name !== 'node_modules' && name !== 'out';
+        } else if (entry.isFile) {
+            const extname = UriUtils.extname(entry.uri);
+            return fileExtensions.includes(extname);
+        }
+        return false;
     }
 }
