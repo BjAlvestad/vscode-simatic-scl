@@ -12,7 +12,6 @@ export function activate(context: vscode.ExtensionContext): void {
         "SimpleStruct",
         "root"
     ];
-    client = startLanguageClient(context, includedFolders);
     const workspaceFolders = vscode.workspace.workspaceFolders?.map(folder => folder.uri.fsPath) || [];
     const resolvedIncludedFolders = includedFolders.map(folder => {
         return workspaceFolders.map(workspaceFolder => path.join(workspaceFolder, folder));
