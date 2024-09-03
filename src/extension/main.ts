@@ -7,26 +7,13 @@ import { SclLibraryFileSystemProvider } from './scl-library-file-system-provider
 let client: LanguageClient;
 
 export function activate(context: vscode.ExtensionContext): void {
-    const includedFolders: string[] = vscode.workspace.getConfiguration('vscode-simatic-scl').get('includedFolders', []);
-    // const includedFolders = [
-    //     "SimpleStruct",
-    //     "TestBlocks"
-    // ];
+    // const includedFolders: string[] = vscode.workspace.getConfiguration('vscode-simatic-scl').get('includedFolders', []);
+    const includedFolders = [
+        "SimpleStruct",
+        "root"
+    ];
     client = startLanguageClient(context, includedFolders);
     SclLibraryFileSystemProvider.register(context);
-
-    vscode.workspace.onDidOpenTextDocument((document) => {
-        const filePath = document.uri.fsPath;
-        const isIncluded = includedFolders.some(folder => filePath.startsWith(vscode.Uri.file(folder).fsPath));
-
-        if (!isIncluded) {
-            // Skip processing this file
-            return;
-        }
-
-        // Process the file with LSP
-        // ...
-    });
 }
 
 export function deactivate(): Thenable<void> | undefined {
@@ -47,7 +34,17 @@ function startLanguageClient(context: vscode.ExtensionContext, includedFolders: 
 
     const clientOptions: LanguageClientOptions = {
         documentSelector: [{ scheme: 'file', language: 'scl' }],
-        initializationOptions: { includedFolders }
+        initializationOptions: { includedFolders },
+        middleware: {
+            didOpen: async (document, next) => {
+                const filePath = document.uri.fsPath;
+                const isIncluded = includedFolders.some(folder => filePath.startsWith(vscode.Uri.file(folder).fsPath));
+
+                if (isIncluded) {
+                    await next(document);
+                }
+            }
+        }
     };
 
     const client = new LanguageClient(
