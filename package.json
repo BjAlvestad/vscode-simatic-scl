@@ -73,7 +73,21 @@
                 "scopeName": "source.scl",
                 "path": "syntaxes/scl.tmLanguage.json"
             }
-        ]
+        ],
+        "configuration": {
+            "type": "object",
+            "title": "Simatic SCL LSP Configuration",
+            "properties": {
+              "vscode-simatic-scl.includedFolders": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "default": [],
+                "description": "File patterns to include in the LSP validation."
+              }
+            }
+          }
     },
     "activationEvents": [
         "onLanguage:scl"

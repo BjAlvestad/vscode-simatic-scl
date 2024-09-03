@@ -7,7 +7,11 @@ import { SclLibraryFileSystemProvider } from './scl-library-file-system-provider
 let client: LanguageClient;
 
 export function activate(context: vscode.ExtensionContext): void {
-    const includedFolders: string[] = vscode.workspace.getConfiguration('myExtension').get('includedFolders', []);
+    const includedFolders: string[] = vscode.workspace.getConfiguration('vscode-simatic-scl').get('includedFolders', []);
+    // const includedFolders = [
+    //     "SimpleStruct",
+    //     "TestBlocks"
+    // ];
     client = startLanguageClient(context, includedFolders);
     SclLibraryFileSystemProvider.register(context);
 
