@@ -10,6 +10,7 @@ VERSION : 0.1
    END_VAR
 
    VAR 
+		otherStruct : "FB_NestedStruct";
 		myStruct : STRUCT
 			intenal1 : DINT;
 		END_STRUCT;
@@ -25,7 +26,7 @@ BEGIN
 	#myVar1;
 
 	#myStruct.intenal1;
-
+   
 	
 END_FUNCTION_BLOCK
 
