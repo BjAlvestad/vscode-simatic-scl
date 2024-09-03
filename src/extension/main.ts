@@ -13,6 +13,12 @@ export function activate(context: vscode.ExtensionContext): void {
         "root"
     ];
     client = startLanguageClient(context, includedFolders);
+    const workspaceFolders = vscode.workspace.workspaceFolders?.map(folder => folder.uri.fsPath) || [];
+    const resolvedIncludedFolders = includedFolders.map(folder => {
+        return workspaceFolders.map(workspaceFolder => path.join(workspaceFolder, folder));
+    }).flat();
+
+    client = startLanguageClient(context, resolvedIncludedFolders);
     SclLibraryFileSystemProvider.register(context);
 }
 
@@ -38,9 +44,7 @@ function startLanguageClient(context: vscode.ExtensionContext, includedFolders: 
         middleware: {
             didOpen: async (document, next) => {
                 const filePath = document.uri.fsPath;
-                const folderPath = vscode.Uri.file("SimpleStruct").fsPath;
-                console.log(folderPath)
-                const isIncluded = includedFolders.some(folder => filePath.startsWith(vscode.Uri.file(folder).fsPath));
+                const isIncluded = includedFolders.some(folder => filePath.startsWith(folder));
 
                 if (isIncluded) {
                     await next(document);
