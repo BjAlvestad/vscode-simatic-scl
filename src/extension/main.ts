@@ -38,6 +38,8 @@ function startLanguageClient(context: vscode.ExtensionContext, includedFolders: 
         middleware: {
             didOpen: async (document, next) => {
                 const filePath = document.uri.fsPath;
+                const folderPath = vscode.Uri.file("SimpleStruct").fsPath;
+                console.log(folderPath)
                 const isIncluded = includedFolders.some(folder => filePath.startsWith(vscode.Uri.file(folder).fsPath));
 
                 if (isIncluded) {
