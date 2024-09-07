@@ -82,5 +82,16 @@ export function createSclServices(context: DefaultSharedModuleContext): {
         // Therefore, initialize the configuration provider instantly
         shared.workspace.ConfigurationProvider.initialized({});
     }
+    shared.workspace.ConfigurationProvider.getConfiguration('vscode-simatic-scl', 'includedFolders').then(
+        config => {
+            console.log(`scl-module.ts config: ${config}`)
+        }
+    )
+    shared.workspace.ConfigurationProvider.getConfiguration('scl', 'vscode-simatic-scl').then(
+        config => {
+            console.log(`scl-module.ts config: ${config}`)
+        }
+    )
+
     return { shared, Scl };
 }
