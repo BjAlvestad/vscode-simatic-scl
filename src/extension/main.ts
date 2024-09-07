@@ -1,5 +1,5 @@
 import type { LanguageClientOptions, ServerOptions} from 'vscode-languageclient/node.js';
-import type * as vscode from 'vscode';
+import * as vscode from 'vscode';
 import * as path from 'node:path';
 import { LanguageClient, TransportKind } from 'vscode-languageclient/node.js';
 import { SclLibraryFileSystemProvider } from './scl-library-file-system-provider.js';
@@ -8,6 +8,14 @@ let client: LanguageClient;
 
 // This function is called when the extension is activated.
 export function activate(context: vscode.ExtensionContext): void {
+    // Ensure configuration is accessed after activation
+    vscode.workspace.onDidChangeConfiguration(() => {
+        getConfig();
+    });
+
+    // Initial configuration fetch
+    getConfig();
+
     client = startLanguageClient(context);
     SclLibraryFileSystemProvider.register(context);
 }
@@ -50,4 +58,15 @@ function startLanguageClient(context: vscode.ExtensionContext): LanguageClient {
     // Start the client. This will also launch the server
     client.start();
     return client;
+}
+
+async function getConfig() {
+    try {
+        const config = await vscode.workspace.getConfiguration('vscode-simatic-scl').get('includedFolders');
+        // This returns the config, which can be seen if you set a breakpoint.
+        // Not sure where this console.log goes to though
+        console.log(`Included folders:\n ${config}\n\n`);
+    } catch (error) {
+        console.error('Error fetching configuration:', error);
+    }
 }
