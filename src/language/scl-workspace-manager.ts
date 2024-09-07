@@ -80,6 +80,9 @@ export class SclWorkspaceManager extends DefaultWorkspaceManager {
             return false;
         }
         if (entry.isDirectory) {
+            if ((this.includeFolders.length > 0)) {
+                return name !== 'node_modules' && name !== 'out' && this.includeFolders.includes(name);
+            }
             return name !== 'node_modules' && name !== 'out';
         } else if (entry.isFile) {
             const extname = UriUtils.extname(entry.uri);
@@ -95,9 +98,14 @@ export class SclWorkspaceManager extends DefaultWorkspaceManager {
         return includeFolders;
     }
 
-    private getFile(configFileName: string) : string {
-        let fileContent = fs.readFileSync(configFileName, 'utf8');
-        // console.log('Config file contents:', fileContent);
-        return fileContent;
+    private getFile(configFileName: string): string {
+        try {
+            let fileContent = fs.readFileSync(configFileName, 'utf8');
+            // console.log('Config file contents:', fileContent);
+            return fileContent;
+        } catch (err) {
+            console.log(`Could not read config file '${configFileName}', so will include all folders`)
+            return '';
+        }
     }
 }
