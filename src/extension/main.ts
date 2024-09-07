@@ -5,6 +5,7 @@ import { LanguageClient, TransportKind } from 'vscode-languageclient/node.js';
 import { SclLibraryFileSystemProvider } from './scl-library-file-system-provider.js';
 
 let client: LanguageClient;
+const processedDocuments = new Set<string>();
 
 export function activate(context: vscode.ExtensionContext): void {
     // const includedFolders: string[] = vscode.workspace.getConfiguration('vscode-simatic-scl').get('includedFolders', []);
@@ -46,7 +47,19 @@ function startLanguageClient(context: vscode.ExtensionContext, includedFolders: 
                 const isIncluded = includedFolders.some(folder => filePath.startsWith(folder));
 
                 if (isIncluded) {
+                    processedDocuments.add(filePath);
                     await next(document);
+                }
+            },
+            didClose: async (document, next) => {
+                const filePath = document.uri.fsPath;
+                processedDocuments.delete(filePath);
+                await next(document);
+            },
+            didChange: async (change, next) => {
+                const filePath = change.document.uri.fsPath;
+                if (processedDocuments.has(filePath)) {
+                    await next(change);
                 }
             }
         }
