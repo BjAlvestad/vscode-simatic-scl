@@ -16,6 +16,15 @@ export class SclWorkspaceManager extends DefaultWorkspaceManager {
     constructor(services: LangiumSharedServices) {
         super(services);
         this.documentFactory = services.workspace.LangiumDocumentFactory;
+
+        const workspaceFolder = `C:\\Users\\BjAlv\\repos\\vscode-simatic-scl\\test\\examples`
+        const fileName = 'config.lsp'
+        const path = `${workspaceFolder}\\${fileName}`
+        const pathUri = URI.file(path)
+
+        this.fileSystemProvider.readFile(pathUri).then(file => {
+            console.log(`file content: ${file}`)
+        })
     }
 
     protected override async loadAdditionalDocuments(
