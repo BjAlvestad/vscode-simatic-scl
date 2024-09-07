@@ -49,8 +49,9 @@ export class SclWorkspaceManager extends DefaultWorkspaceManager {
         } else if (entry.isFile) {
             const extname = UriUtils.extname(entry.uri);
             const relativePath = absoluteToRelativePath(_workspaceFolder.uri, entry.uri.path);
+            const toBeIncluded = this.filterContent.has(relativePath);
             console.log('File path:\t' + relativePath + ` (${name})`)
-            return fileExtensions.includes(extname);
+            return fileExtensions.includes(extname) && toBeIncluded;
         }
         return false;
     }
