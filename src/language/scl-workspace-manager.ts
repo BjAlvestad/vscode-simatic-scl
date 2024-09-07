@@ -101,18 +101,8 @@ export class SclWorkspaceManager extends DefaultWorkspaceManager {
     }
 
     private getFile(configFileName: string) : string {
-        // const fs = require('fs');
-        let fileContent = '';
-        fs.readFile(configFileName, 'utf8', (err, data) => {
-            if (err) {
-                console.error('Error reading the config file: ' + err);
-                return;
-            }
-            console.log('Config file contents:', data);
-            fileContent = data;
-            return;
-        });
-        
+        let fileContent = fs.readFileSync(configFileName, 'utf8');
+        // console.log('Config file contents:', fileContent);
         return fileContent;
     }
 }
