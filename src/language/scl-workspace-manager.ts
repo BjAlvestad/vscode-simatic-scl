@@ -18,6 +18,7 @@ export class SclWorkspaceManager extends DefaultWorkspaceManager {
 
     private documentFactory: LangiumDocumentFactory;
     // private configUri?: URI;
+    private includeFolders: string[] = [];
 
     constructor(services: LangiumSharedServices) {
         super(services);
@@ -45,15 +46,7 @@ export class SclWorkspaceManager extends DefaultWorkspaceManager {
     override initialize(params: InitializeParams): void {
         console.log(params.workspaceFolders)
         const configFileName = 'config.lsp'
-        if (params.workspaceFolders && params.workspaceFolders[0]) {
-            const workspaceRootPath = params.workspaceFolders[0].uri;
-            console.log(`workspaceRootPath: ${workspaceRootPath}`);
-            const configFilePath = `${workspaceRootPath}/${configFileName}`;
-            console.log(`config path: ${configFilePath}`);
-            const path = URI.file(params.workspaceFolders[0].uri)
-            console.log(`path: ${path.path}\n  fsPath: ${path.fsPath}`)
-            this.getFoldersToInclude()
-        }
+        this.includeFolders = this.getFoldersToInclude();
 
         super.initialize(params);
     }
@@ -80,6 +73,8 @@ export class SclWorkspaceManager extends DefaultWorkspaceManager {
 
 
     protected override includeEntry(_workspaceFolder: WorkspaceFolder, entry: FileSystemNode, fileExtensions: string[]): boolean {
+        // console.log(`Inside includeEntry: ${this.includeFolders.length} - [${this.includeFolders.join(', ')}]`);
+
         const name = UriUtils.basename(entry.uri);
         if (name.startsWith('.')) {
             return false;
@@ -95,8 +90,8 @@ export class SclWorkspaceManager extends DefaultWorkspaceManager {
 
     private getFoldersToInclude() {
         const fileContent = this.getFile('config.lsp');
-        const includeFolders = fileContent.split('\r?\n');
-        console.log(`splitting '${fileContent}' into array of include folders:\n${includeFolders}`)
+        const includeFolders = fileContent.split('\n').map(s => s.trim());
+        console.log(`splitting string:\n'${fileContent}'\ninto array of include folders: [${includeFolders}]`)
         return includeFolders;
     }
 
