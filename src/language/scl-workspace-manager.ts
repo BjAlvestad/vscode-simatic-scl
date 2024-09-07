@@ -38,4 +38,18 @@ export class SclWorkspaceManager extends DefaultWorkspaceManager {
             collector(this.documentFactory.fromString(builtinLibrary.uriMap[key], URI.parse(fullUri)));
         }
     }
+
+    protected override includeEntry(_workspaceFolder: WorkspaceFolder, entry: FileSystemNode, fileExtensions: string[]): boolean {
+        const name = UriUtils.basename(entry.uri);
+        if (name.startsWith('.')) {
+            return false;
+        }
+        if (entry.isDirectory) {
+            return name !== 'node_modules' && name !== 'out';
+        } else if (entry.isFile) {
+            const extname = UriUtils.extname(entry.uri);
+            return fileExtensions.includes(extname);
+        }
+        return false;
+    }
 }
