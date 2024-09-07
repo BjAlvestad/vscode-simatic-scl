@@ -93,7 +93,7 @@ export class SclWorkspaceManager extends DefaultWorkspaceManager {
 
     private getFoldersToInclude() {
         const fileContent = this.getFile('config.lsp');
-        const includeFolders = fileContent.split('\n').map(s => s.trim());
+        const includeFolders = fileContent.split('\n').map(s => s.trim()).filter(s => s.length > 0);
         console.log(`splitting string:\n'${fileContent}'\ninto array of include folders: [${includeFolders}]`)
         return includeFolders;
     }
@@ -104,7 +104,7 @@ export class SclWorkspaceManager extends DefaultWorkspaceManager {
             // console.log('Config file contents:', fileContent);
             return fileContent;
         } catch (err) {
-            console.log(`Could not read config file '${configFileName}', so will include all folders`)
+            console.log(`Could not read config file '${configFileName}' for folders to include`)
             return '';
         }
     }
