@@ -93,7 +93,7 @@ export class SclWorkspaceManager extends DefaultWorkspaceManager {
 
     private isSubfolderToInclude(fsPath: string): boolean {
         for (let path of this.includeFolders) {
-            if (fsPath.startsWith(path)) {
+            if (fsPath.startsWith(path) || path.startsWith(fsPath)) {
                 return true;
             }
         }
