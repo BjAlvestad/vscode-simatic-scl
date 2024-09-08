@@ -1,7 +1,7 @@
 # SCL extension with LSP for VS Code
 
 This is an extension that provides an LSP for the SCL language.
-It is still in early development, and ***not ready for use***, but cross reference support for local variables, UDTs and FBs is already partially implemented.
+It is still in early development, and ***not ready for use***, but cross reference support for local variables, UDTs and FBs is already implemented.
 
 The following major things have not been implemented yet:
 
@@ -16,12 +16,27 @@ The following major things have not been implemented yet:
 - Parsing of tag declarations (in xml file), and thus also linking to tags.
 - Parsing of nested multi-line comments.
 - Assigning value to local function name (which is an allowed alternative to returning a value in SCL)
-- Cashing (so performance will be very poor on larger projects).
+- Basic cashing and optional work scope filtering was introduced in v0.0.5, but no effort has been put into performance optimization yet (so performance will be very poor on larger projects).
 - Syntax highlighting (currently only keywords are highlighted).
 
-It is also limited to using 4GB RAM in VS Code, so it is not able to open extremely large projects.
+It is also limited to using 4GB RAM in VS Code, so it is not able to open extremely large projects, unless you choose to filter what is included.
+
+Any document with a linking error will get all its references recalculated on an update to **any** file. And will therefore have a major effect on performance, since it essentially gains no benefit from the caching.
+Due to not supporting all built-in functions yet, and not parsing tags yet, multiple linking errors are expected.
 
 ## Changelog
+
+### v0.0.5
+
+- Fix global scoping
+- Add caching for global and local scoping
+- Add possibility to filter files that gets loaded into the workspace initially.
+
+**Note on how filter works**:
+
+As of now, this gets defined via a file named `includeFoldersFilter.scl-lsp` and which is placed in root of workspace you open. If this is missing all files gets loaded.
+Note that this only limits what is loaded initially. So if you open any other files, then they will also get loaded into the Language Server. It is possible to utilize the built in `file.exclude` to exclude these folders from VS Code explorer and quick open.
+Future plans for this is to instead rely on json files that define which folders to be included, and based on those limit both what is initially loaded to Langauge Server, and which folders are visible in VS Code.
 
 ### v0.0.4
 
