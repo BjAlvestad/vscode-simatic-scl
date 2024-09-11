@@ -4,7 +4,7 @@ grammar TagXml
 hidden terminal WS: /\s+/;
 
 terminal ID: /[_a-zA-Z][\w_]*/;
-terminal LOGICAL_ADDRESS: /%[IOM]\d+(.\d+)?/;
+terminal LOGICAL_ADDRESS: /%[IQM]\d+(.\d+)?/;
 terminal DOUBLE_QUOTE_STRING: /"(\\.|[^"\\])*"/;
 // terminal TIME_LITERAL: /[Ll]?[Tt]#[0-9DdHhMmNnSs_]+/;
 
@@ -33,7 +33,7 @@ AttributesListForTable:
 
 ObjectListForTable:
     '<' 'ObjectList' '>'
-        plcTags+=PlcTag
+        plcTags+=PlcTag*
     '<' '/' 'ObjectList' '>'
 ;
 
@@ -47,9 +47,9 @@ PlcTag:
 AttibutesList:
     '<' 'AttributeList' '>'
         '<' 'DataTypeName' '>' type=ID '<' '/' 'DataTypeName' '>'
-        '<' 'ExternalAccessible' '>' isExternalAccessible?='true' '<' '/' 'ExternalAccessible' '>'
-        '<' 'ExternalVisible' '>' isExternalAVisible?='true' '<' '/' 'ExternalVisible' '>'
-        '<' 'ExternalWritable' '>' isExternalWritable?='true' '<' '/' 'ExternalWritable' '>'
+        '<' 'ExternalAccessible' '>' isExternalAccessible=('true'|'false') '<' '/' 'ExternalAccessible' '>'
+        '<' 'ExternalVisible' '>' isExternalAVisible=('true'|'false') '<' '/' 'ExternalVisible' '>'
+        '<' 'ExternalWritable' '>' isExternalWritable=('true'|'false') '<' '/' 'ExternalWritable' '>'
         '<' 'LogicalAddress' '>' address=LOGICAL_ADDRESS '</LogicalAddress' '>'
         '<' 'Name' '>' name=ID '<' '/' 'Name' '>'
     '<' '/' 'AttributeList' '>'

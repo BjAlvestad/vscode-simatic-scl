@@ -281,9 +281,9 @@ beforeAll(async () => {
     // await services.shared.workspace.WorkspaceManager.initializeWorkspace([]);
 });
 
-describe('Parsing tests', () => {
+describe('Parsing XML Tag list tests', () => {
 
-    test('Parse simple XML', async () => {
+    test('Parse single tag with empty comments', async () => {
         document = await parse(singleTagExample);
 
         expect(checkDocumentValid(document)).toBeFalsy();
@@ -308,6 +308,12 @@ describe('Parsing tests', () => {
         //       40_123E10
         //       3.0E+10
         // `);
+    });
+
+    test('Parse multiple tags with empty comments', async () => {
+        document = await parse(tagExample);
+
+        expect(checkDocumentValid(document)).toBeFalsy();
     });
 });
 
