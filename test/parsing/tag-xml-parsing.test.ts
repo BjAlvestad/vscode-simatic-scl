@@ -69,7 +69,7 @@ const singleTagExample = `
 </Document>
 `
 
-const tagExample = `
+const tagExampleEmptyComments = `
 <?xml version="1.0" encoding="utf-8"?>
 <Document>
   <Engineering version="V17" />
@@ -311,7 +311,13 @@ describe('Parsing XML Tag list tests', () => {
     });
 
     test('Parse multiple tags with empty comments', async () => {
-        document = await parse(tagExample);
+        document = await parse(tagExampleEmptyComments);
+
+        expect(checkDocumentValid(document)).toBeFalsy();
+    });
+
+    test('Parse multiple tags with comments', async () => {
+        document = await parse(tagExampleWithComments);
 
         expect(checkDocumentValid(document)).toBeFalsy();
     });

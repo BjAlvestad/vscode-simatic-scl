@@ -3,6 +3,7 @@ grammar TagXml
 
 hidden terminal WS: /\s+/;
 
+terminal TAG_COMMENT: /(?<=(<Text>))[^<]+(?=(<\/Text>))/;
 terminal ID: /[_a-zA-Z][\w_]*/;
 terminal LOGICAL_ADDRESS: /%[IQM]\d+(.\d+)?/;
 terminal DOUBLE_QUOTE_STRING: /"(\\.|[^"\\])*"/;
@@ -69,7 +70,7 @@ MultilingualTextItem:
     '<' 'MultilingualTextItem' 'ID=' tagId=DOUBLE_QUOTE_STRING  'CompositionName' '=' compositionName=DOUBLE_QUOTE_STRING '>'
         '<' 'AttributeList' '>'
             '<' 'Culture' '>' cultureLang=ID '-' cultureRegion=ID '<' '/' 'Culture' '>'
-            '<' 'Text' '/' '>'
+            '<' 'Text' (('/' '>') | ('>' comment=TAG_COMMENT '<' '/' 'Text' '>'))
         '<' '/' 'AttributeList' '>'
     '<' '/' 'MultilingualTextItem' '>'
 ;
