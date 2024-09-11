@@ -40,7 +40,7 @@ ObjectListForTable:
 PlcTag:
     '<' 'SW.Tags.PlcTag' 'ID=' tagId=DOUBLE_QUOTE_STRING 'CompositionName' '=' compositionName=DOUBLE_QUOTE_STRING '>'
         attributes=AttibutesList
-        // objectList=ObjectList
+        objectList=ObjectListForComments
     '<' '/' 'SW.Tags.PlcTag' '>'
 ;
 
@@ -55,11 +55,37 @@ AttibutesList:
     '<' '/' 'AttributeList' '>'
 ;
 
-ObjectList:
+ObjectListForComments:
     '<' 'ObjectList' '>'
-        ('<' '/'? id=ID (metaData+=DOUBLE_QUOTE_STRING)* '/'? '>')*
+        '<' 'MultilingualText' 'ID=' tagId=DOUBLE_QUOTE_STRING  'CompositionName' '=' compositionName=DOUBLE_QUOTE_STRING '>'
+            '<' 'ObjectList' '>'
+                items+=MultilingualTextItem+
+            '<' '/' 'ObjectList' '>'
+        '<' '/' 'MultilingualText' '>'
     '<' '/' 'ObjectList' '>'
 ;
+
+MultilingualTextItem:
+    '<' 'MultilingualTextItem' 'ID=' tagId=DOUBLE_QUOTE_STRING  'CompositionName' '=' compositionName=DOUBLE_QUOTE_STRING '>'
+        '<' 'AttributeList' '>'
+            '<' 'Culture' '>' cultureLang=ID '-' cultureRegion=ID '<' '/' 'Culture' '>'
+            '<' 'Text' '/' '>'
+        '<' '/' 'AttributeList' '>'
+    '<' '/' 'MultilingualTextItem' '>'
+;
+
+// ObjectList:
+//     '<' 'ObjectList' '>'
+//         ('<' '/'? attributeName=(ID|XmlKeywordsAllowedElsewhere) (id+=(ID|'ID='|XmlKeywordsAllowedElsewhere) '='? metaData+=DOUBLE_QUOTE_STRING)* '/'? '>')*
+//     '<' '/' 'ObjectList' '>'
+// ;
+
+// XmlKeywordsAllowedElsewhere returns string:
+//     'CompositionName'
+//     | 'ObjectList'
+//     | 'AttributeList'
+// ;
+
 
 // fragment NameOpenTag returns string: '<' 'Name' '>';
 // fragment NameCloseTag returns string: '<' '/' 'Name' '>';

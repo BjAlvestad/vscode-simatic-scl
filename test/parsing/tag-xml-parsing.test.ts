@@ -284,7 +284,7 @@ beforeAll(async () => {
 describe('Parsing tests', () => {
 
     test('Parse simple XML', async () => {
-        document = await parse(singleTagExampleWithoutCommentPart);
+        document = await parse(singleTagExample);
 
         expect(checkDocumentValid(document)).toBeFalsy();
 
