@@ -4,22 +4,22 @@ grammar TagXml
 hidden terminal WS: /\s+/;
 
 terminal ID: /[_a-zA-Z][\w_]*/;
-terminal LOGICAL_ADDRESS: /%[XBWD][IOM]\d+(.\d+)?/;
+terminal LOGICAL_ADDRESS: /%[IOM]\d+(.\d+)?/;
 terminal DOUBLE_QUOTE_STRING: /"(\\.|[^"\\])*"/;
 // terminal TIME_LITERAL: /[Ll]?[Tt]#[0-9DdHhMmNnSs_]+/;
 
 // terminal NUMBER returns string: /([DdLl]?[BbWwLl]#)?((16#[0-9a-fA-F_]+)|(((2|8)#)?[0-9][0-9_]*(\.?([0-9_]*[eE][+-]?)?[0-9_]+)?))/;
 
 entry XmlModel:
-    '<?' 'xml' (metaData+=DOUBLE_QUOTE_STRING)* '?>'
+    '<?' 'xml' 'version' '=' version=DOUBLE_QUOTE_STRING 'encoding' '=' encoding=DOUBLE_QUOTE_STRING '?>'
     '<' 'Document' '>'
-        '<' 'Engineering' (metaData+=DOUBLE_QUOTE_STRING)* '>'
+        '<' 'Engineering' 'version' '=' version=DOUBLE_QUOTE_STRING '/' '>'
         plcTagTable=PlcTagTable
     '<' '/' 'Document' '>'
 ;
 
 PlcTagTable:
-    '<' 'SW.Tags.PlcTagTable' '>'
+    '<' 'SW.Tags.PlcTagTable' 'ID=' tagId=DOUBLE_QUOTE_STRING '>'
         attributes=AttributesListForTable
         objectList=ObjectListForTable
     '<' '/' 'SW.Tags.PlcTagTable' '>'
@@ -38,9 +38,9 @@ ObjectListForTable:
 ;
 
 PlcTag:
-    '<' 'SW.Tags.PlcTag' (metaData+=DOUBLE_QUOTE_STRING)* '>'
+    '<' 'SW.Tags.PlcTag' 'ID=' tagId=DOUBLE_QUOTE_STRING 'CompositionName' '=' compositionName=DOUBLE_QUOTE_STRING '>'
         attributes=AttibutesList
-        objectList=ObjectList
+        // objectList=ObjectList
     '<' '/' 'SW.Tags.PlcTag' '>'
 ;
 

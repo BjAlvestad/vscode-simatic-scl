@@ -9,6 +9,66 @@ let services: ReturnType<typeof createSclServices>;
 let parse:    ReturnType<typeof parseHelper<XmlModel>>;
 let document: LangiumDocument<XmlModel> | undefined;
 
+const singleTagExampleWithoutCommentPart = `
+<?xml version="1.0" encoding="utf-8"?>
+<Document>
+  <Engineering version="V17" />
+  <SW.Tags.PlcTagTable ID="0">
+    <AttributeList>
+      <Name>AlveTestTable</Name>
+    </AttributeList>
+    <ObjectList>
+      <SW.Tags.PlcTag ID="1" CompositionName="Tags">
+        <AttributeList>
+          <DataTypeName>Bool</DataTypeName>
+          <ExternalAccessible>true</ExternalAccessible>
+          <ExternalVisible>true</ExternalVisible>
+          <ExternalWritable>true</ExternalWritable>
+          <LogicalAddress>%I0.7</LogicalAddress>
+          <Name>MyMinimal</Name>
+        </AttributeList>
+      </SW.Tags.PlcTag>
+    </ObjectList>
+  </SW.Tags.PlcTagTable>
+</Document>
+`
+
+const singleTagExample = `
+<?xml version="1.0" encoding="utf-8"?>
+<Document>
+  <Engineering version="V17" />
+  <SW.Tags.PlcTagTable ID="0">
+    <AttributeList>
+      <Name>AlveTestTable</Name>
+    </AttributeList>
+    <ObjectList>
+      <SW.Tags.PlcTag ID="1" CompositionName="Tags">
+        <AttributeList>
+          <DataTypeName>Bool</DataTypeName>
+          <ExternalAccessible>true</ExternalAccessible>
+          <ExternalVisible>true</ExternalVisible>
+          <ExternalWritable>true</ExternalWritable>
+          <LogicalAddress>%I0.7</LogicalAddress>
+          <Name>MyMinimal</Name>
+        </AttributeList>
+        <ObjectList>
+          <MultilingualText ID="2" CompositionName="Comment">
+            <ObjectList>
+              <MultilingualTextItem ID="3" CompositionName="Items">
+                <AttributeList>
+                  <Culture>en-US</Culture>
+                  <Text />
+                </AttributeList>
+              </MultilingualTextItem>
+            </ObjectList>
+          </MultilingualText>
+        </ObjectList>
+      </SW.Tags.PlcTag>
+    </ObjectList>
+  </SW.Tags.PlcTagTable>
+</Document>
+`
+
 const tagExample = `
 <?xml version="1.0" encoding="utf-8"?>
 <Document>
@@ -224,7 +284,7 @@ beforeAll(async () => {
 describe('Parsing tests', () => {
 
     test('Parse simple XML', async () => {
-        document = await parse(tagExample);
+        document = await parse(singleTagExampleWithoutCommentPart);
 
         expect(checkDocumentValid(document)).toBeFalsy();
 
