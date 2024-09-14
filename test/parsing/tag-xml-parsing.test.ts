@@ -69,6 +69,42 @@ const singleTagExample = `
 </Document>
 `
 
+const tagWithSpecialCharactersInName = `
+<?xml version="1.0" encoding="utf-8"?>
+<Document>
+  <Engineering version="V17" />
+  <SW.Tags.PlcTagTable ID="0">
+    <AttributeList>
+      <Name>AlveTestTable</Name>
+    </AttributeList>
+    <ObjectList>
+      <SW.Tags.PlcTag ID="1" CompositionName="Tags">
+        <AttributeList>
+          <DataTypeName>Bool</DataTypeName>
+          <ExternalAccessible>true</ExternalAccessible>
+          <ExternalVisible>true</ExternalVisible>
+          <ExternalWritable>true</ExternalWritable>
+          <LogicalAddress>%I0.7</LogicalAddress>
+          <Name>MyWeird%Tag</Name>
+        </AttributeList>
+        <ObjectList>
+          <MultilingualText ID="2" CompositionName="Comment">
+            <ObjectList>
+              <MultilingualTextItem ID="3" CompositionName="Items">
+                <AttributeList>
+                  <Culture>en-US</Culture>
+                  <Text />
+                </AttributeList>
+              </MultilingualTextItem>
+            </ObjectList>
+          </MultilingualText>
+        </ObjectList>
+      </SW.Tags.PlcTag>
+    </ObjectList>
+  </SW.Tags.PlcTagTable>
+</Document>
+`
+
 const tagExampleEmptyComments = `
 <?xml version="1.0" encoding="utf-8"?>
 <Document>
@@ -308,6 +344,23 @@ describe('Parsing XML Tag list tests', () => {
         //       40_123E10
         //       3.0E+10
         // `);
+    });
+  
+    test("Parse tag with special characters in name", async () => {
+      document = await parse(tagWithSpecialCharactersInName);
+
+      expect(checkDocumentValid(document)).toBeFalsy();
+
+      expect(
+        checkDocumentValid(document) ||
+          s`
+                Tag names:
+                  ${document.parseResult.value?.plcTagTable.objectList.plcTags[0].attributes.name}
+            `
+      ).toBe(s`
+          Tag names:
+            MyWeird%Tag
+        `);
     });
 
     test('Parse multiple tags with empty comments', async () => {

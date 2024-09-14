@@ -6,8 +6,10 @@ VERSION : 0.1
    END_VAR
 
 BEGIN
+
+"DB_MyDataBlockInTagFolder";
 "MyMinimal";
-#soneInternalNumber;
+"MyWeird%Tag";
 
 END_FUNCTION_BLOCK
 

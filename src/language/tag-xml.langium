@@ -3,6 +3,7 @@ import "./terminal"
 
 
 terminal TAG_COMMENT: /(?<=(<Text>))[^<]+(?=(<\/Text>))/;
+terminal XML_NAME: /(?<=(<Name>))[^<]+(?=(<\/Name>))/;
 terminal LOGICAL_ADDRESS: /%[IQM]\d+(.\d+)?/;
 // terminal TIME_LITERAL: /[Ll]?[Tt]#[0-9DdHhMmNnSs_]+/;
 
@@ -25,7 +26,7 @@ PlcTagTable:
 
 AttributesListForTable:
     '<' 'AttributeList' '>'
-        '<' 'Name' '>' name=ID '<' '/' 'Name' '>'
+        '<' 'Name' '>' name=XML_NAME '<' '/' 'Name' '>'
     '<' '/' 'AttributeList' '>'
 ;
 
@@ -49,7 +50,7 @@ AttibutesList:
         '<' 'ExternalVisible' '>' isExternalAVisible=('true'|'false') '<' '/' 'ExternalVisible' '>'
         '<' 'ExternalWritable' '>' isExternalWritable=('true'|'false') '<' '/' 'ExternalWritable' '>'
         '<' 'LogicalAddress' '>' address=LOGICAL_ADDRESS '</LogicalAddress' '>'
-        '<' 'Name' '>' name=ID '<' '/' 'Name' '>'
+        '<' 'Name' '>' name=XML_NAME '<' '/' 'Name' '>'
     '<' '/' 'AttributeList' '>'
 ;
 
