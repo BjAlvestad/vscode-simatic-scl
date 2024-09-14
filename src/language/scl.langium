@@ -319,7 +319,7 @@ TimeExpression:
 ;
 
 
-type NamedElement = VariableDeclaration | SclBlock | AttibutesList;
+type NamedElement = VariableDeclaration | SclBlock;
 
 IfStatement:
     (('IF' | 'ELSIF') condition=Expression 'THEN')
