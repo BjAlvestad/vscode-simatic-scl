@@ -1,7 +1,7 @@
 import { DocumentCache, MapScope, ReferenceInfo, Scope } from 'langium';
 import { AstUtils, EMPTY_SCOPE } from 'langium';
 import { DefaultScopeProvider } from 'langium';
-import { isDbBlock, isMemberCall, isSclBlock, isUdtRef, isVariableDeclaration, MemberCall, Model, SclBlock, Struct, UdtRef } from './generated/ast.js';
+import { AttibutesList, isDbBlock, isMemberCall, isSclBlock, isUdtRef, isVariableDeclaration, MemberCall, Model, SclBlock, Struct, UdtRef, XmlModel } from './generated/ast.js';
 import { inferType } from './type-system/infer.js';
 import { isGlobalDbBlockType, isInstanceDbBlockType, isStructType } from './type-system/descriptions.js';
 import { GetAllVarDecsFromModel } from './utils.js';
@@ -10,6 +10,7 @@ import { SclServices } from './scl-module.js';
 
 export class SclScopeProvider extends DefaultScopeProvider {
     skipConsoleLog = true;
+    services;
 
     protected readonly scopeCache: DocumentCache<
       string,
@@ -18,6 +19,7 @@ export class SclScopeProvider extends DefaultScopeProvider {
 
     constructor(services: SclServices) {
         super(services);
+        this.services = services;
         this.scopeCache = new DocumentCache(services.shared);
       }
 
@@ -33,6 +35,19 @@ export class SclScopeProvider extends DefaultScopeProvider {
                 );
             case 'MemberCall':
             case 'DbMemberCall':
+                const tagsScope = (
+                    this.createScopeForNodes(
+                        this.services.shared.workspace.LangiumDocuments.all
+                        .filter(doc => doc.uri.path.endsWith('xml'))
+                        .flatMap(xmlDoc =>
+                            (xmlDoc.parseResult.value as XmlModel).plcTagTable.objectList.plcTags
+                                .flatMap(tags => tags.attributes)
+                        )
+                    )
+                )
+
+                // return tagsScope
+
                 return this.globalScopeCache.get(
                     referenceType,
                     () => new MapScope(
