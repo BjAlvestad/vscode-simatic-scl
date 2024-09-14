@@ -69,6 +69,42 @@ const singleTagExample = `
 </Document>
 `
 
+const singleTagReadingWord = `
+<?xml version="1.0" encoding="utf-8"?>
+<Document>
+  <Engineering version="V17" />
+  <SW.Tags.PlcTagTable ID="0">
+    <AttributeList>
+      <Name>AlveTestTable</Name>
+    </AttributeList>
+    <ObjectList>
+       <SW.Tags.PlcTag ID="1" CompositionName="Tags">
+        <AttributeList>
+          <DataTypeName>Int</DataTypeName>
+          <ExternalAccessible>true</ExternalAccessible>
+          <ExternalVisible>true</ExternalVisible>
+          <ExternalWritable>true</ExternalWritable>
+          <LogicalAddress>%IW16</LogicalAddress>
+          <Name>myIntegerTag</Name>
+        </AttributeList>
+        <ObjectList>
+          <MultilingualText ID="B6" CompositionName="Comment">
+            <ObjectList>
+              <MultilingualTextItem ID="B7" CompositionName="Items">
+                <AttributeList>
+                  <Culture>en-US</Culture>
+                  <Text />
+                </AttributeList>
+              </MultilingualTextItem>
+            </ObjectList>
+          </MultilingualText>
+        </ObjectList>
+      </SW.Tags.PlcTag>
+    </ObjectList>
+  </SW.Tags.PlcTagTable>
+</Document>
+`
+
 const tagWithSpecialCharactersInName = `
 <?xml version="1.0" encoding="utf-8"?>
 <Document>
@@ -409,6 +445,11 @@ describe('Parsing XML Tag list tests', () => {
           Tag names:
             MyConst
         `);
+    });
+
+  test("Parse integer tag reading word", async () => {
+      document = await parse(singleTagReadingWord);
+      expect(checkDocumentValid(document)).toBeFalsy();
     });
 
     test('Parse multiple tags with empty comments', async () => {

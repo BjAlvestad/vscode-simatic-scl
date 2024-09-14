@@ -5,7 +5,7 @@ import "./terminal"
 terminal TAG_COMMENT: /(?<=(<Text>))[^<]+(?=(<\/Text>))/;
 terminal XML_NAME: /(?<=(<Name>))[^<]+(?=(<\/Name>))/;
 terminal XML_CONSTANT_VALUE: /(?<=(<Value>))[^<]+(?=(<\/Value>))/;
-terminal LOGICAL_ADDRESS: /%[IQM]\d+(.\d+)?/;
+terminal LOGICAL_ADDRESS: /%[IQM][BWD]?\d+(.\d+)?/;
 // terminal TIME_LITERAL: /[Ll]?[Tt]#[0-9DdHhMmNnSs_]+/;
 
 // terminal NUMBER returns string: /([DdLl]?[BbWwLl]#)?((16#[0-9a-fA-F_]+)|(((2|8)#)?[0-9][0-9_]*(\.?([0-9_]*[eE][+-]?)?[0-9_]+)?))/;
