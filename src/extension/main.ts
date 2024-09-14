@@ -36,7 +36,10 @@ function startLanguageClient(context: vscode.ExtensionContext): LanguageClient {
 
     // Options to control the language client
     const clientOptions: LanguageClientOptions = {
-        documentSelector: [{ scheme: 'file', language: 'scl' }]
+        documentSelector: [
+            { scheme: 'file', language: 'scl' },
+            { scheme: 'file', language: 'tag-xml' }
+        ]
     };
 
     // Create the language client and start the client.
