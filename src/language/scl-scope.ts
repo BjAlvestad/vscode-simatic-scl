@@ -50,10 +50,13 @@ export class SclScopeProvider extends DefaultScopeProvider {
     private getTagsAsAstNodeDescriptions() {
         return (
             this.services.shared.workspace.LangiumDocuments.all
-            .filter(doc => doc.uri.path.endsWith('xml'))
-            .flatMap(xmlDoc =>
-                (xmlDoc.parseResult.value as XmlModel).plcTagTable.objectList.plcTags
-                    .flatMap(tags => this.descriptions.createDescription(tags.attributes, tags.attributes.name))
+                .filter(doc => doc.uri.path.endsWith('xml'))
+                .flatMap(xmlDoc =>
+                    (xmlDoc.parseResult.value as XmlModel).plcTagTable.objectList.plcTags
+                        .flatMap(tags => this.descriptions.createDescription(
+                            tags.attributes,
+                            `"${tags.attributes.name}"`  // Definition is without quotes (even for special characters), but call must have double quotes
+                        ))
             )
         )
     }
