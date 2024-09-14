@@ -1,7 +1,7 @@
 import { DocumentCache, MapScope, ReferenceInfo, Scope } from 'langium';
 import { AstUtils, EMPTY_SCOPE } from 'langium';
 import { DefaultScopeProvider } from 'langium';
-import { AttibutesList, isDbBlock, isMemberCall, isSclBlock, isUdtRef, isVariableDeclaration, MemberCall, Model, SclBlock, Struct, UdtRef, XmlModel } from './generated/ast.js';
+import { isDbBlock, isMemberCall, isSclBlock, isUdtRef, isVariableDeclaration, MemberCall, Model, SclBlock, Struct, UdtRef, XmlModel } from './generated/ast.js';
 import { inferType } from './type-system/infer.js';
 import { isGlobalDbBlockType, isInstanceDbBlockType, isStructType } from './type-system/descriptions.js';
 import { GetAllVarDecsFromModel } from './utils.js';

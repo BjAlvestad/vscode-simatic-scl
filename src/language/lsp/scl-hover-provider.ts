@@ -1,6 +1,6 @@
 import { AstNode } from "langium";
 import { Hover } from "vscode-languageclient";
-import { isStruct, isNamedElement, isSclBlock, isVariableDeclaration, isAttibutesList, isXmlModel } from "../generated/ast.js";
+import { isStruct, isNamedElement, isSclBlock, isVariableDeclaration } from "../generated/ast.js";
 import { isErrorType, typeToString } from "../type-system/descriptions.js";
 import { inferType } from "../type-system/infer.js";
 import { AstNodeHoverProvider } from "langium/lsp";
