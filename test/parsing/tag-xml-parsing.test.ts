@@ -105,6 +105,39 @@ const tagWithSpecialCharactersInName = `
 </Document>
 `
 
+const singleConstant = `
+<?xml version="1.0" encoding="utf-8"?>
+<Document>
+  <Engineering version="V17" />
+  <SW.Tags.PlcTagTable ID="0">
+    <AttributeList>
+      <Name>AlveTestTable</Name>
+    </AttributeList>
+    <ObjectList>
+      <SW.Tags.PlcUserConstant ID="A" CompositionName="UserConstants">
+        <AttributeList>
+          <DataTypeName>Bool</DataTypeName>
+          <Name>MyConst</Name>
+          <Value>False</Value>
+        </AttributeList>
+        <ObjectList>
+          <MultilingualText ID="B" CompositionName="Comment">
+            <ObjectList>
+              <MultilingualTextItem ID="C" CompositionName="Items">
+                <AttributeList>
+                  <Culture>en-US</Culture>
+                  <Text />
+                </AttributeList>
+              </MultilingualTextItem>
+            </ObjectList>
+          </MultilingualText>
+        </ObjectList>
+      </SW.Tags.PlcUserConstant>
+    </ObjectList>
+  </SW.Tags.PlcTagTable>
+</Document>
+`
+
 const tagExampleEmptyComments = `
 <?xml version="1.0" encoding="utf-8"?>
 <Document>
@@ -355,11 +388,26 @@ describe('Parsing XML Tag list tests', () => {
         checkDocumentValid(document) ||
           s`
                 Tag names:
-                  ${document.parseResult.value?.plcTagTable.objectList.plcTags[0].attributes.name}
+                  ${document.parseResult.value?.plcTagTable.objectList.plcTags[0].name}
             `
       ).toBe(s`
           Tag names:
             MyWeird%Tag
+        `);
+    });
+  
+    test("Parse constant", async () => {
+      document = await parse(singleConstant);
+
+      expect(
+        checkDocumentValid(document) ||
+          s`
+                Tag names:
+                  ${document.parseResult.value?.plcTagTable.objectList.plcTags[0].name}
+            `
+      ).toBe(s`
+          Tag names:
+            MyConst
         `);
     });
 

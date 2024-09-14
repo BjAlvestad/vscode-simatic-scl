@@ -54,8 +54,8 @@ export class SclScopeProvider extends DefaultScopeProvider {
                 .flatMap(xmlDoc =>
                     (xmlDoc.parseResult.value as XmlModel).plcTagTable.objectList.plcTags
                         .flatMap(tags => this.descriptions.createDescription(
-                            tags.attributes,
-                            `"${tags.attributes.name}"`  // Definition is without quotes (even for special characters), but call must have double quotes
+                            tags,
+                            `"${tags.name}"`  // Definition is without quotes (even for special characters), but call must have double quotes
                         ))
             )
         )

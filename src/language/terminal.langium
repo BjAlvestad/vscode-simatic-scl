@@ -38,3 +38,25 @@ DataType returns string:
     | 'HW_ANY' | 'HW_DEVICE' | 'HW_DPMASTER' | 'HW_DPSLAVE' | 'HW_HSC' | 'HW_IEPORT' | 'HW_INTERFACE'
     | 'HW_IO' | 'HW_IOSYSTEM' | 'HW_MODULE' | 'HW_PTO' | 'HW_PWM' | 'HW_SUBMODULE'
 ;
+
+TypeName returns string:
+    DataType 
+    | StringTypeName
+    | 'Void'
+;
+
+StringTypeName returns string:
+    'STRING' | 'WSTRING'
+;
+
+NumberExpression: (type=TypeName '#')? value=NUMBER;
+StringExpression: (type=StringTypeName '#')? value=SINGLE_QUOTE_STRING;
+BooleanExpression: value?='true' | 'false';
+TimeExpression:
+    value=(
+        TIME_LITERAL |
+        DATE_LITERAL |
+        TIME_OF_DAY_LITERAL |
+        DATE_AND_TIME_LITERAL
+    )
+;

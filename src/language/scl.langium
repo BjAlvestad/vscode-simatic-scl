@@ -306,19 +306,6 @@ UnaryExpression:
     operator=('NOT' | '-' | '+') value=Expression
 ;
 
-NumberExpression: (type=TypeName '#')? value=NUMBER;
-StringExpression: (type=StringTypeName '#')? value=SINGLE_QUOTE_STRING;
-BooleanExpression: value?='true' | 'false';
-TimeExpression:
-    value=(
-        TIME_LITERAL |
-        DATE_LITERAL |
-        TIME_OF_DAY_LITERAL |
-        DATE_AND_TIME_LITERAL
-    )
-;
-
-
 type NamedElement = VariableDeclaration | SclBlock;
 
 IfStatement:
@@ -385,16 +372,6 @@ CaseStatement:
 
 KeywordsAllowedElsewhere returns string:
     RetainKeywordName
-;
-
-TypeName returns string:
-    DataType 
-    | StringTypeName
-    | 'Void'
-;
-
-StringTypeName returns string:
-    'STRING' | 'WSTRING'
 ;
 
 // Declaration/assignment for elementary data types
