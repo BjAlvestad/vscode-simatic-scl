@@ -1,0 +1,13 @@
+FUNCTION_BLOCK "FB_NestedStruct"
+{ S7_Optimized_Access := 'TRUE' }
+VERSION : 0.1
+   VAR 
+        soneInternalNumber : DINT;
+   END_VAR
+
+BEGIN
+"MyMinimal";
+#soneInternalNumber;
+
+END_FUNCTION_BLOCK
+

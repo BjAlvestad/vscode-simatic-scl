@@ -1,5 +1,6 @@
 grammar Scl
 import "./terminal"
+import "./tag-xml"
 
 entry Model:
     SclBlock
@@ -318,7 +319,7 @@ TimeExpression:
 ;
 
 
-type NamedElement = VariableDeclaration | SclBlock;
+type NamedElement = VariableDeclaration | SclBlock | AttibutesList;
 
 IfStatement:
     (('IF' | 'ELSIF') condition=Expression 'THEN')
@@ -390,26 +391,6 @@ TypeName returns string:
     DataType 
     | StringTypeName
     | 'Void'
-;
-
-DataType returns string:
-    // Elementary types
-    'BOOL'
-    | 'BYTE' | 'WORD' | 'DWORD' | 'LWORD'  // LWORD is not not supported by S7-300
-    | 'SINT' | 'INT' | 'DINT' | 'LINT' | 'USINT' | 'UINT' | 'UDINT' | 'ULINT'  // Only INT and DINT are supported by S7-300
-    | 'REAL' | 'LREAL'
-    | 'S5TIME' | 'TIME' | 'LTIME'
-    | 'DATE'   | 'TIME_OF_DAY' | 'TOD' | 'LTOD' | 'LTIME_OF_DAY'
-    | 'CHAR'  | 'WCHAR'
-    // Complex - Data and time
-    | 'DT' | 'DATE_AND_TIME' | 'LDT' | 'DATE_AND_LTIME' | 'DTL'
-    // Misc
-    | 'NULL'
-    | 'DB_ANY'
-    | 'BCD16' | 'BCD32'
-    | 'VARIANT' | 'ANY' | 'POINTER'
-    | 'HW_ANY' | 'HW_DEVICE' | 'HW_DPMASTER' | 'HW_DPSLAVE' | 'HW_HSC' | 'HW_IEPORT' | 'HW_INTERFACE'
-    | 'HW_IO' | 'HW_IOSYSTEM' | 'HW_MODULE' | 'HW_PTO' | 'HW_PWM' | 'HW_SUBMODULE'
 ;
 
 StringTypeName returns string:

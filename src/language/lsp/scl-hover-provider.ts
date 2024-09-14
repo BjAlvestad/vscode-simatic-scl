@@ -1,6 +1,6 @@
 import { AstNode } from "langium";
 import { Hover } from "vscode-languageclient";
-import { isStruct, isNamedElement, isSclBlock, isVariableDeclaration } from "../generated/ast.js";
+import { isStruct, isNamedElement, isSclBlock, isVariableDeclaration, isAttibutesList } from "../generated/ast.js";
 import { isErrorType, typeToString } from "../type-system/descriptions.js";
 import { inferType } from "../type-system/infer.js";
 import { AstNodeHoverProvider } from "langium/lsp";
@@ -22,7 +22,9 @@ export class SclHoverProvider extends AstNodeHoverProvider {
             }
             if(isSclBlock(node)) {
 
-            } else if (node.type.primitive) {
+            } else if (isAttibutesList(node)) {
+                
+            } else if ( node.type.primitive) {
                 return {
                     contents: {
                         kind: 'markdown',

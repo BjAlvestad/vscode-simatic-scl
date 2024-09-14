@@ -1,12 +1,9 @@
 grammar TagXml
+import "./terminal"
 
-
-hidden terminal WS: /\s+/;
 
 terminal TAG_COMMENT: /(?<=(<Text>))[^<]+(?=(<\/Text>))/;
-terminal ID: /[_a-zA-Z][\w_]*/;
 terminal LOGICAL_ADDRESS: /%[IQM]\d+(.\d+)?/;
-terminal DOUBLE_QUOTE_STRING: /"(\\.|[^"\\])*"/;
 // terminal TIME_LITERAL: /[Ll]?[Tt]#[0-9DdHhMmNnSs_]+/;
 
 // terminal NUMBER returns string: /([DdLl]?[BbWwLl]#)?((16#[0-9a-fA-F_]+)|(((2|8)#)?[0-9][0-9_]*(\.?([0-9_]*[eE][+-]?)?[0-9_]+)?))/;
@@ -47,7 +44,7 @@ PlcTag:
 
 AttibutesList:
     '<' 'AttributeList' '>'
-        '<' 'DataTypeName' '>' type=ID '<' '/' 'DataTypeName' '>'
+        '<' 'DataTypeName' '>' type=DataType '<' '/' 'DataTypeName' '>'
         '<' 'ExternalAccessible' '>' isExternalAccessible=('true'|'false') '<' '/' 'ExternalAccessible' '>'
         '<' 'ExternalVisible' '>' isExternalAVisible=('true'|'false') '<' '/' 'ExternalVisible' '>'
         '<' 'ExternalWritable' '>' isExternalWritable=('true'|'false') '<' '/' 'ExternalWritable' '>'
