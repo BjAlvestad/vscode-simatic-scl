@@ -35,28 +35,27 @@ export class SclScopeProvider extends DefaultScopeProvider {
                 );
             case 'MemberCall':
             case 'DbMemberCall':
-                const tagsScope = (
-                    this.createScopeForNodes(
-                        this.services.shared.workspace.LangiumDocuments.all
-                        .filter(doc => doc.uri.path.endsWith('xml'))
-                        .flatMap(xmlDoc =>
-                            (xmlDoc.parseResult.value as XmlModel).plcTagTable.objectList.plcTags
-                                .flatMap(tags => tags.attributes)
-                        )
-                    )
-                )
-
-                // return tagsScope
-
                 return this.globalScopeCache.get(
                     referenceType,
                     () => new MapScope(
                         this.indexManager.allElements(SclBlock).filter(e => e.type === 'DbBlock' || e.type === 'FcBlock')
+                            .concat(this.getTagsAsAstNodeDescriptions())
                     )
                 );
             default:
                 return EMPTY_SCOPE;
         }
+    }
+
+    private getTagsAsAstNodeDescriptions() {
+        return (
+            this.services.shared.workspace.LangiumDocuments.all
+            .filter(doc => doc.uri.path.endsWith('xml'))
+            .flatMap(xmlDoc =>
+                (xmlDoc.parseResult.value as XmlModel).plcTagTable.objectList.plcTags
+                    .flatMap(tags => this.descriptions.createDescription(tags.attributes, tags.attributes.name))
+            )
+        )
     }
     
     /** Context based scope */
