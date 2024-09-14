@@ -51,6 +51,7 @@ export class SclScopeProvider extends DefaultScopeProvider {
         return (
             this.services.shared.workspace.LangiumDocuments.all
                 .filter(doc => doc.uri.path.endsWith('xml'))
+                .filter(xmlDoc => xmlDoc.parseResult.parserErrors.length === 0)
                 .flatMap(xmlDoc =>
                     (xmlDoc.parseResult.value as XmlModel).plcTagTable.objectList.plcTags
                         .flatMap(tags => this.descriptions.createDescription(
