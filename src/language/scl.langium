@@ -1,6 +1,5 @@
 grammar Scl
 import "./terminal"
-import "./tag-xml"
 
 entry Model:
     SclBlock
