@@ -4,355 +4,11 @@ import { expandToString as s } from "langium/generate";
 import { parseHelper } from "langium/test";
 import { createSclServices } from "../../src/language/scl-module.js";
 import { XmlModel, isXmlModel } from "../../src/language/generated/ast.js";
+import { TagXmlTestData } from "./tag-xml-test-data.js";
 
 let services: ReturnType<typeof createSclServices>;
 let parse:    ReturnType<typeof parseHelper<XmlModel>>;
 let document: LangiumDocument<XmlModel> | undefined;
-
-const singleTagExample = `
-<?xml version="1.0" encoding="utf-8"?>
-<Document>
-  <Engineering version="V17" />
-  <SW.Tags.PlcTagTable ID="0">
-    <AttributeList>
-      <Name>AlveTestTable</Name>
-    </AttributeList>
-    <ObjectList>
-      <SW.Tags.PlcTag ID="1" CompositionName="Tags">
-        <AttributeList>
-          <DataTypeName>Bool</DataTypeName>
-          <ExternalAccessible>true</ExternalAccessible>
-          <ExternalVisible>true</ExternalVisible>
-          <ExternalWritable>true</ExternalWritable>
-          <LogicalAddress>%I0.7</LogicalAddress>
-          <Name>MyMinimal</Name>
-        </AttributeList>
-        <ObjectList>
-          <MultilingualText ID="2" CompositionName="Comment">
-            <ObjectList>
-              <MultilingualTextItem ID="3" CompositionName="Items">
-                <AttributeList>
-                  <Culture>en-US</Culture>
-                  <Text />
-                </AttributeList>
-              </MultilingualTextItem>
-            </ObjectList>
-          </MultilingualText>
-        </ObjectList>
-      </SW.Tags.PlcTag>
-    </ObjectList>
-  </SW.Tags.PlcTagTable>
-</Document>
-`
-
-const singleTagReadingWord = `
-<?xml version="1.0" encoding="utf-8"?>
-<Document>
-  <Engineering version="V17" />
-  <SW.Tags.PlcTagTable ID="0">
-    <AttributeList>
-      <Name>AlveTestTable</Name>
-    </AttributeList>
-    <ObjectList>
-       <SW.Tags.PlcTag ID="1" CompositionName="Tags">
-        <AttributeList>
-          <DataTypeName>Int</DataTypeName>
-          <ExternalAccessible>true</ExternalAccessible>
-          <ExternalVisible>true</ExternalVisible>
-          <ExternalWritable>true</ExternalWritable>
-          <LogicalAddress>%IW16</LogicalAddress>
-          <Name>myIntegerTag</Name>
-        </AttributeList>
-        <ObjectList>
-          <MultilingualText ID="B6" CompositionName="Comment">
-            <ObjectList>
-              <MultilingualTextItem ID="B7" CompositionName="Items">
-                <AttributeList>
-                  <Culture>en-US</Culture>
-                  <Text />
-                </AttributeList>
-              </MultilingualTextItem>
-            </ObjectList>
-          </MultilingualText>
-        </ObjectList>
-      </SW.Tags.PlcTag>
-    </ObjectList>
-  </SW.Tags.PlcTagTable>
-</Document>
-`
-
-const tagWithSpecialCharactersInName = `
-<?xml version="1.0" encoding="utf-8"?>
-<Document>
-  <Engineering version="V17" />
-  <SW.Tags.PlcTagTable ID="0">
-    <AttributeList>
-      <Name>AlveTestTable</Name>
-    </AttributeList>
-    <ObjectList>
-      <SW.Tags.PlcTag ID="1" CompositionName="Tags">
-        <AttributeList>
-          <DataTypeName>Bool</DataTypeName>
-          <ExternalAccessible>true</ExternalAccessible>
-          <ExternalVisible>true</ExternalVisible>
-          <ExternalWritable>true</ExternalWritable>
-          <LogicalAddress>%I0.7</LogicalAddress>
-          <Name>MyWeird%Tag</Name>
-        </AttributeList>
-        <ObjectList>
-          <MultilingualText ID="2" CompositionName="Comment">
-            <ObjectList>
-              <MultilingualTextItem ID="3" CompositionName="Items">
-                <AttributeList>
-                  <Culture>en-US</Culture>
-                  <Text />
-                </AttributeList>
-              </MultilingualTextItem>
-            </ObjectList>
-          </MultilingualText>
-        </ObjectList>
-      </SW.Tags.PlcTag>
-    </ObjectList>
-  </SW.Tags.PlcTagTable>
-</Document>
-`
-
-const singleConstant = `
-<?xml version="1.0" encoding="utf-8"?>
-<Document>
-  <Engineering version="V17" />
-  <SW.Tags.PlcTagTable ID="0">
-    <AttributeList>
-      <Name>AlveTestTable</Name>
-    </AttributeList>
-    <ObjectList>
-      <SW.Tags.PlcUserConstant ID="A" CompositionName="UserConstants">
-        <AttributeList>
-          <DataTypeName>Bool</DataTypeName>
-          <Name>MyConst</Name>
-          <Value>False</Value>
-        </AttributeList>
-        <ObjectList>
-          <MultilingualText ID="B" CompositionName="Comment">
-            <ObjectList>
-              <MultilingualTextItem ID="C" CompositionName="Items">
-                <AttributeList>
-                  <Culture>en-US</Culture>
-                  <Text />
-                </AttributeList>
-              </MultilingualTextItem>
-            </ObjectList>
-          </MultilingualText>
-        </ObjectList>
-      </SW.Tags.PlcUserConstant>
-    </ObjectList>
-  </SW.Tags.PlcTagTable>
-</Document>
-`
-
-const tagExampleEmptyComments = `
-<?xml version="1.0" encoding="utf-8"?>
-<Document>
-  <Engineering version="V17" />
-  <SW.Tags.PlcTagTable ID="0">
-    <AttributeList>
-      <Name>AlveTestTable</Name>
-    </AttributeList>
-    <ObjectList>
-      <SW.Tags.PlcTag ID="1" CompositionName="Tags">
-        <AttributeList>
-          <DataTypeName>Bool</DataTypeName>
-          <ExternalAccessible>true</ExternalAccessible>
-          <ExternalVisible>true</ExternalVisible>
-          <ExternalWritable>true</ExternalWritable>
-          <LogicalAddress>%I0.7</LogicalAddress>
-          <Name>MyMinimal</Name>
-        </AttributeList>
-        <ObjectList>
-          <MultilingualText ID="2" CompositionName="Comment">
-            <ObjectList>
-              <MultilingualTextItem ID="3" CompositionName="Items">
-                <AttributeList>
-                  <Culture>en-US</Culture>
-                  <Text />
-                </AttributeList>
-              </MultilingualTextItem>
-            </ObjectList>
-          </MultilingualText>
-        </ObjectList>
-      </SW.Tags.PlcTag>
-      <SW.Tags.PlcTag ID="4" CompositionName="Tags">
-        <AttributeList>
-          <DataTypeName>Bool</DataTypeName>
-          <ExternalAccessible>false</ExternalAccessible>
-          <ExternalVisible>false</ExternalVisible>
-          <ExternalWritable>false</ExternalWritable>
-          <LogicalAddress>%I1.0</LogicalAddress>
-          <Name>MyRemoveAttributes</Name>
-        </AttributeList>
-        <ObjectList>
-          <MultilingualText ID="5" CompositionName="Comment">
-            <ObjectList>
-              <MultilingualTextItem ID="6" CompositionName="Items">
-                <AttributeList>
-                  <Culture>en-US</Culture>
-                  <Text />
-                </AttributeList>
-              </MultilingualTextItem>
-            </ObjectList>
-          </MultilingualText>
-        </ObjectList>
-      </SW.Tags.PlcTag>
-      <SW.Tags.PlcTag ID="7" CompositionName="Tags">
-        <AttributeList>
-          <DataTypeName>Bool</DataTypeName>
-          <ExternalAccessible>true</ExternalAccessible>
-          <ExternalVisible>true</ExternalVisible>
-          <ExternalWritable>true</ExternalWritable>
-          <LogicalAddress>%M1.1</LogicalAddress>
-          <Name>MyMemory</Name>
-        </AttributeList>
-        <ObjectList>
-          <MultilingualText ID="8" CompositionName="Comment">
-            <ObjectList>
-              <MultilingualTextItem ID="9" CompositionName="Items">
-                <AttributeList>
-                  <Culture>en-US</Culture>
-                  <Text />
-                </AttributeList>
-              </MultilingualTextItem>
-            </ObjectList>
-          </MultilingualText>
-        </ObjectList>
-      </SW.Tags.PlcTag>
-      <SW.Tags.PlcTag ID="A" CompositionName="Tags">
-        <AttributeList>
-          <DataTypeName>Bool</DataTypeName>
-          <ExternalAccessible>true</ExternalAccessible>
-          <ExternalVisible>true</ExternalVisible>
-          <ExternalWritable>true</ExternalWritable>
-          <LogicalAddress>%Q1.2</LogicalAddress>
-          <Name>MyOutput</Name>
-        </AttributeList>
-        <ObjectList>
-          <MultilingualText ID="B" CompositionName="Comment">
-            <ObjectList>
-              <MultilingualTextItem ID="C" CompositionName="Items">
-                <AttributeList>
-                  <Culture>en-US</Culture>
-                  <Text />
-                </AttributeList>
-              </MultilingualTextItem>
-            </ObjectList>
-          </MultilingualText>
-        </ObjectList>
-      </SW.Tags.PlcTag>
-    </ObjectList>
-  </SW.Tags.PlcTagTable>
-</Document>
-`
-
-const tagExampleWithComments = `
-<?xml version="1.0" encoding="utf-8"?>
-<Document>
-  <Engineering version="V17" />
-  <SW.Tags.PlcTagTable ID="0">
-    <AttributeList>
-      <Name>AlveTestTable_WithComments</Name>
-    </AttributeList>
-    <ObjectList>
-      <SW.Tags.PlcTag ID="1" CompositionName="Tags">
-        <AttributeList>
-          <DataTypeName>Bool</DataTypeName>
-          <ExternalAccessible>true</ExternalAccessible>
-          <ExternalVisible>true</ExternalVisible>
-          <ExternalWritable>true</ExternalWritable>
-          <LogicalAddress>%I10.7</LogicalAddress>
-          <Name>MyMinimal</Name>
-        </AttributeList>
-        <ObjectList>
-          <MultilingualText ID="2" CompositionName="Comment">
-            <ObjectList>
-              <MultilingualTextItem ID="3" CompositionName="Items">
-                <AttributeList>
-                  <Culture>en-US</Culture>
-                  <Text>Coment on MyMinimal</Text>
-                </AttributeList>
-              </MultilingualTextItem>
-            </ObjectList>
-          </MultilingualText>
-        </ObjectList>
-      </SW.Tags.PlcTag>
-      <SW.Tags.PlcTag ID="4" CompositionName="Tags">
-        <AttributeList>
-          <DataTypeName>Bool</DataTypeName>
-          <ExternalAccessible>false</ExternalAccessible>
-          <ExternalVisible>false</ExternalVisible>
-          <ExternalWritable>false</ExternalWritable>
-          <LogicalAddress>%I11.0</LogicalAddress>
-          <Name>MyRemoveAttributes</Name>
-        </AttributeList>
-        <ObjectList>
-          <MultilingualText ID="5" CompositionName="Comment">
-            <ObjectList>
-              <MultilingualTextItem ID="6" CompositionName="Items">
-                <AttributeList>
-                  <Culture>en-US</Culture>
-                  <Text>Comment on MyRemoveAttributes</Text>
-                </AttributeList>
-              </MultilingualTextItem>
-            </ObjectList>
-          </MultilingualText>
-        </ObjectList>
-      </SW.Tags.PlcTag>
-      <SW.Tags.PlcTag ID="7" CompositionName="Tags">
-        <AttributeList>
-          <DataTypeName>Bool</DataTypeName>
-          <ExternalAccessible>true</ExternalAccessible>
-          <ExternalVisible>true</ExternalVisible>
-          <ExternalWritable>true</ExternalWritable>
-          <LogicalAddress>%M11.1</LogicalAddress>
-          <Name>MyMemory</Name>
-        </AttributeList>
-        <ObjectList>
-          <MultilingualText ID="8" CompositionName="Comment">
-            <ObjectList>
-              <MultilingualTextItem ID="9" CompositionName="Items">
-                <AttributeList>
-                  <Culture>en-US</Culture>
-                  <Text>Comment with weirt symbol &lt; &gt; !?</Text>
-                </AttributeList>
-              </MultilingualTextItem>
-            </ObjectList>
-          </MultilingualText>
-        </ObjectList>
-      </SW.Tags.PlcTag>
-      <SW.Tags.PlcTag ID="A" CompositionName="Tags">
-        <AttributeList>
-          <DataTypeName>Bool</DataTypeName>
-          <ExternalAccessible>true</ExternalAccessible>
-          <ExternalVisible>true</ExternalVisible>
-          <ExternalWritable>true</ExternalWritable>
-          <LogicalAddress>%Q11.2</LogicalAddress>
-          <Name>MyOutput</Name>
-        </AttributeList>
-        <ObjectList>
-          <MultilingualText ID="B" CompositionName="Comment">
-            <ObjectList>
-              <MultilingualTextItem ID="C" CompositionName="Items">
-                <AttributeList>
-                  <Culture>en-US</Culture>
-                  <Text>Coment with partial weird !1 symbol</Text>
-                </AttributeList>
-              </MultilingualTextItem>
-            </ObjectList>
-          </MultilingualText>
-        </ObjectList>
-      </SW.Tags.PlcTag>
-    </ObjectList>
-  </SW.Tags.PlcTagTable>
-</Document>
-`
 
 beforeAll(async () => {
     services = createSclServices(EmptyFileSystem);
@@ -365,34 +21,13 @@ beforeAll(async () => {
 describe('Parsing XML Tag list tests', () => {
 
     test('Parse single tag with empty comments', async () => {
-        document = await parse(singleTagExample);
+        document = await parse(TagXmlTestData.singleTagExample);
 
         expect(checkDocumentValid(document)).toBeFalsy();
-
-        // expect(
-        //     checkDocumentValid(document) || s`
-        //         Numbers:
-        //           ${document.parseResult.value?.elements?.map(p => (p as NumberExpression).value)?.join('\n')}
-        //     `
-        // ).toBe(s`
-        //     Numbers:
-        //       11
-        //       22
-        //       16#22adf
-        //       3.3
-        //       3.3e+7
-        //       3.3e-8
-        //       3.3e8
-        //       33e8
-        //       33e+8
-        //       33e-8
-        //       40_123E10
-        //       3.0E+10
-        // `);
     });
   
     test("Parse tag with special characters in name", async () => {
-      document = await parse(tagWithSpecialCharactersInName);
+      document = await parse(TagXmlTestData.tagWithSpecialCharactersInName);
 
       expect(checkDocumentValid(document)).toBeFalsy();
 
@@ -409,7 +44,7 @@ describe('Parsing XML Tag list tests', () => {
     });
   
     test("Parse constant", async () => {
-      document = await parse(singleConstant);
+      document = await parse(TagXmlTestData.singleConstant);
 
       expect(
         checkDocumentValid(document) ||
@@ -424,18 +59,18 @@ describe('Parsing XML Tag list tests', () => {
     });
 
   test("Parse integer tag reading word", async () => {
-      document = await parse(singleTagReadingWord);
+      document = await parse(TagXmlTestData.singleTagReadingWord);
       expect(checkDocumentValid(document)).toBeFalsy();
     });
 
     test('Parse multiple tags with empty comments', async () => {
-        document = await parse(tagExampleEmptyComments);
+        document = await parse(TagXmlTestData.tagExampleEmptyComments);
 
         expect(checkDocumentValid(document)).toBeFalsy();
     });
 
     test('Parse multiple tags with comments', async () => {
-        document = await parse(tagExampleWithComments);
+        document = await parse(TagXmlTestData.tagExampleWithComments);
 
         expect(checkDocumentValid(document)).toBeFalsy();
     });
