@@ -4,7 +4,7 @@ import { expandToString as s } from "langium/generate";
 import { parseHelper } from "langium/test";
 import { createSclServices } from "../../src/language/scl-module.js";
 import { XmlModel, isXmlModel } from "../../src/language/generated/ast.js";
-import { TagXmlTestData } from "./tag-xml-test-data.js";
+import { TagXmlTestData } from "../test-data/tag-xml-test-data.js";
 
 let services: ReturnType<typeof createSclServices>;
 let parse:    ReturnType<typeof parseHelper<XmlModel>>;
