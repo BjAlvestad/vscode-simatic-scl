@@ -142,6 +142,78 @@ export namespace TagXmlTestData {
         </Document>
     `;
 
+    export const tagWithComment = s`
+        <?xml version="1.0" encoding="utf-8"?>
+        <Document>
+        <Engineering version="V17" />
+        <SW.Tags.PlcTagTable ID="0">
+            <AttributeList>
+            <Name>TestTable_WithComments</Name>
+            </AttributeList>
+            <ObjectList>
+            <SW.Tags.PlcTag ID="A" CompositionName="Tags">
+                <AttributeList>
+                <DataTypeName>Bool</DataTypeName>
+                <ExternalAccessible>true</ExternalAccessible>
+                <ExternalVisible>true</ExternalVisible>
+                <ExternalWritable>true</ExternalWritable>
+                <LogicalAddress>%Q11.2</LogicalAddress>
+                <Name>MyOutput</Name>
+                </AttributeList>
+                <ObjectList>
+                <MultilingualText ID="B" CompositionName="Comment">
+                    <ObjectList>
+                    <MultilingualTextItem ID="C" CompositionName="Items">
+                        <AttributeList>
+                        <Culture>en-US</Culture>
+                        <Text>Coment with partial weird !1 symbol</Text>
+                        </AttributeList>
+                    </MultilingualTextItem>
+                    </ObjectList>
+                </MultilingualText>
+                </ObjectList>
+            </SW.Tags.PlcTag>
+            </ObjectList>
+        </SW.Tags.PlcTagTable>
+        </Document>
+    `;
+
+    export const tagWithCommentStartingWithEqualKeyword = s`
+        <?xml version="1.0" encoding="utf-8"?>
+        <Document>
+        <Engineering version="V17" />
+        <SW.Tags.PlcTagTable ID="0">
+            <AttributeList>
+            <Name>TestTable_WithComments</Name>
+            </AttributeList>
+            <ObjectList>
+            <SW.Tags.PlcTag ID="A" CompositionName="Tags">
+                <AttributeList>
+                <DataTypeName>Bool</DataTypeName>
+                <ExternalAccessible>true</ExternalAccessible>
+                <ExternalVisible>true</ExternalVisible>
+                <ExternalWritable>true</ExternalWritable>
+                <LogicalAddress>%Q11.2</LogicalAddress>
+                <Name>MyOutput</Name>
+                </AttributeList>
+                <ObjectList>
+                <MultilingualText ID="B" CompositionName="Comment">
+                    <ObjectList>
+                    <MultilingualTextItem ID="C" CompositionName="Items">
+                        <AttributeList>
+                        <Culture>en-US</Culture>
+                        <Text>=Coment with partial weird !1 symbol</Text>
+                        </AttributeList>
+                    </MultilingualTextItem>
+                    </ObjectList>
+                </MultilingualText>
+                </ObjectList>
+            </SW.Tags.PlcTag>
+            </ObjectList>
+        </SW.Tags.PlcTagTable>
+        </Document>
+    `;
+
     export const tagExampleEmptyComments = s`
         <?xml version="1.0" encoding="utf-8"?>
         <Document>

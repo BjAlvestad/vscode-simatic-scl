@@ -63,6 +63,16 @@ describe('Parsing XML Tag list tests', () => {
       expect(checkDocumentValid(document)).toBeFalsy();
     });
 
+  test("Parse tag with comment", async () => {
+      document = await parse(TagXmlTestData.tagWithComment);
+      expect(checkDocumentValid(document)).toBeFalsy();
+    });
+
+  test("Parse tag starting with '=' keyword", async () => {
+      document = await parse(TagXmlTestData.tagWithCommentStartingWithEqualKeyword);
+      expect(checkDocumentValid(document)).toBeFalsy();
+    });
+
     test('Parse multiple tags with empty comments', async () => {
         document = await parse(TagXmlTestData.tagExampleEmptyComments);
 
