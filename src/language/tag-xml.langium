@@ -1,14 +1,10 @@
 grammar TagXml
 import "./terminal"
 
-
 terminal TAG_COMMENT: /(?<=(<Text>))[^<]+(?=(<\/Text>))/;
 terminal XML_NAME: /(?<=(<Name>))[^<]+(?=(<\/Name>))/;
 terminal XML_CONSTANT_VALUE: /(?<=(<Value>))[^<]+(?=(<\/Value>))/;
 terminal LOGICAL_ADDRESS: /%[IQM][BWD]?\d+(.\d+)?/;
-// terminal TIME_LITERAL: /[Ll]?[Tt]#[0-9DdHhMmNnSs_]+/;
-
-// terminal NUMBER returns string: /([DdLl]?[BbWwLl]#)?((16#[0-9a-fA-F_]+)|(((2|8)#)?[0-9][0-9_]*(\.?([0-9_]*[eE][+-]?)?[0-9_]+)?))/;
 
 entry XmlModel:
     '<?' 'xml' 'version' '=' version=DOUBLE_QUOTE_STRING 'encoding' '=' encoding=DOUBLE_QUOTE_STRING '?>'
@@ -80,19 +76,3 @@ MultilingualTextItem:
         '<' '/' 'AttributeList' '>'
     '<' '/' 'MultilingualTextItem' '>'
 ;
-
-// ObjectList:
-//     '<' 'ObjectList' '>'
-//         ('<' '/'? attributeName=(ID|XmlKeywordsAllowedElsewhere) (id+=(ID|'ID='|XmlKeywordsAllowedElsewhere) '='? metaData+=DOUBLE_QUOTE_STRING)* '/'? '>')*
-//     '<' '/' 'ObjectList' '>'
-// ;
-
-// XmlKeywordsAllowedElsewhere returns string:
-//     'CompositionName'
-//     | 'ObjectList'
-//     | 'AttributeList'
-// ;
-
-
-// fragment NameOpenTag returns string: '<' 'Name' '>';
-// fragment NameCloseTag returns string: '<' '/' 'Name' '>';

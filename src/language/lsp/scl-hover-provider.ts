@@ -21,7 +21,8 @@ export class SclHoverProvider extends AstNodeHoverProvider {
                 return undefined;
             }
             if(isSclBlock(node)) {
-            } else if ( node.type.primitive) {
+
+            } else if (node.type.primitive) {
                 return {
                     contents: {
                         kind: 'markdown',

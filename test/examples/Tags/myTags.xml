@@ -3,7 +3,7 @@
   <Engineering version="V17" />
   <SW.Tags.PlcTagTable ID="0">
     <AttributeList>
-      <Name>AlveTestTable</Name>
+      <Name>MyTagTable</Name>
     </AttributeList>
     <ObjectList>
       <SW.Tags.PlcTag ID="1" CompositionName="Tags">

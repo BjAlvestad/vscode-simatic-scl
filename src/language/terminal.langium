@@ -19,6 +19,12 @@ terminal ID: /[_a-zA-Z][\w_]*/;
 hidden terminal ML_COMMENT: /\(\*[\s\S]*?\*\)/;
 hidden terminal SL_COMMENT: /\/\/[^\n\r]*/;
 
+TypeName returns string:
+    DataType 
+    | StringTypeName
+    | 'Void'
+;
+
 DataType returns string:
     // Elementary types
     'BOOL'
@@ -37,12 +43,6 @@ DataType returns string:
     | 'VARIANT' | 'ANY' | 'POINTER'
     | 'HW_ANY' | 'HW_DEVICE' | 'HW_DPMASTER' | 'HW_DPSLAVE' | 'HW_HSC' | 'HW_IEPORT' | 'HW_INTERFACE'
     | 'HW_IO' | 'HW_IOSYSTEM' | 'HW_MODULE' | 'HW_PTO' | 'HW_PWM' | 'HW_SUBMODULE'
-;
-
-TypeName returns string:
-    DataType 
-    | StringTypeName
-    | 'Void'
 ;
 
 StringTypeName returns string:

@@ -9,30 +9,6 @@ let services: ReturnType<typeof createSclServices>;
 let parse:    ReturnType<typeof parseHelper<XmlModel>>;
 let document: LangiumDocument<XmlModel> | undefined;
 
-const singleTagExampleWithoutCommentPart = `
-<?xml version="1.0" encoding="utf-8"?>
-<Document>
-  <Engineering version="V17" />
-  <SW.Tags.PlcTagTable ID="0">
-    <AttributeList>
-      <Name>AlveTestTable</Name>
-    </AttributeList>
-    <ObjectList>
-      <SW.Tags.PlcTag ID="1" CompositionName="Tags">
-        <AttributeList>
-          <DataTypeName>Bool</DataTypeName>
-          <ExternalAccessible>true</ExternalAccessible>
-          <ExternalVisible>true</ExternalVisible>
-          <ExternalWritable>true</ExternalWritable>
-          <LogicalAddress>%I0.7</LogicalAddress>
-          <Name>MyMinimal</Name>
-        </AttributeList>
-      </SW.Tags.PlcTag>
-    </ObjectList>
-  </SW.Tags.PlcTagTable>
-</Document>
-`
-
 const singleTagExample = `
 <?xml version="1.0" encoding="utf-8"?>
 <Document>
