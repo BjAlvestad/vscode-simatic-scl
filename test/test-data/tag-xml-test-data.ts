@@ -7,7 +7,7 @@ export namespace TagXmlTestData {
         <Engineering version="V17" />
         <SW.Tags.PlcTagTable ID="0">
             <AttributeList>
-            <Name>AlveTestTable</Name>
+            <Name>MyTestTable</Name>
             </AttributeList>
             <ObjectList>
             <SW.Tags.PlcTag ID="1" CompositionName="Tags">
@@ -43,7 +43,7 @@ export namespace TagXmlTestData {
         <Engineering version="V17" />
         <SW.Tags.PlcTagTable ID="0">
             <AttributeList>
-            <Name>AlveTestTable</Name>
+            <Name>MyTestTable</Name>
             </AttributeList>
             <ObjectList>
             <SW.Tags.PlcTag ID="1" CompositionName="Tags">
@@ -79,7 +79,7 @@ export namespace TagXmlTestData {
         <Engineering version="V17" />
         <SW.Tags.PlcTagTable ID="0">
             <AttributeList>
-            <Name>AlveTestTable</Name>
+            <Name>MyTestTable</Name>
             </AttributeList>
             <ObjectList>
             <SW.Tags.PlcTag ID="1" CompositionName="Tags">
@@ -115,7 +115,7 @@ export namespace TagXmlTestData {
         <Engineering version="V17" />
         <SW.Tags.PlcTagTable ID="0">
             <AttributeList>
-            <Name>AlveTestTable</Name>
+            <Name>MyTestTable</Name>
             </AttributeList>
             <ObjectList>
             <SW.Tags.PlcUserConstant ID="A" CompositionName="UserConstants">
@@ -166,7 +166,7 @@ export namespace TagXmlTestData {
                     <MultilingualTextItem ID="C" CompositionName="Items">
                         <AttributeList>
                         <Culture>en-US</Culture>
-                        <Text>Coment with partial weird !1 symbol</Text>
+                        <Text>Comment with partial weird !1 symbol</Text>
                         </AttributeList>
                     </MultilingualTextItem>
                     </ObjectList>
@@ -202,7 +202,7 @@ export namespace TagXmlTestData {
                     <MultilingualTextItem ID="C" CompositionName="Items">
                         <AttributeList>
                         <Culture>en-US</Culture>
-                        <Text>=Coment with partial weird !1 symbol</Text>
+                        <Text>=Comment with partial weird !1 symbol</Text>
                         </AttributeList>
                     </MultilingualTextItem>
                     </ObjectList>
@@ -220,7 +220,7 @@ export namespace TagXmlTestData {
         <Engineering version="V17" />
         <SW.Tags.PlcTagTable ID="0">
             <AttributeList>
-            <Name>AlveTestTable</Name>
+            <Name>MyTestTable</Name>
             </AttributeList>
             <ObjectList>
             <SW.Tags.PlcTag ID="1" CompositionName="Tags">
@@ -322,7 +322,7 @@ export namespace TagXmlTestData {
         <Engineering version="V17" />
         <SW.Tags.PlcTagTable ID="0">
             <AttributeList>
-            <Name>AlveTestTable_WithComments</Name>
+            <Name>MyTestTable_WithComments</Name>
             </AttributeList>
             <ObjectList>
             <SW.Tags.PlcTag ID="1" CompositionName="Tags">
@@ -340,7 +340,7 @@ export namespace TagXmlTestData {
                     <MultilingualTextItem ID="3" CompositionName="Items">
                         <AttributeList>
                         <Culture>en-US</Culture>
-                        <Text>Coment on MyMinimal</Text>
+                        <Text>Comment on MyMinimal</Text>
                         </AttributeList>
                     </MultilingualTextItem>
                     </ObjectList>
@@ -384,7 +384,7 @@ export namespace TagXmlTestData {
                     <MultilingualTextItem ID="9" CompositionName="Items">
                         <AttributeList>
                         <Culture>en-US</Culture>
-                        <Text>Comment with weirt symbol &lt; &gt; !?</Text>
+                        <Text>Comment with weird symbol &lt; &gt; !?</Text>
                         </AttributeList>
                     </MultilingualTextItem>
                     </ObjectList>
@@ -406,7 +406,7 @@ export namespace TagXmlTestData {
                     <MultilingualTextItem ID="C" CompositionName="Items">
                         <AttributeList>
                         <Culture>en-US</Culture>
-                        <Text>Coment with partial weird !1 symbol</Text>
+                        <Text>Comment with partial weird !1 symbol</Text>
                         </AttributeList>
                     </MultilingualTextItem>
                     </ObjectList>
