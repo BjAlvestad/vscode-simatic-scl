@@ -1,0 +1,15 @@
+FUNCTION_BLOCK "FB_NestedStruct"
+{ S7_Optimized_Access := 'TRUE' }
+VERSION : 0.1
+   VAR 
+        soneInternalNumber : DINT;
+   END_VAR
+
+BEGIN
+
+"DB_MyDataBlockInTagFolder";
+"MyMinimal";
+"MyWeird%Tag";
+
+END_FUNCTION_BLOCK
+

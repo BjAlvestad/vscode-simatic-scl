@@ -65,6 +65,16 @@
                     ".udt"
                 ],
                 "configuration": "./language-configuration.json"
+            },
+            {
+                "id": "tag-xml",
+                "aliases": [
+                    "tag-xml"
+                ],
+                "extensions": [
+                    ".xml"
+                ],
+                "configuration": "./xml-language-configuration.json"
             }
         ],
         "grammars": [
@@ -72,6 +82,11 @@
                 "language": "scl",
                 "scopeName": "source.scl",
                 "path": "syntaxes/scl.tmLanguage.json"
+            },
+            {
+                "language": "tag-xml",
+                "scopeName": "source.xml",
+                "path": "syntaxes/tag-xml.tmLanguage.json"
             }
         ]
     },

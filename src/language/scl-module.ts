@@ -1,6 +1,6 @@
 import { type Module, inject } from 'langium';
 import { createDefaultModule, createDefaultSharedModule, PartialLangiumSharedServices, type DefaultSharedModuleContext, type LangiumServices, type LangiumSharedServices, type PartialLangiumServices } from 'langium/lsp';
-import { SclGeneratedModule, SclGeneratedSharedModule } from './generated/module.js';
+import { TagXmlGeneratedModule, SclGeneratedModule, SclGeneratedSharedModule } from './generated/module.js';
 import { SclValidator, registerValidationChecks } from './scl-validator.js';
 import { SclScopeProvider } from './scl-scope.js';
 import { SclHoverProvider } from './lsp/scl-hover-provider.js';
@@ -21,6 +21,7 @@ export type SclAddedServices = {
  * of custom service classes.
  */
 export type SclServices = LangiumServices & SclAddedServices
+export type TagXmlServices = LangiumServices
 
 /**
  * Dependency injection module that overrides Langium default services and contributes the
@@ -63,7 +64,8 @@ export const SclSharedModule: Module<LangiumSharedServices, PartialLangiumShared
  */
 export function createSclServices(context: DefaultSharedModuleContext): {
     shared: LangiumSharedServices,
-    Scl: SclServices
+    Scl: SclServices,
+    TagXml: TagXmlServices
 } {
     const shared = inject(
         createDefaultSharedModule(context),
@@ -75,12 +77,19 @@ export function createSclServices(context: DefaultSharedModuleContext): {
         SclGeneratedModule,
         SclModule
     );
+    const TagXml = inject(
+        createDefaultModule({ shared }),
+        TagXmlGeneratedModule,
+        SclModule
+    );
+    
     shared.ServiceRegistry.register(Scl);
+    shared.ServiceRegistry.register(TagXml);
     registerValidationChecks(Scl);
     if (!context.connection) {
         // We don't run inside a language server
         // Therefore, initialize the configuration provider instantly
         shared.workspace.ConfigurationProvider.initialized({});
     }
-    return { shared, Scl };
+    return { shared, Scl, TagXml };
 }

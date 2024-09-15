@@ -1,0 +1,13 @@
+DATA_BLOCK "DB_MyDataBlockInTagFolder"
+{ S7_Optimized_Access := 'TRUE' }
+VERSION : 0.1
+   VAR 
+        someVar : DINT;
+   END_VAR
+
+BEGIN
+
+
+
+END_DATA_BLOCK
+
