@@ -90,8 +90,5 @@
             }
         ]
     },
-    "activationEvents": [
-        "onLanguage:scl"
-    ],
     "main": "./out/extension/main.cjs"
 }
