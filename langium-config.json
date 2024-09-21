@@ -6,7 +6,7 @@
         "fileExtensions": [".scl", ".db", ".udt"],
         "caseInsensitive": true,
         "textMate": {
-            "out": "syntaxes/scl.tmLanguage.json"
+            "out": "syntaxes/generated/scl.tmLanguage.json"
         }
     }, {
         "id": "xml",
@@ -14,7 +14,7 @@
         "fileExtensions": [".tags.xml"],
         "caseInsensitive": true,
         "textMate": {
-            "out": "syntaxes/tag-xml.tmLanguage.json"
+            "out": "syntaxes/generated/tag-xml.tmLanguage.json"
         }
     }],
     "out": "src/language/generated"
