@@ -37,7 +37,7 @@ export class SclTokenBuilder extends DefaultTokenBuilder {
     ): TokenType {
         let tokenType = super.buildKeywordToken(keyword, terminalTokens, caseInsensitive);
         
-        if (tokenType.name === '*' || tokenType.name === '(') {
+        if (tokenType.name === '*') {
             // The default } token will use [TEMPLATE_LITERAL_MIDDLE, TEMPLATE_LITERAL_END] as longer alts
             // We need to delete the LONGER_ALT, they are not valid for the regular lexer mode
             delete tokenType.LONGER_ALT;
