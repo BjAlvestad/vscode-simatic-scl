@@ -12,10 +12,10 @@ export class SclTokenBuilder extends DefaultTokenBuilder {
         if(isTokenTypeArray(tokenTypes)) {
             // Regular mode just drops template literal middle & end
             const regularModeTokens = tokenTypes
-                .filter(token => !['ML_COMMENT_CONTENT','ML_COMMENT_END'].includes(token.name));
+                .filter(token => !['ML_COMMENT_MIDDLE','ML_COMMENT_END'].includes(token.name));
             // Template mode needs to exclude the '}' keyword
             const commentModeTokens = tokenTypes
-                .filter(token => !['*)'].includes(token.name));
+                .filter(token => !['*', '('].includes(token.name));
 
             const multiModeLexerDef: IMultiModeLexerDefinition = {
                 modes: {
@@ -28,44 +28,6 @@ export class SclTokenBuilder extends DefaultTokenBuilder {
         } else {
             throw new Error('Invalid token vocabulary received from DefaultTokenBuilder!');
         }
-
-        // ----------------
-
-        //     // Regular mode just drops template literal middle & end
-        //     const regularModeTokens = tokenTypes
-        //         .filter(token => !['TEMPLATE_LITERAL_MIDDLE','TEMPLATE_LITERAL_END'].includes(token.name));
-        //     // Template mode needs to exclude the '}' keyword
-        //     const templateModeTokens = tokenTypes
-        //         .filter(token => !['}'].includes(token.name));
-
-        //     const multiModeLexerDef: IMultiModeLexerDefinition = {
-        //         modes: {
-        //             [REGULAR_MODE]: regularModeTokens,
-        //             [TEMPLATE_MODE]: templateModeTokens
-        //         },
-        //         defaultMode: REGULAR_MODE
-        //     };
-        //     return multiModeLexerDef;
-        // } else {
-        //     throw new Error('Invalid token vocabulary received from DefaultTokenBuilder!');
-        // }
-
-        // ----------------
-
-    //   const commentStart = tokens.find(token => token.name === 'ML_COMMENT_START')!;
-    //   const commentEnd = tokens.find(token => token.name === 'ML_COMMENT_END')!;
-    //   const commentContent = tokens.find(token => token.name === 'ML_COMMENT_CONTENT')!;
-    //   commentStart.PUSH_MODE = 'comment';
-    //   commentEnd.POP_MODE = true;
-    //   const nonCommentTokens = tokens.filter(token => token !== commentEnd && token !== commentContent);
-    //   const commentTokens = [commentEnd, commentContent];
-    //   return {
-    //     modes: {
-    //       comment: commentTokens,
-    //       nonComment: nonCommentTokens
-    //     },
-    //     defaultMode: 'nonComment'
-    //   };
     }
 
     protected override buildKeywordToken(
@@ -94,5 +56,44 @@ export class SclTokenBuilder extends DefaultTokenBuilder {
         }
         return tokenType;
     }
+
+
+    // ----------------
+
+    //     // Regular mode just drops template literal middle & end
+    //     const regularModeTokens = tokenTypes
+    //         .filter(token => !['TEMPLATE_LITERAL_MIDDLE','TEMPLATE_LITERAL_END'].includes(token.name));
+    //     // Template mode needs to exclude the '}' keyword
+    //     const templateModeTokens = tokenTypes
+    //         .filter(token => !['}'].includes(token.name));
+
+    //     const multiModeLexerDef: IMultiModeLexerDefinition = {
+    //         modes: {
+    //             [REGULAR_MODE]: regularModeTokens,
+    //             [TEMPLATE_MODE]: templateModeTokens
+    //         },
+    //         defaultMode: REGULAR_MODE
+    //     };
+    //     return multiModeLexerDef;
+    // } else {
+    //     throw new Error('Invalid token vocabulary received from DefaultTokenBuilder!');
+    // }
+
+    // ----------------
+
+    //   const commentStart = tokens.find(token => token.name === 'ML_COMMENT_START')!;
+    //   const commentEnd = tokens.find(token => token.name === 'ML_COMMENT_END')!;
+    //   const commentContent = tokens.find(token => token.name === 'ML_COMMENT_CONTENT')!;
+    //   commentStart.PUSH_MODE = 'comment';
+    //   commentEnd.POP_MODE = true;
+    //   const nonCommentTokens = tokens.filter(token => token !== commentEnd && token !== commentContent);
+    //   const commentTokens = [commentEnd, commentContent];
+    //   return {
+    //     modes: {
+    //       comment: commentTokens,
+    //       nonComment: nonCommentTokens
+    //     },
+    //     defaultMode: 'nonComment'
+    //   };
 
   }
