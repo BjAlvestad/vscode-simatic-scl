@@ -37,6 +37,9 @@ export class SclTokenBuilder extends DefaultTokenBuilder {
     ): TokenType {
         let tokenType = super.buildKeywordToken(keyword, terminalTokens, caseInsensitive);
         
+        // The IF sentence below is commented out, since `*` got added as a terminal instead of keyword
+        // If it is used as keyword instead, we would need to delete the LONGER_ALT from it, since `*)` cannot be used in
+        // regularModeTokens now that we are using it in commentModeTokens.
         // if (tokenType.name === '*') {
         //     // The default * token will use [ML_COMMENT_END] as longer alts (since that also starts with *)
         //     // We need to delete the LONGER_ALT, they are not valid for the regular lexer mode
