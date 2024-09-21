@@ -1,6 +1,6 @@
 {
   "name": "xml",
-  "scopeName": "source.xml",
+  "scopeName": "source.tags.xml",
   "fileTypes": [
     ".tags.xml"
   ],
