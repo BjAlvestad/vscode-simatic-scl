@@ -16,9 +16,6 @@ terminal MEMORY_AREA: /\.%[XBWD]\d+/;  //TODO: Consider using positive look-behi
 
 terminal ID: /[_a-zA-Z][\w_]*/;
 
-hidden terminal ML_COMMENT: /\(\*[\s\S]*?\*\)/;
-hidden terminal SL_COMMENT: /\/\/[^\n\r]*/;
-
 TypeName returns string:
     DataType 
     | StringTypeName

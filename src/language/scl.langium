@@ -397,3 +397,8 @@ BlockEnd returns string:
     'END_DATA_BLOCK' |
     'END_ORGANIZATION_BLOCK'
 ;
+
+hidden terminal ML_COMMENT_START: '(*';
+hidden terminal ML_COMMENT_END: '*)';
+hidden terminal ML_COMMENT_CONTENT: /[\s\S]*?(?=(\*\)))/;
+hidden terminal SL_COMMENT: /\/\/[^\n\r]*/;

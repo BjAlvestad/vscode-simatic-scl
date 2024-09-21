@@ -7,6 +7,7 @@ import { SclHoverProvider } from './lsp/scl-hover-provider.js';
 import { SclIndexManager } from './scl-index-manager.js';
 import { SclWorkspaceManager } from './scl-workspace-manager.js';
 import { SclServiceRegistry } from './scl-service-registry.js';
+import { SclTokenBuilder } from './scl-token-builder.js';
 
 /**
  * Declaration of custom services - add your own service classes here.
@@ -30,6 +31,9 @@ export type TagXmlServices = LangiumServices
  * selected services, while the custom services must be fully specified.
  */
 export const SclModule: Module<SclServices, PartialLangiumServices & SclAddedServices> = {
+    parser: {
+        TokenBuilder: () => new SclTokenBuilder(),
+    },
     validation: {
         SclValidator: () => new SclValidator()
     },
