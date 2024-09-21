@@ -152,7 +152,7 @@ VariableAttribute:
     '{' (name=ID ':=' value=SINGLE_QUOTE_STRING ';'?)+ '}';
 
 ArrayRange:
-    start+=(Expression|'*') ('..' end+=Expression)? (',' start+=(Expression|'*') ('..' end+=Expression)?)*
+    start+=(Expression|STAR) ('..' end+=Expression)? (',' start+=(Expression|STAR) ('..' end+=Expression)?)*
 ;
 
 InitializationExpression:
@@ -164,13 +164,13 @@ InitializationExpression:
 ;
 
 UdtInitialization:
-    '(' (('(' ')') | udtInitialization+=UdtInitialization | arrayInitialization+=ArrayInitialization | expressions+=InitializationExpression)
-    (',' (('(' ')') | udtInitialization+=UdtInitialization | arrayInitialization+=ArrayInitialization | expressions+=InitializationExpression) )* ')'
+    PARAN_OPEN ((PARAN_OPEN ')') | udtInitialization+=UdtInitialization | arrayInitialization+=ArrayInitialization | expressions+=InitializationExpression)
+    (',' ((PARAN_OPEN ')') | udtInitialization+=UdtInitialization | arrayInitialization+=ArrayInitialization | expressions+=InitializationExpression) )* ')'
 ;
 
 ArrayInitialization:
-    '[' (('(' ')') | udtInitialization+=UdtInitialization | (NUMBER '(' expressions+=InitializationExpression ')' | expressions+=InitializationExpression))
-    (',' (('(' ')') |udtInitialization+=UdtInitialization | (NUMBER '(' expressions+=InitializationExpression ')' | expressions+=InitializationExpression)))* ']'
+    '[' ((PARAN_OPEN ')') | udtInitialization+=UdtInitialization | (NUMBER PARAN_OPEN expressions+=InitializationExpression ')' | expressions+=InitializationExpression))
+    (',' ((PARAN_OPEN ')') |udtInitialization+=UdtInitialization | (NUMBER PARAN_OPEN expressions+=InitializationExpression ')' | expressions+=InitializationExpression)))* ']'
 ;
 
 // ***********************
@@ -211,7 +211,7 @@ Addition infers Expression:
 ;
 
 Multiplication infers Expression:
-    Logical ({infer BinaryExpression.left=current} operator=('*' | '/' | '**' | 'MOD') right=Logical)*
+    Logical ({infer BinaryExpression.left=current} operator=(STAR | '/' | '**' | 'MOD') right=Logical)*
 ;
 
 Logical infers Expression:
@@ -233,7 +233,7 @@ MemberCall infers Expression:
         (element=[NamedElement:ID] | element=[NamedElement:DOUBLE_QUOTE_STRING] | element=[NamedElement:KeywordsAllowedElsewhere])
         '^'?
 		(arrayAccessCall?='[' ( arguments+=Expression (',' arguments+=Expression)* )?']')?
-        (explicitOperationCall?='('(arguments+=Expression (',' arguments+=Expression)*)?')')?
+        (explicitOperationCall?=PARAN_OPEN(arguments+=Expression (',' arguments+=Expression)*)?')')?
     )
     // Alternatively memory area access, where `.` is part of terminal.
     | (memoryArea=MEMORY_AREA)
@@ -241,7 +241,7 @@ MemberCall infers Expression:
 ;
 
 Primary infers Expression:
-    '(' Expression ')'
+    PARAN_OPEN Expression ')'
     | TypeName '#'?
     | UnaryExpression
     | NumberExpression
@@ -259,7 +259,7 @@ FeatureCall infers Expression:
     '^'?
     // Optional array access and/or function call after referencing an element
     (arrayAccessCall?='[' ( arguments+=Expression (',' arguments+=Expression)* )?']')?
-    (explicitOperationCall?='('(arguments+=Expression (',' arguments+=Expression)*)?')')?
+    (explicitOperationCall?=PARAN_OPEN(arguments+=Expression (',' arguments+=Expression)*)?')')?
 ;
 
 DbProgramElement:
@@ -397,3 +397,10 @@ BlockEnd returns string:
     'END_DATA_BLOCK' |
     'END_ORGANIZATION_BLOCK'
 ;
+
+hidden terminal ML_COMMENT_START: '(*';
+hidden terminal ML_COMMENT_CONTENT: /(?<=((\(\*)|(\*\))))[\s\S]+?(?=((\(\*)|(\*\))))/;
+hidden terminal ML_COMMENT_END: '*)';
+hidden terminal SL_COMMENT: /\/\/[^\n\r]*/;
+terminal PARAN_OPEN: '(';
+terminal STAR: '*';

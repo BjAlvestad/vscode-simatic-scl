@@ -555,6 +555,56 @@ describe('Parsing tests', () => {
           TITLE = Some problematic title not placed in string
       `);
     });
+
+    test("parse multi-line comment without any content", async () => {
+      document = await parse(`
+            FUNCTION_BLOCK "FB_WithMultilineComment"
+            BEGIN
+            (**)
+            END_FUNCTION_BLOCK
+        `);
+
+        expect(checkDocumentValid(document)).toBeFalsy();
+    });
+
+    test("parse multi-line comment on single line", async () => {
+      document = await parse(`
+            FUNCTION_BLOCK "FB_WithMultilineComment"
+            BEGIN
+            (* My comment *)
+            END_FUNCTION_BLOCK
+        `);
+
+        expect(checkDocumentValid(document)).toBeFalsy();
+    });
+
+    test("parse multi-line comment", async () => {
+      document = await parse(`
+            FUNCTION_BLOCK "FB_WithMultilineComment"
+            BEGIN
+            (*
+                My comment
+            *)
+            END_FUNCTION_BLOCK
+        `);
+
+        expect(checkDocumentValid(document)).toBeFalsy();
+    });
+
+    test("parse nested multi-line comment", async () => {
+      document = await parse(`
+            FUNCTION_BLOCK "FB_WithMultilineComment"
+            BEGIN
+            (*
+                My comment
+                (* with nested multiline comment *)
+            *)
+            END_FUNCTION_BLOCK
+        `);
+
+      expect(checkDocumentValid(document)).toBeFalsy();
+    });
+
 });
 
 function checkDocumentValid(document: LangiumDocument): string | undefined {
