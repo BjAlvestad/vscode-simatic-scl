@@ -1,5 +1,5 @@
-import type { CustomPatternMatcherFunc, TokenPattern, IMultiModeLexerDefinition, TokenType, TokenVocabulary } from 'chevrotain';
-import { DefaultTokenBuilder, Grammar, GrammarAST, isTokenTypeArray } from "langium";
+import type { IMultiModeLexerDefinition, TokenType, TokenVocabulary } from 'chevrotain';
+import { DefaultTokenBuilder, GrammarAST, isTokenTypeArray } from "langium";
 
 const REGULAR_MODE  = 'regular_mode';
 const COMMENT_MODE  = 'comment_mode';
@@ -13,7 +13,7 @@ export class SclTokenBuilder extends DefaultTokenBuilder {
             // Regular mode just drops middle and end of multi line comment
             const regularModeTokens = tokenTypes
                 .filter(token => !['ML_COMMENT_CONTENT', 'ML_COMMENT_END'].includes(token.name));
-            // Comment mode  mode needs to exclude the '}' keyword
+            // Comment mode only needs to include the comment start (for nested comments), and comment content and end
             const commentModeTokens = tokenTypes
                 .filter(token => ['ML_COMMENT_START', 'ML_COMMENT_CONTENT','ML_COMMENT_END'].includes(token.name));
 
@@ -38,7 +38,7 @@ export class SclTokenBuilder extends DefaultTokenBuilder {
         let tokenType = super.buildKeywordToken(keyword, terminalTokens, caseInsensitive);
         
         if (tokenType.name === '*') {
-            // The default } token will use [TEMPLATE_LITERAL_MIDDLE, TEMPLATE_LITERAL_END] as longer alts
+            // The default * token will use [ML_COMMENT_END] as longer alts (since that also starts with *)
             // We need to delete the LONGER_ALT, they are not valid for the regular lexer mode
             delete tokenType.LONGER_ALT;
         }
@@ -48,7 +48,7 @@ export class SclTokenBuilder extends DefaultTokenBuilder {
     protected override buildTerminalToken(terminal: GrammarAST.TerminalRule): TokenType {
         let tokenType = super.buildTerminalToken(terminal);
 
-        // Update token types to enter & exit template mode
+        // Update token types to enter & exit multi-line comment mode
         if(tokenType.name === 'ML_COMMENT_START') {
             tokenType.PUSH_MODE = COMMENT_MODE;
         } else if(tokenType.name === 'ML_COMMENT_END') {
@@ -56,44 +56,4 @@ export class SclTokenBuilder extends DefaultTokenBuilder {
         }
         return tokenType;
     }
-
-
-    // ----------------
-
-    //     // Regular mode just drops template literal middle & end
-    //     const regularModeTokens = tokenTypes
-    //         .filter(token => !['TEMPLATE_LITERAL_MIDDLE','TEMPLATE_LITERAL_END'].includes(token.name));
-    //     // Template mode needs to exclude the '}' keyword
-    //     const templateModeTokens = tokenTypes
-    //         .filter(token => !['}'].includes(token.name));
-
-    //     const multiModeLexerDef: IMultiModeLexerDefinition = {
-    //         modes: {
-    //             [REGULAR_MODE]: regularModeTokens,
-    //             [TEMPLATE_MODE]: templateModeTokens
-    //         },
-    //         defaultMode: REGULAR_MODE
-    //     };
-    //     return multiModeLexerDef;
-    // } else {
-    //     throw new Error('Invalid token vocabulary received from DefaultTokenBuilder!');
-    // }
-
-    // ----------------
-
-    //   const commentStart = tokens.find(token => token.name === 'ML_COMMENT_START')!;
-    //   const commentEnd = tokens.find(token => token.name === 'ML_COMMENT_END')!;
-    //   const commentContent = tokens.find(token => token.name === 'ML_COMMENT_CONTENT')!;
-    //   commentStart.PUSH_MODE = 'comment';
-    //   commentEnd.POP_MODE = true;
-    //   const nonCommentTokens = tokens.filter(token => token !== commentEnd && token !== commentContent);
-    //   const commentTokens = [commentEnd, commentContent];
-    //   return {
-    //     modes: {
-    //       comment: commentTokens,
-    //       nonComment: nonCommentTokens
-    //     },
-    //     defaultMode: 'nonComment'
-    //   };
-
   }
