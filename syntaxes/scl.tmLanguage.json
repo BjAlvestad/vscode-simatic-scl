@@ -217,6 +217,7 @@
               "name": "punctuation.definition.comment.scl"
             }
           },
+		  "patterns":[ {"include": "#comments"}],
           "end": "\\*\\)",
           "endCaptures": {
             "0": {
