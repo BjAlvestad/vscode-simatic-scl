@@ -1,0 +1,47 @@
+{
+  "name": "xml",
+  "scopeName": "source.tags.xml",
+  "fileTypes": [
+    ".tags.xml"
+  ],
+  "patterns": [
+    {
+      "include": "#comments"
+    },
+    {
+      "name": "keyword.control.xml",
+      "match": "\\b([aA][nN][yY]|[aA][tT][tT][rR][iI][bB][uU][tT][eE][lL][iI][sS][tT]|[bB][cC][dD][11][66]|[bB][cC][dD][33][22]|[bB][oO][oO][lL]|[bB][yY][tT][eE]|[cC][hH][aA][rR]|[cC][oO][mM][pP][oO][sS][iI][tT][iI][oO][nN][nN][aA][mM][eE]|[cC][uU][lL][tT][uU][rR][eE]|[dD][aA][tT][eE]|[dD][aA][tT][eE][__][aA][nN][dD][__][lL][tT][iI][mM][eE]|[dD][aA][tT][eE][__][aA][nN][dD][__][tT][iI][mM][eE]|[dD][bB][__][aA][nN][yY]|[dD][iI][nN][tT]|[dD][tT]|[dD][tT][lL]|[dD][wW][oO][rR][dD]|[dD][aA][tT][aA][tT][yY][pP][eE][nN][aA][mM][eE]|[dD][oO][cC][uU][mM][eE][nN][tT]|[eE][nN][gG][iI][nN][eE][eE][rR][iI][nN][gG]|[eE][xX][tT][eE][rR][nN][aA][lL][aA][cC][cC][eE][sS][sS][iI][bB][lL][eE]|[eE][xX][tT][eE][rR][nN][aA][lL][vV][iI][sS][iI][bB][lL][eE]|[eE][xX][tT][eE][rR][nN][aA][lL][wW][rR][iI][tT][aA][bB][lL][eE]|[hH][wW][__][aA][nN][yY]|[hH][wW][__][dD][eE][vV][iI][cC][eE]|[hH][wW][__][dD][pP][mM][aA][sS][tT][eE][rR]|[hH][wW][__][dD][pP][sS][lL][aA][vV][eE]|[hH][wW][__][hH][sS][cC]|[hH][wW][__][iI][eE][pP][oO][rR][tT]|[hH][wW][__][iI][nN][tT][eE][rR][fF][aA][cC][eE]|[hH][wW][__][iI][oO]|[hH][wW][__][iI][oO][sS][yY][sS][tT][eE][mM]|[hH][wW][__][mM][oO][dD][uU][lL][eE]|[hH][wW][__][pP][tT][oO]|[hH][wW][__][pP][wW][mM]|[hH][wW][__][sS][uU][bB][mM][oO][dD][uU][lL][eE]|[iI][nN][tT]|[lL][dD][tT]|[lL][iI][nN][tT]|[lL][rR][eE][aA][lL]|[lL][tT][iI][mM][eE]|[lL][tT][iI][mM][eE][__][oO][fF][__][dD][aA][yY]|[lL][tT][oO][dD]|[lL][wW][oO][rR][dD]|[lL][oO][gG][iI][cC][aA][lL][aA][dD][dD][rR][eE][sS][sS]|[mM][uU][lL][tT][iI][lL][iI][nN][gG][uU][aA][lL][tT][eE][xX][tT]|[mM][uU][lL][tT][iI][lL][iI][nN][gG][uU][aA][lL][tT][eE][xX][tT][iI][tT][eE][mM]|[nN][uU][lL][lL]|[nN][aA][mM][eE]|[oO][bB][jJ][eE][cC][tT][lL][iI][sS][tT]|[pP][oO][iI][nN][tT][eE][rR]|[rR][eE][aA][lL]|[sS][55][tT][iI][mM][eE]|[sS][iI][nN][tT]|[sS][wW]\\.[tT][aA][gG][sS]\\.[pP][lL][cC][tT][aA][gG]|[sS][wW]\\.[tT][aA][gG][sS]\\.[pP][lL][cC][tT][aA][gG][tT][aA][bB][lL][eE]|[sS][wW]\\.[tT][aA][gG][sS]\\.[pP][lL][cC][uU][sS][eE][rR][cC][oO][nN][sS][tT][aA][nN][tT]|[tT][iI][mM][eE]|[tT][iI][mM][eE][__][oO][fF][__][dD][aA][yY]|[tT][oO][dD]|[tT][eE][xX][tT]|[uU][dD][iI][nN][tT]|[uU][iI][nN][tT]|[uU][lL][iI][nN][tT]|[uU][sS][iI][nN][tT]|[vV][aA][rR][iI][aA][nN][tT]|[vV][aA][lL][uU][eE]|[wW][cC][hH][aA][rR]|[wW][oO][rR][dD]|[eE][nN][cC][oO][dD][iI][nN][gG]|[fF][aA][lL][sS][eE]|[tT][rR][uU][eE]|[vV][eE][rR][sS][iI][oO][nN]|[xX][mM][lL])\\b|\\B(</[lL][oO][gG][iI][cC][aA][lL][aA][dD][dD][rR][eE][sS][sS]|</[vV][aA][lL][uU][eE])\\b|\\b([iI][dD]=)\\B"
+    }
+  ],
+  "repository": {
+    "comments": {
+      "patterns": [
+        {
+          "name": "comment.block.xml",
+          "begin": "\\(\\*",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.definition.comment.xml"
+            }
+          },
+          "end": "\\*\\)",
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.definition.comment.xml"
+            }
+          }
+        },
+        {
+          "begin": "//",
+          "beginCaptures": {
+            "1": {
+              "name": "punctuation.whitespace.comment.leading.xml"
+            }
+          },
+          "end": "(?=$)",
+          "name": "comment.line.xml"
+        }
+      ]
+    }
+  }
+}
