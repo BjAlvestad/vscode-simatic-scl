@@ -13,6 +13,7 @@ import { LangiumSharedServices } from "langium/lsp";
 import { InitializeParams } from "vscode-languageclient";
 import fs from 'fs';
 import path from 'path';
+import { SclUriUtils } from "./scl-uri-utils.js";
 
 export class SclWorkspaceManager extends DefaultWorkspaceManager {
 
@@ -64,7 +65,7 @@ export class SclWorkspaceManager extends DefaultWorkspaceManager {
             }
             return name !== 'node_modules' && name !== 'out';
         } else if (entry.isFile) {
-            const extname = UriUtils.extname(entry.uri);
+            const extname = SclUriUtils.extname(entry.uri);
             return fileExtensions.includes(extname);
         }
         return false;

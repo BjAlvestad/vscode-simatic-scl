@@ -72,7 +72,7 @@
                     "tag-xml"
                 ],
                 "extensions": [
-                    ".xml"
+                    ".tags.xml"
                 ],
                 "configuration": "./xml-language-configuration.json"
             }
@@ -85,7 +85,7 @@
             },
             {
                 "language": "tag-xml",
-                "scopeName": "source.xml",
+                "scopeName": "source.tags.xml",
                 "path": "syntaxes/tag-xml.tmLanguage.json"
             }
         ]

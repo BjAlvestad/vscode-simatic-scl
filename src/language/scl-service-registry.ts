@@ -1,4 +1,5 @@
-import { DefaultServiceRegistry, LangiumCoreServices, URI, UriUtils } from 'langium';
+import { DefaultServiceRegistry, LangiumCoreServices, URI } from 'langium';
+import { SclUriUtils } from './scl-uri-utils.js';
 
 export class SclServiceRegistry extends DefaultServiceRegistry {
 
@@ -16,7 +17,7 @@ export class SclServiceRegistry extends DefaultServiceRegistry {
                 return services;
             }
         }
-        const ext = UriUtils.extname(uri);
+        const ext = SclUriUtils.extname(uri);
         const services = this.fileExtensionMap.get(ext);
         if (!services) {
             if (languageId) {

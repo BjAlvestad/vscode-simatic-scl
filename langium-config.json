@@ -11,7 +11,7 @@
     }, {
         "id": "xml",
         "grammar": "src/language/tag-xml.langium",
-        "fileExtensions": [".xml"],
+        "fileExtensions": [".tags.xml"],
         "caseInsensitive": true,
         "textMate": {
             "out": "syntaxes/tag-xml.tmLanguage.json"
