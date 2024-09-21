@@ -152,7 +152,7 @@ VariableAttribute:
     '{' (name=ID ':=' value=SINGLE_QUOTE_STRING ';'?)+ '}';
 
 ArrayRange:
-    start+=(Expression|'*') ('..' end+=Expression)? (',' start+=(Expression|'*') ('..' end+=Expression)?)*
+    start+=(Expression|STAR) ('..' end+=Expression)? (',' start+=(Expression|STAR) ('..' end+=Expression)?)*
 ;
 
 InitializationExpression:
@@ -211,7 +211,7 @@ Addition infers Expression:
 ;
 
 Multiplication infers Expression:
-    Logical ({infer BinaryExpression.left=current} operator=('*' | '/' | '**' | 'MOD') right=Logical)*
+    Logical ({infer BinaryExpression.left=current} operator=(STAR | '/' | '**' | 'MOD') right=Logical)*
 ;
 
 Logical infers Expression:
@@ -398,8 +398,10 @@ BlockEnd returns string:
     'END_ORGANIZATION_BLOCK'
 ;
 
+// hidden terminal ML_COMMENT_START: '(*';
 hidden terminal ML_COMMENT_START: '(*';
+hidden terminal ML_COMMENT_CONTENT: /(?<=((\(\*)|(\*\))))[\s\S]+?(?=((\(\*)|(\*\))))/;
 hidden terminal ML_COMMENT_END: '*)';
-hidden terminal ML_COMMENT_CONTENT: /(?=(\(\*))[\s\S]*?(?=(\*\)))/;
 hidden terminal SL_COMMENT: /\/\/[^\n\r]*/;
 terminal PARAN_OPEN: '(';
+terminal STAR: '*';

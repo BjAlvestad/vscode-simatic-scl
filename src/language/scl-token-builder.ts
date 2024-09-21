@@ -15,7 +15,7 @@ export class SclTokenBuilder extends DefaultTokenBuilder {
                 .filter(token => !['ML_COMMENT_CONTENT', 'ML_COMMENT_END'].includes(token.name));
             // Comment mode only needs to include the comment start (for nested comments), and comment content and end
             const commentModeTokens = tokenTypes
-                .filter(token => ['ML_COMMENT_START', 'ML_COMMENT_CONTENT','ML_COMMENT_END'].includes(token.name));
+                .filter(token => ['ML_COMMENT_START', 'ML_COMMENT_CONTENT', 'ML_COMMENT_END'].includes(token.name));
 
             const multiModeLexerDef: IMultiModeLexerDefinition = {
                 modes: {
@@ -37,11 +37,11 @@ export class SclTokenBuilder extends DefaultTokenBuilder {
     ): TokenType {
         let tokenType = super.buildKeywordToken(keyword, terminalTokens, caseInsensitive);
         
-        if (tokenType.name === '*') {
-            // The default * token will use [ML_COMMENT_END] as longer alts (since that also starts with *)
-            // We need to delete the LONGER_ALT, they are not valid for the regular lexer mode
-            delete tokenType.LONGER_ALT;
-        }
+        // if (tokenType.name === '*') {
+        //     // The default * token will use [ML_COMMENT_END] as longer alts (since that also starts with *)
+        //     // We need to delete the LONGER_ALT, they are not valid for the regular lexer mode
+        //     delete tokenType.LONGER_ALT;
+        // }
         return tokenType;
     }
 
