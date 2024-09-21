@@ -6,6 +6,7 @@ import { SclScopeProvider } from './scl-scope.js';
 import { SclHoverProvider } from './lsp/scl-hover-provider.js';
 import { SclIndexManager } from './scl-index-manager.js';
 import { SclWorkspaceManager } from './scl-workspace-manager.js';
+import { SclServiceRegistry } from './scl-service-registry.js';
 
 /**
  * Declaration of custom services - add your own service classes here.
@@ -41,6 +42,7 @@ export const SclModule: Module<SclServices, PartialLangiumServices & SclAddedSer
 };
 
 export const SclSharedModule: Module<LangiumSharedServices, PartialLangiumSharedServices> = {
+    ServiceRegistry: (services) => new SclServiceRegistry(services),
     workspace: {
         IndexManager: (services) => new SclIndexManager(services),
         WorkspaceManager: (services) => new SclWorkspaceManager(services)
