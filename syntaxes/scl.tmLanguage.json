@@ -76,7 +76,7 @@
               ]
             }
           },
-          "match": "(?i)\\b(function)\\s+(\"(\\w*)\")((|\\s*)((\\:)(\\s*|)(\\w*)(\\s))|)",
+          "match": "(?i)\\b(function)\\s+(\"([^\"]*)\")((|\\s*)((\\:)(\\s*|)(\\w*)(\\s))|)",
           "name": "storage.type.function.scl"
         },
         {
@@ -89,7 +89,7 @@
             "2": { "name": "entity.name.function.scl" },
             "3": { "name": "entity.name.function.scl" }
           },
-          "match": "(?i)\\b(function_block)\\s+(\"(\\w*)\")?",
+          "match": "(?i)\\b(function_block)\\s+(\"([^\"]*)\")?",
           "name": "storage.type.function.scl"
         },
         {
@@ -97,7 +97,7 @@
           "name": "storage.type.function.scl"
         },
         {
-          "match": "(\"(\\w+?)\")|\\#.*\\[\\d\\]|\\#\\w*(?=\\()",
+          "match": "(\"([^\"]?)\")|\\#.*\\[\\d\\]|\\#\\w*(?=\\()",
           "name": "entity.name.function.scl"
         },
         {
@@ -106,7 +106,7 @@
             "2": { "name": "entity.name.function.scl" },
             "3": { "name": "entity.name.function.scl" }
           },
-          "match": "(?i)\\b(data_block)\\s+(\"(\\w*)\")?",
+          "match": "(?i)\\b(data_block)\\s+(\"([^\"]*)\")?",
           "name": "storage.type.function.scl"
         },
         {
