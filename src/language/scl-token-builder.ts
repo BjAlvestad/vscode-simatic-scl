@@ -10,12 +10,12 @@ export class SclTokenBuilder extends DefaultTokenBuilder {
         const tokenTypes = super.buildTokens(grammar, options);
 
         if(isTokenTypeArray(tokenTypes)) {
-            // Regular mode just drops template literal middle & end
+            // Regular mode just drops middle and end of multi line comment
             const regularModeTokens = tokenTypes
-                .filter(token => !['ML_COMMENT_MIDDLE','ML_COMMENT_END'].includes(token.name));
-            // Template mode needs to exclude the '}' keyword
+                .filter(token => !['ML_COMMENT_CONTENT', 'ML_COMMENT_END'].includes(token.name));
+            // Comment mode  mode needs to exclude the '}' keyword
             const commentModeTokens = tokenTypes
-                .filter(token => !['*', '('].includes(token.name));
+                .filter(token => ['ML_COMMENT_START', 'ML_COMMENT_CONTENT','ML_COMMENT_END'].includes(token.name));
 
             const multiModeLexerDef: IMultiModeLexerDefinition = {
                 modes: {
