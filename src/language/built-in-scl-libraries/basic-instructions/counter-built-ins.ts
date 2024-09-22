@@ -1,5 +1,5 @@
 
-export namespace LegacyBuiltIns {
+export namespace CounterBuiltIns {
 
     export const uriMap: { [K: string]: string } = {
 

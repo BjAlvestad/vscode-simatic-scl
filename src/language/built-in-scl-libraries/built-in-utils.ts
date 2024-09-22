@@ -80,3 +80,14 @@ export function createGeneralFunctionBlock(name: string, inputs?: string[], outp
     END_FUNCTION_BLOCK
     `.trimStart();
 }
+
+/** TEMPLATE for XoxBuiltIns namespace
+ 
+export namespace BuiltIns {
+
+    export const uriMap: { [K: string]: string } = {
+
+    }
+}
+ 
+ */
