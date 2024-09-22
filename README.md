@@ -3,6 +3,9 @@
 This is an extension that provides an LSP for the SCL language.
 It is still in early development, and ***not ready for use***, but cross reference support for local variables, UDTs and FBs is already implemented.
 
+Since this extension is providing a language server, which has not been optimized yet, you should expect a performance impact.  
+If you are only interested in the syntax highlighting, which would give no performance impact, then use the extension [Gunders89.vscode-scl](https://marketplace.visualstudio.com/items?itemName=Gunders89.vscode-scl) instead. His extension also provides snippets, which this extension currently does not (although this extension will give scoped auto-complete, at a performance cost, which his does not).
+
 The following major things have not been implemented yet:
 
 - Several built in functions not yet added (but framework for built-ins and many functions were added in 0.0.4).
@@ -13,8 +16,7 @@ The following major things have not been implemented yet:
     - Program_Alarm ()
     - Get_Name
     - etc... See "Data type" in TIA Portal for full list of things that should be handled, in addition to "Instructions"
-- Parsing of tag declarations (in xml file), and thus also linking to tags.
-- Parsing of nested multi-line comments.
+
 - Assigning value to local function name (which is an allowed alternative to returning a value in SCL)
 - Basic cashing and optional work scope filtering was introduced in v0.0.5, but no effort has been put into performance optimization yet (so performance will be very poor on larger projects).
 - Syntax highlighting (currently only keywords are highlighted).
@@ -25,6 +27,17 @@ Any document with a linking error will get all its references recalculated on an
 Due to not supporting all built-in functions yet, and not parsing tags yet, multiple linking errors are expected.
 
 ## Changelog
+
+### v0.0.6
+
+- Add parsing of tag declarations (in xml file), and linking to them.
+- Add parsing of nested multi-line comments.
+- Update TextMade grammar for SCL instead of using the auto-generated one with only keywords.
+  - Used the TextMate grammar in [Gunders89 Siemens SCL extension found in his vscode-scl repo](https://github.com/Gunders89/vscode-scl) as starting point. Changes from that starting point is listed in the points below.
+  - Fixed TextMate grammar so that it also highlights nested comments correctly.
+  - Add highlighting for any character enclosed in double quotes, not just word chars, since TIA allows special characters in the name.
+  - Removed grammar for built in functions, since we are using a LSP, and will want to treat them same as normal functions outside of the TM Grammar.
+- Updated 6 npm packages, removing 1 moderate severity vulnerability.
 
 ### v0.0.5
 
