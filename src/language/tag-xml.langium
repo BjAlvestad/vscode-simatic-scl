@@ -1,7 +1,7 @@
 grammar TagXml
 import "./terminal"
 
-terminal TAG_COMMENT: /(?<=(<Text>))[^<]+(?=(<\/Text>))/;
+terminal TAG_COMMENT: /(?<=(<Text>=?))[^<]+(?=(<\/Text>))/;
 terminal XML_NAME: /(?<=(<Name>))[^<]+(?=(<\/Name>))/;
 terminal XML_CONSTANT_VALUE: /(?<=(<Value>))[^<]+(?=(<\/Value>))/;
 terminal LOGICAL_ADDRESS: /%[IQM][BWD]?\d+(.\d+)?/;
@@ -72,7 +72,7 @@ MultilingualTextItem:
     '<' 'MultilingualTextItem' 'ID=' tagId=DOUBLE_QUOTE_STRING  'CompositionName' '=' compositionName=DOUBLE_QUOTE_STRING '>'
         '<' 'AttributeList' '>'
             '<' 'Culture' '>' cultureLang=ID '-' cultureRegion=ID '<' '/' 'Culture' '>'
-            '<' 'Text' (('/' '>') | ('>' comment=TAG_COMMENT '<' '/' 'Text' '>'))
+            '<' 'Text' (('/' '>') | ('>' '='? comment=TAG_COMMENT '<' '/' 'Text' '>'))
         '<' '/' 'AttributeList' '>'
     '<' '/' 'MultilingualTextItem' '>'
 ;
