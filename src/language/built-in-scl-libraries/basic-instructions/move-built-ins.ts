@@ -70,4 +70,9 @@ export namespace MoveBuiltIns {
         '/builtinLibrary.LOWER_BOUND.scl': LOWER_BOUND,
         '/builtinLibrary.UPPER_BOUND.scl': UPPER_BOUND,
     }
+
+    /* List of other functions that have max 1 formal parameter */
+    export const functionsWithoutFormalParameter: Set<string> = new Set<string>([
+        'CountOfElements',
+    ]);
 }

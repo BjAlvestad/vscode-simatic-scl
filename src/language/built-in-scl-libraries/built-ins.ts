@@ -58,16 +58,12 @@ export namespace BuiltIns {
     //TODO: Remove later and instead implement general solution. **Any** function that only has
     // a single formal parameter is allowed to omit it. Also applies to user created functions.
     const functionsWithoutFormalParameter: Set<string> = new Set<string>([
-        // Built in CONVERT functions
+        ...TimerBuiltIns.functionsWithoutFormalParameter,
+        ...MoveBuiltIns.functionsWithoutFormalParameter,
         ...ConversionBuiltIns.functionsWithoutFormalParameter,
-        // Built in T_CONV functions (for converting date and time)
         ...DataAndTimeBuiltIns.functionsWithoutFormalParameter_T_CONV,
-        // Builtin functions with only an IN or OUT parameter
         ...DataAndTimeBuiltIns.functionsWithoutFormalParameter_other,
         ...StringAndCharBuiltIns.functionsWithoutFormalParameter,
-        // Builtin functions a single in, out of in_out parameter, but with special name
-        'RESET_TIMER',
-        'CountOfElements',
     ]);
     
     export function isBuiltInFunction(functionName: string): boolean {

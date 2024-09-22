@@ -16,4 +16,9 @@ export namespace TimerBuiltIns {
         '/builtinLibrary.TONR_TIME.scl': TONR_TIME,
         '/builtinLibrary.RESET_TIMER.scl': RESET_TIMER,
     }
+
+    /* List of other functions that have max 1 formal parameter */
+    export const functionsWithoutFormalParameter: Set<string> = new Set<string>([
+        'RESET_TIMER',
+    ]);
 }
