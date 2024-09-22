@@ -18,4 +18,14 @@ export namespace ComparatorBuiltIns {
         '/builtinLibrary.IS_NULL.scl': IS_NULL,
         '/builtinLibrary.NOT_NULL.scl': NOT_NULL,
     }
+
+    /* List of other functions that have max 1 formal parameter */
+    export const functionsWithoutFormalParameter: Set<string> = new Set<string>([
+        'TypeOf',
+        'TypeOfElements',
+        'IS_ARRAY',
+        
+        'IS_NULL',
+        'NOT_NULL',
+    ]);
 }

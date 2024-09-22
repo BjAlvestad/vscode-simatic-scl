@@ -14,4 +14,9 @@ export namespace StringAndCharBuiltIns {
         '/builtinLibrary.REPLACE.scl': REPLACE,
         '/builtinLibrary.ATH.scl': ATH,
     }
+
+    /* List of other functions that have max 1 formal parameter */
+    export const functionsWithoutFormalParameter: Set<string> = new Set<string>([
+        'LEN',
+    ]);
 }
