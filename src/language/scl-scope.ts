@@ -5,7 +5,7 @@ import { isDbBlock, isMemberCall, isSclBlock, isUdtRef, isVariableDeclaration, M
 import { inferType } from './type-system/infer.js';
 import { isGlobalDbBlockType, isInstanceDbBlockType, isStructType } from './type-system/descriptions.js';
 import { GetAllVarDecsFromModel } from './utils.js';
-import { isBuiltInFunctionWithoutParameters } from './built-in-scl-libraries/built-in-scl-library-functions.js'
+import { BuiltIns } from './built-in-scl-libraries/built-ins.js';
 import { SclServices } from './scl-module.js';
 
 export class SclScopeProvider extends DefaultScopeProvider {
@@ -77,7 +77,7 @@ export class SclScopeProvider extends DefaultScopeProvider {
                 let memberCallContainer = memberCall.$container;
                 if(isMemberCall(memberCallContainer)
                     && memberCallContainer.explicitOperationCall
-                    && !isBuiltInFunctionWithoutParameters(memberCallContainer.element.$refText)
+                    && !BuiltIns.isBuiltInFunctionWithoutParameters(memberCallContainer.element.$refText)
                     && memberCallContainer.element.ref?.name
                 ) {
                     const uri = AstUtils.findRootNode(memberCallContainer).$document!.uri.toString();

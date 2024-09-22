@@ -8,7 +8,7 @@ import {
 } from "langium";
 import { WorkspaceFolder } from 'vscode-languageserver';
 import { URI } from "vscode-uri";
-import * as builtinLibrary from './built-in-scl-libraries/built-in-scl-library-functions.js'
+import { BuiltIns } from "./built-in-scl-libraries/built-ins.js";
 import { LangiumSharedServices } from "langium/lsp";
 import { InitializeParams } from "vscode-languageclient";
 import fs from 'fs';
@@ -36,9 +36,9 @@ export class SclWorkspaceManager extends DefaultWorkspaceManager {
     ): Promise<void> {
         await super.loadAdditionalDocuments(folders, collector);
         // Load our library using the `builtin` URI schema
-        for (let key in builtinLibrary.uriMap) {
+        for (let key in BuiltIns.uriMap) {
             const fullUri = 'builtin://' + key;
-            collector(this.documentFactory.fromString(builtinLibrary.uriMap[key], URI.parse(fullUri)));
+            collector(this.documentFactory.fromString(BuiltIns.uriMap[key], URI.parse(fullUri)));
         }
     }
 
