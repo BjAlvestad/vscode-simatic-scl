@@ -1,6 +1,6 @@
 import { BuiltInsUtils } from "../built-ins-utils.js";
 
-export namespace TimerBuiltIns {   
+export module TimerBuiltIns {   
     // Timer operations:
     export const TP_TIME = BuiltInsUtils.createGeneralFunctionBlock('TP_TIME', ['IN : BOOL', 'PT : TIME'], ['Q : BOOL', 'ET : TIME'], undefined,);
     export const TON_TIME = BuiltInsUtils.createGeneralFunctionBlock('TON_TIME', ['IN : BOOL', 'PT : TIME'], ['Q : BOOL', 'ET : TIME'], undefined,);

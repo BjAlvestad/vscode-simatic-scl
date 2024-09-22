@@ -1,6 +1,6 @@
 import { BuiltInsUtils } from "../built-ins-utils.js";
 
-export namespace DataAndTimeBuiltIns {
+export module DataAndTimeBuiltIns {
     
     // Built in T_CONV functions (for converting date and time)
     

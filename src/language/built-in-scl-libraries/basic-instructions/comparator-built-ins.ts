@@ -1,6 +1,6 @@
 import { BuiltInsUtils } from "../built-ins-utils.js";
 
-export namespace ComparatorBuiltIns {
+export module ComparatorBuiltIns {
     export const TypeOf = BuiltInsUtils.createGeneralFunction('TypeOf', ['OPERAND : VARIANT'], undefined, undefined, 'ANY');
     export const TypeOfElements = BuiltInsUtils.createGeneralFunction('TypeOfElements', ['OPERAND : VARIANT'], undefined, undefined, 'ANY');
     export const IS_ARRAY = BuiltInsUtils.createGeneralFunction('IS_ARRAY', ['OPERAND : VARIANT'], undefined, undefined, 'BOOL');

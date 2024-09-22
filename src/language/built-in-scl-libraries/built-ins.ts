@@ -12,7 +12,7 @@ import { WordLogicBuiltIns } from "./basic-instructions/word-logic-built-ins.js"
 import { ShiftAndRotateBuiltIns } from "./basic-instructions/shift-and-rotate-built-ins.js";
 import { LegacyBuiltIns } from "./basic-instructions/legacy-built-ins.js";
 
-export namespace BuiltIns {
+export module BuiltIns {
     
     // *****************************
     // ****  Register builtins  ****

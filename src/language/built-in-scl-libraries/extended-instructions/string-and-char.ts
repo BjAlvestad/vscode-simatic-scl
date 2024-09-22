@@ -1,6 +1,6 @@
 import { BuiltInsUtils } from "../built-ins-utils.js";
 
-export namespace StringAndCharBuiltIns {
+export module StringAndCharBuiltIns {
     export const LEN = BuiltInsUtils.createInOutFunction('LEN', 'STRING', undefined, 'INT')
     export const CONCAT = BuiltInsUtils.createGeneralFunction('CONCAT', ['IN1 : STRING', 'IN2 : STRING'], undefined, undefined, 'STRING');
     export const FIND = BuiltInsUtils.createGeneralFunction('FIND', ['IN1 : STRING', 'IN2 : STRING'], undefined, undefined, 'INT');

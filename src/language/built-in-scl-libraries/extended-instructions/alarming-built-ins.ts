@@ -1,6 +1,6 @@
 import { BuiltInsUtils } from "../built-ins-utils.js";
 
-export namespace AlarmingBuiltIns {
+export module AlarmingBuiltIns {
     
     export const Ack_Alarms = BuiltInsUtils.createGeneralFunction(
         'Ack_Alarms',

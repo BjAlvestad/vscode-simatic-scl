@@ -1,7 +1,7 @@
 import { BuiltInsUtils } from "../built-ins-utils.js";
 
 
-export namespace MoveBuiltIns {
+export module MoveBuiltIns {
     // **** ROOT FOLDER: Move operations (under Basic Instructions) ****
     export const Deserialize = BuiltInsUtils.createGeneralFunction('Deserialize', ['SRC_ARRAY : ARRAY[*] of BYTE'], undefined, ['DEST_VARIABLE : ANY', 'POS : DINT'], 'INT');
     export const Serialize = BuiltInsUtils.createGeneralFunction('Serialize', ['SRC_VARIABLE : ANY'], undefined, ['DEST_ARRAY : ARRAY[*] of BYTE', 'POS : DINT'], 'INT');

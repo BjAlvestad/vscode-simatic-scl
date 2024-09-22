@@ -1,6 +1,6 @@
 import { BuiltInsUtils } from "../built-ins-utils.js";
 
-export namespace ConversionBuiltIns {
+export module ConversionBuiltIns {
     // Built in CONVERT functions
     
     export const BCD16_TO_INT = BuiltInsUtils.createConvertFunction('BCD16', 'INT');

@@ -1,5 +1,5 @@
 
-export namespace BuiltInsUtils {
+export module BuiltInsUtils {
 
     export function createConvertFunction(from: string, to: string): string {
         return `

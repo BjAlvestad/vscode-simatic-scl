@@ -2,7 +2,7 @@
 
 import { BuiltInsUtils } from "../built-ins-utils.js";
 
-export namespace BuiltIns {
+export module BuiltIns {
 
     export const uriMap: { [K: string]: string } = {
 
