@@ -1,12 +1,12 @@
-import { createGeneralFunction, createGeneralFunctionBlock } from "../built-in-utils.js";
+import { BuiltInsUtils } from "../built-ins-utils.js";
 
 export namespace TimerBuiltIns {   
     // Timer operations:
-    export const TP_TIME = createGeneralFunctionBlock('TP_TIME', ['IN : BOOL', 'PT : TIME'], ['Q : BOOL', 'ET : TIME'], undefined,);
-    export const TON_TIME = createGeneralFunctionBlock('TON_TIME', ['IN : BOOL', 'PT : TIME'], ['Q : BOOL', 'ET : TIME'], undefined,);
-    export const TOF_TIME = createGeneralFunctionBlock('TOF_TIME', ['IN : BOOL', 'PT : TIME'], ['Q : BOOL', 'ET : TIME'], undefined,);
-    export const TONR_TIME = createGeneralFunctionBlock('TONR_TIME', ['IN : BOOL', 'R : BOOL', 'PT : TIME'], ['Q : BOOL', 'ET : TIME'], undefined,);
-    export const RESET_TIMER = createGeneralFunction('RESET_TIMER', undefined, undefined, ['TIMER : TIME'],'Void')  // Actually not TIME type but IEC_TIMER, TON_TIME etc.
+    export const TP_TIME = BuiltInsUtils.createGeneralFunctionBlock('TP_TIME', ['IN : BOOL', 'PT : TIME'], ['Q : BOOL', 'ET : TIME'], undefined,);
+    export const TON_TIME = BuiltInsUtils.createGeneralFunctionBlock('TON_TIME', ['IN : BOOL', 'PT : TIME'], ['Q : BOOL', 'ET : TIME'], undefined,);
+    export const TOF_TIME = BuiltInsUtils.createGeneralFunctionBlock('TOF_TIME', ['IN : BOOL', 'PT : TIME'], ['Q : BOOL', 'ET : TIME'], undefined,);
+    export const TONR_TIME = BuiltInsUtils.createGeneralFunctionBlock('TONR_TIME', ['IN : BOOL', 'R : BOOL', 'PT : TIME'], ['Q : BOOL', 'ET : TIME'], undefined,);
+    export const RESET_TIMER = BuiltInsUtils.createGeneralFunction('RESET_TIMER', undefined, undefined, ['TIMER : TIME'],'Void')  // Actually not TIME type but IEC_TIMER, TON_TIME etc.
     
     export const uriMap: { [K: string]: string } = {
         // Bit logic operations:

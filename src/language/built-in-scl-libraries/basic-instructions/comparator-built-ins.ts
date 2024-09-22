@@ -1,20 +1,20 @@
-import { createGeneralFunction } from "../built-in-utils.js";
+import { BuiltInsUtils } from "../built-ins-utils.js";
 
 export namespace ComparatorBuiltIns {
-    export const TypeOf = createGeneralFunction('TypeOf', ['OPERAND : VARIANT'], undefined, undefined, 'ANY');
-    export const TypeOfElements = createGeneralFunction('TypeOfElements', ['OPERAND : VARIANT'], undefined, undefined, 'ANY');
-    export const IS_ARRAY = createGeneralFunction('IS_ARRAY', ['OPERAND : VARIANT'], undefined, undefined, 'BOOL');
+    export const TypeOf = BuiltInsUtils.createGeneralFunction('TypeOf', ['OPERAND : VARIANT'], undefined, undefined, 'ANY');
+    export const TypeOfElements = BuiltInsUtils.createGeneralFunction('TypeOfElements', ['OPERAND : VARIANT'], undefined, undefined, 'ANY');
+    export const IS_ARRAY = BuiltInsUtils.createGeneralFunction('IS_ARRAY', ['OPERAND : VARIANT'], undefined, undefined, 'BOOL');
     // Missing: TypeOfDB
     
     // Not listed under any category in TIA Portal:
-    export const IS_NULL = createGeneralFunction('IS_NULL', ['OPERAND : VARIANT'], undefined, undefined, 'BOOL');
-    export const NOT_NULL = createGeneralFunction('NOT_NULL', ['OPERAND : VARIANT'], undefined, undefined, 'BOOL');
+    export const IS_NULL = BuiltInsUtils.createGeneralFunction('IS_NULL', ['OPERAND : VARIANT'], undefined, undefined, 'BOOL');
+    export const NOT_NULL = BuiltInsUtils.createGeneralFunction('NOT_NULL', ['OPERAND : VARIANT'], undefined, undefined, 'BOOL');
 
     export const uriMap: { [K: string]: string } = {
         '/builtinLibrary.TypeOf.scl': TypeOf,
         '/builtinLibrary.TypeOfElements.scl': TypeOfElements,
         '/builtinLibrary.IS_ARRAY.scl': IS_ARRAY,
-        
+
         '/builtinLibrary.IS_NULL.scl': IS_NULL,
         '/builtinLibrary.NOT_NULL.scl': NOT_NULL,
     }
