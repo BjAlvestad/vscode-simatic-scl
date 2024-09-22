@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import * as builtinLibrary from '../language/built-in-scl-libraries/built-in-scl-library-functions.js';
+import { BuiltIns } from '../language/built-in-scl-libraries/built-ins.js';
 
 export class SclLibraryFileSystemProvider implements vscode.FileSystemProvider {
 
@@ -13,7 +13,7 @@ export class SclLibraryFileSystemProvider implements vscode.FileSystemProvider {
 
     stat(uri: vscode.Uri): vscode.FileStat {
         const date = Date.now();
-        const library = builtinLibrary.uriMap[uri.path];
+        const library = BuiltIns.uriMap[uri.path];
         return {
             ctime: date,
             mtime: date,
@@ -24,7 +24,7 @@ export class SclLibraryFileSystemProvider implements vscode.FileSystemProvider {
 
     readFile(uri: vscode.Uri): Uint8Array {
         // Return different libraries based on the URI
-        const library = builtinLibrary.uriMap[uri.path];
+        const library = BuiltIns.uriMap[uri.path];
         return new Uint8Array(Buffer.from(library));
     }
 
