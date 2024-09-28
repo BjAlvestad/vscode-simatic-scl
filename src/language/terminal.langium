@@ -58,7 +58,6 @@ DataType returns string:
     | 'OPC_UA_LocalizedTextEncodingMask'
     // Misc having do default value or elements under it 
     | 'PID_GradientEstimation' | 'PID_GradientParams' | 'PID_StandardDeviation'
-    | 'Program_Alarm'
 ;
 
 StringTypeName returns string:
