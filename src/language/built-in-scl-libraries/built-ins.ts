@@ -14,6 +14,7 @@ import { LegacyBuiltIns } from "./basic-instructions/legacy-built-ins.js";
 import { TypeBuiltIns } from "./types/type-built-ins.js";
 import { DiagnosticsBuiltIns } from "./extended-instructions/diagnostics-built-ins.js";
 import { PidControlBuiltIns } from "./technology/pid-control-built-ins.js";
+import { OpenUserCommunicationBuiltIns } from "./communication/open-user-communication-built-ins.js";
 
 export module BuiltIns {
     
@@ -50,7 +51,7 @@ export module BuiltIns {
         ...PidControlBuiltIns.uriMap,
     
         // ** Communication **
-    
+        ...OpenUserCommunicationBuiltIns.uriMap,
     
         // ** Optional packages **
     
