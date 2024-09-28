@@ -44,7 +44,7 @@ FbBlock:
 ;
 
 FcBlock:
-    type='FUNCTION' ( name=DOUBLE_QUOTE_STRING | name=ID) (':' returnType=TypeName)?
+    type='FUNCTION' ( name=DOUBLE_QUOTE_STRING | name=ID) (':' returnType=(TypeName | DOUBLE_QUOTE_STRING | ID))?
         blockMetaData=BlockMetadata?
         decBlocks+=DecBlocks*
         ('BEGIN'
