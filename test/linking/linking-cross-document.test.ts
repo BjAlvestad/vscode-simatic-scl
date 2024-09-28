@@ -9,6 +9,7 @@ let services: ReturnType<typeof createSclServices>;
 let parse:    ReturnType<typeof parseHelper<Model>>;
 let document: LangiumDocument<Model> | undefined;
 let otherDocument: LangiumDocument<Model> | undefined;
+let thirdDocument: LangiumDocument<Model> | undefined;
 
 beforeAll(async () => {
     services = createSclServices(EmptyFileSystem);
@@ -21,6 +22,7 @@ beforeAll(async () => {
 afterEach(async () => {
     document && clearDocuments(services.shared, [ document ]);
     otherDocument && clearDocuments(services.shared, [ otherDocument ]);
+    thirdDocument && clearDocuments(services.shared, [ thirdDocument ]);
 });
 
 describe('Linking cross document tests', () => {
@@ -162,6 +164,92 @@ describe('Linking cross document tests', () => {
             ref.name:
                 myLocalVar
                 myOtherVar
+        `);
+    });
+
+    test('linking to element in global DB from FB', async () => {
+        thirdDocument = await parse(`
+            FUNCTION_BLOCK "FB_MyFB3"
+            VERSION : 0.1
+            
+            VAR_IN
+                xMyInput : DINT;
+            END_VAR
+
+            BEGIN
+
+            END_FUNCTION_BLOCK
+        `, {documentUri: "file:///FB_MyFB3.scl"});
+
+        otherDocument = await parse(`
+            DATA_BLOCK "gb_MyGlobalDb"
+            NON_RETAIN
+
+            VAR 
+                myFunctionInstance : FB_MyFB3;
+            END_VAR
+
+            BEGIN
+
+            END_DATA_BLOCK
+        `, {documentUri: "file:///gb_MyGlobalDb.scl"});
+
+        document = await parse(`
+            FUNCTION_BLOCK "FB_MyFB2"
+            VERSION : 0.1
+            
+            VAR 
+                myLocalVar : DINT;
+            END_VAR
+
+            BEGIN
+
+            #myLocalVar;
+            "gb_MyGlobalDb".myFunctionInstance;
+            "gb_MyGlobalDb".myFunctionInstance[#myLocalVar];
+            "gb_MyGlobalDb".myFunctionInstance[#myLocalVar](xMyInput := 3);
+
+            END_FUNCTION_BLOCK
+        `, {documentUri: "file:///FB_MyFB2.scl"});
+
+        const fbDockDirectParseResults = document?.parseResult.value;
+        const element0 = fbDockDirectParseResults.elements[0] as MemberCall;
+        const element1 = fbDockDirectParseResults.elements[1] as MemberCall;
+        const element1Prev = element1.previous as MemberCall;
+        const element2 = fbDockDirectParseResults.elements[2] as MemberCall;
+        const element2Prev = element2.previous as MemberCall;
+        const element2Index = element2.indexes[0] as MemberCall;
+        const element3 = fbDockDirectParseResults.elements[3] as MemberCall;
+        const element3Prev = element3.previous as MemberCall;
+
+        console.log('\n\nelement2:\n')
+        console.log(element2)
+        // console.log('\n\nelement3:\n')
+        // console.log(element3)
+        expect(
+            checkDocumentValid(document) || s`
+                refText:
+                    #${element0.element?.$refText}
+                    ${element1Prev.element?.$refText}.${element1.element?.$refText}
+                    ${element2Prev.element?.$refText}.${element2.element?.$refText}[#${element2Index.element.$refText}]
+                    ${element3Prev.element?.$refText}.${element3.element?.$refText}
+                ref.name:
+                    #${element0.element?.ref?.name}
+                    ${element1Prev.element?.ref?.name}.${element1.element?.ref?.name}
+                    ${element2Prev.element?.ref?.name}.${element2.element?.ref?.name}[#${element2Index.element.ref?.name}]
+                    ${element3Prev.element?.ref?.name}.${element3.element?.ref?.name}
+            `
+        ).toBe(s`
+            refText:
+                #myLocalVar
+                "gb_MyGlobalDb".myFunctionInstance
+                "gb_MyGlobalDb".myFunctionInstance[#myLocalVar]
+                "gb_MyGlobalDb".myFunctionInstance[#myLocalVar](xMyInput := 3)
+            ref.name:
+                #myLocalVar
+                "gb_MyGlobalDb".myFunctionInstance
+                "gb_MyGlobalDb".myFunctionInstance[#myLocalVar]
+                "gb_MyGlobalDb".myFunctionInstance[#myLocalVar](xMyInput := 3)
         `);
     });
 
