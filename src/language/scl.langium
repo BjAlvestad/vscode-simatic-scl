@@ -8,7 +8,7 @@ entry Model:
 SclBlock: DbBlock | UdtBlock | FbBlock | FcBlock | ObBlock ;
 
 DbBlock:
-    type='DATA_BLOCK' ( name=DOUBLE_QUOTE_STRING | name=ID) (':' returnType=TypeName)?
+    type='DATA_BLOCK' ( name=DOUBLE_QUOTE_STRING | name=ID)
         blockMetaData=BlockMetadata?
         isNonRetain?='NON_RETAIN'?
         ((isArrayDb?='ARRAY' '[' arrayRange=ArrayRange ']' 'OF')? (dbFromUdt=[SclBlock:DOUBLE_QUOTE_STRING] | dbFromBuiltInFunction=ID) ';'?)?
@@ -20,7 +20,7 @@ DbBlock:
 ;
 
 UdtBlock:
-    type=TypeKeywordName ( name=DOUBLE_QUOTE_STRING | name=ID) (':' returnType=TypeName)?
+    type=TypeKeywordName ( name=DOUBLE_QUOTE_STRING | name=ID)
         blockMetaData=BlockMetadata?
         isNonRetain?='NON_RETAIN'?
         (
