@@ -20,7 +20,7 @@ DbBlock:
 ;
 
 UdtBlock:
-    type='TYPE' ( name=DOUBLE_QUOTE_STRING | name=ID) (':' returnType=TypeName)?
+    type=TypeKeywordName ( name=DOUBLE_QUOTE_STRING | name=ID) (':' returnType=TypeName)?
         blockMetaData=BlockMetadata?
         isNonRetain?='NON_RETAIN'?
         (
@@ -371,6 +371,7 @@ CaseStatement:
 
 KeywordsAllowedElsewhere returns string:
     RetainKeywordName
+    | TypeKeywordName
 ;
 
 // Declaration/assignment for elementary data types
@@ -389,6 +390,7 @@ fragment DateAndTime returns string:
 ;
 
 RetainKeywordName returns string: 'Retain';
+TypeKeywordName returns string: 'TYPE';
 
 BlockEnd returns string:
     'END_FUNCTION_BLOCK' |
