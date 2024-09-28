@@ -38,16 +38,6 @@ export module TypeBuiltIns {
     // - PIP
     // - PORT
     // - RTM
-    // Single line date
-    // - Date
-    // - Date_And_Time
-    // - LDT            (LDT#1970-01-01-00:00:00)
-    // - LTime          (LT#0ns)
-    // - LTime_Of_Day   (LTOD#00:00:00)
-    // - LWord          (16#0)
-    // - S5Time         (S5T#0ms)
-    // - Time           (T#0ms)
-    // - Time_Of_Day        (TOD#00:00:00)
     // The following has no default value or elements under it
     // - PID_GradientEstimation
     // - PID_GradientParams

@@ -28,11 +28,16 @@ DataType returns string:
     | 'BYTE' | 'WORD' | 'DWORD' | 'LWORD'  // LWORD is not not supported by S7-300
     | 'SINT' | 'INT' | 'DINT' | 'LINT' | 'USINT' | 'UINT' | 'UDINT' | 'ULINT'  // Only INT and DINT are supported by S7-300
     | 'REAL' | 'LREAL'
-    | 'S5TIME' | 'TIME' | 'LTIME'
-    | 'DATE'   | 'TIME_OF_DAY' | 'TOD' | 'LTOD' | 'LTIME_OF_DAY'
     | 'CHAR'  | 'WCHAR'
-    // Complex - Data and time
-    | 'DT' | 'DATE_AND_TIME' | 'LDT' | 'DATE_AND_LTIME'
+    // Data and time
+    | 'Date'            // (D#1990-01-01)
+    | 'Date_And_Time'   // (DT#1990-01-01-00:00:00)
+    | 'LDT'             // (LDT#1970-01-01-00:00:00)
+    | 'LTime'           // (LT#0ns)
+    | 'LTime_Of_Day'    // (LTOD#00:00:00)
+    | 'S5Time'          // (S5T#0ms)
+    | 'Time'            // (T#0ms)
+    | 'Time_Of_Day'     // (TOD#00:00:00)
     // Misc
     | 'NULL'
     | 'DB_ANY'
