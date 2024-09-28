@@ -1,0 +1,22 @@
+FUNCTION_BLOCK "FB_TestArrayOfFb"
+
+VAR
+    myIndex : INT;
+    myDirect : "FB_SimpleBlockWithInputs";
+    myArray : ARRAY [1..10] of "FB_SimpleBlockWithInputs";
+END_VAR
+
+BEGIN
+
+#myArray;
+#myArray[1];
+#myArray[1].otherVar1;
+#myArray[1]();  // Ok
+#myArray[1](IN := 123);  // Ok
+#myArray[#myIndex]();  // Problem with #myIndex, due to content of `[]` gets same scope as content of ()/
+#myArray[#myIndex](IN := 321);  // Parameter/argunemnt ok. Problem with #myIndex, due to same reason as above.
+
+#myDirect;
+#myDirect.otherVar1();
+
+END_FUNCTION_BLOCK

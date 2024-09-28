@@ -75,6 +75,7 @@ export class SclScopeProvider extends DefaultScopeProvider {
             if (!previous) {
                 // This makes auto complete work for formal parameter in function call. But still get red underline for linking error
                 let memberCallContainer = memberCall.$container;
+                //BUG: When we have a call [](), the elements inside [] also get scoped to the parameters of the function, and not the local variables
                 if(isMemberCall(memberCallContainer)
                     && memberCallContainer.explicitOperationCall
                     && !BuiltIns.isBuiltInFunctionWithoutParameters(memberCallContainer.element.$refText)
