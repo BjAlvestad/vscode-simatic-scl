@@ -223,9 +223,9 @@ MemberCall infers Expression:
         '.' '#'?
         (element=[NamedElement:ID] | element=[NamedElement:DOUBLE_QUOTE_STRING] | element=[NamedElement:KeywordsAllowedElsewhere])
         '^'?
-		(arrayAccessCall?='[' ( indexes+=Expression (',' indexes+=Expression)* )?']')?
-        (explicitOperationCall?=PARAN_OPEN(arguments+=Expression (',' arguments+=Expression)*)?')')?
+        (arrayAccessCall?='[' ( indexes+=Expression (',' indexes+=Expression)* )?']')?
     )
+    | (explicitOperationCall?=PARAN_OPEN(arguments+=Expression (',' arguments+=Expression)*)?')')
     // Alternatively memory area access, where `.` is part of terminal.
     | (memoryArea=MEMORY_AREA)
     )*
@@ -250,7 +250,6 @@ FeatureCall infers Expression:
     '^'?
     // Optional array access and/or function call after referencing an element
     (arrayAccessCall?='[' ( indexes+=Expression (',' indexes+=Expression)* )?']')?
-    (explicitOperationCall?=PARAN_OPEN(arguments+=Expression (',' arguments+=Expression)*)?')')?
 ;
 
 DbProgramElement:

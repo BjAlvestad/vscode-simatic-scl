@@ -77,7 +77,7 @@ export class SclScopeProvider extends DefaultScopeProvider {
                 let memberCallContainer = memberCall.$container;
                 //BUG: When we have a call [](), the elements inside [] also get scoped to the parameters of the function, and not the local variables
                 if(isMemberCall(memberCallContainer)
-                    && memberCallContainer.explicitOperationCall
+                    && memberCall.$containerProperty === 'explicitOperationCall'  // To prevent this getting applied when inside array
                     && !BuiltIns.isBuiltInFunctionWithoutParameters(memberCallContainer.element.$refText)
                     && memberCallContainer.element.ref?.name
                 ) {
