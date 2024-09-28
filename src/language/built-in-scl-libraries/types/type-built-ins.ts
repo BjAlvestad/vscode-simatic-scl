@@ -273,7 +273,6 @@ export module TypeBuiltIns {
 
     Functions TO BE ADDED:
 
-    ReadFromArrayDBL
     TRCV_C
     TSEND_C
 

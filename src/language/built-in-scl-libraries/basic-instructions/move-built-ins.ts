@@ -1,4 +1,6 @@
+import { BuiltInFunction } from "../built-in-function.js";
 import { BuiltInsUtils } from "../built-ins-utils.js";
+import { VariableDeclarationLine } from "../variable-declaration-line.js";
 
 
 export module MoveBuiltIns {
@@ -24,7 +26,39 @@ export module MoveBuiltIns {
     // ** SUB FOLDER: Array DB **
     // Missing: ReadFromArrayDB
     // Missing: WriteToArrayDB
-    // Missing: ReadFromArrayDBL
+    function createReadFromArrayDBL() {
+
+        return new BuiltInFunction(
+            'ReadFromArrayDBL',
+            'FunctionBlock',
+            '1.2',
+            '',
+            // 'Read from ARRAY data block in load memory',
+            [
+                new VariableDeclarationLine('req', 'Bool', 'false', ''),
+                new VariableDeclarationLine('db', 'DB_ANY', '0', ''),
+                new VariableDeclarationLine('index', 'DInt', '0', ''),
+            ],
+            [
+                new VariableDeclarationLine('busy', 'Bool', 'false', ''),
+                new VariableDeclarationLine('done', 'Bool', 'false', ''),
+                new VariableDeclarationLine('error', 'Int', '0', ''),
+            ],
+            [
+                new VariableDeclarationLine('value', 'Variant'),
+            ],
+            [
+                new VariableDeclarationLine('header', 'DBHeader', ''),
+                new VariableDeclarationLine('state', 'USInt', '0'),
+                new VariableDeclarationLine('internal_req', 'Bool', 'false'),
+                new VariableDeclarationLine('perfect', 'Bool', 'false'),
+                new VariableDeclarationLine('index_copy', 'DInt', '0'),
+                new VariableDeclarationLine('dbref', 'VAREF', ''),
+                new VariableDeclarationLine('dstref', 'VAREF', ''),
+
+            ]
+        ).toString();
+    }
     // Missing: WriteToArrayDBL
     
     // ** SUB FOLDER: Read / Write memory **
@@ -63,7 +97,9 @@ export module MoveBuiltIns {
         '/builtinLibrary.SCATTER_BLK.scl': SCATTER_BLK,
         '/builtinLibrary.GATHER.scl': GATHER,
         '/builtinLibrary.GATHER_BLK.scl': GATHER_BLK,
-
+        
+        '/builtinLibrary.ReadFromArrayDB.scl': createReadFromArrayDBL(),
+        
         '/builtinLibrary.VariantGet.scl': VariantGet,
         '/builtinLibrary.VariantPut.scl': VariantPut,
         '/builtinLibrary.CountOfElements.scl': CountOfElements,
