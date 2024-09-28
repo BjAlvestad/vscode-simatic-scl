@@ -7,13 +7,13 @@ export module DataAndTimeBuiltIns {
     export const BYTE_TO_DATE = BuiltInsUtils.createConvertFunction('BYTE', 'DATE');
     export const BYTE_TO_LDT = BuiltInsUtils.createConvertFunction('BYTE', 'LDT');
     export const BYTE_TO_LTIME = BuiltInsUtils.createConvertFunction('BYTE', 'LTIME');
-    export const BYTE_TO_LTOD = BuiltInsUtils.createConvertFunction('BYTE', 'LTOD');
+    export const BYTE_TO_LTOD = BuiltInsUtils.createConvertFunction('BYTE', 'LTime_Of_Day', 'BYTE_TO_LTOD');
     export const BYTE_TO_TIME = BuiltInsUtils.createConvertFunction('BYTE', 'TIME');
-    export const BYTE_TO_TOD = BuiltInsUtils.createConvertFunction('BYTE', 'TOD');
+    export const BYTE_TO_TOD = BuiltInsUtils.createConvertFunction('BYTE', 'Time_Of_Day', 'BYTE_TO_TOD');
     
     export const DATE_TO_BYTE = BuiltInsUtils.createConvertFunction('DATE', 'BYTE');
     export const DATE_TO_DINT = BuiltInsUtils.createConvertFunction('DATE', 'DINT');
-    export const DATE_TO_DT = BuiltInsUtils.createConvertFunction('DATE', 'DT');
+    export const DATE_TO_DT = BuiltInsUtils.createConvertFunction('DATE', 'Date_And_Time', 'DATE_TO_DT');
     export const DATE_TO_DTL = BuiltInsUtils.createConvertFunction('DATE', 'DTL');
     export const DATE_TO_DWORD = BuiltInsUtils.createConvertFunction('DATE', 'DWORD');
     export const DATE_TO_INT = BuiltInsUtils.createConvertFunction('DATE', 'INT');
@@ -30,49 +30,49 @@ export module DataAndTimeBuiltIns {
     export const DINT_TO_DATE = BuiltInsUtils.createConvertFunction('DINT', 'DATE');
     export const DINT_TO_LDT = BuiltInsUtils.createConvertFunction('DINT', 'LDT');
     export const DINT_TO_LTIME = BuiltInsUtils.createConvertFunction('DINT', 'LTIME');
-    export const DINT_TO_LTOD = BuiltInsUtils.createConvertFunction('DINT', 'LTOD');
+    export const DINT_TO_LTOD = BuiltInsUtils.createConvertFunction('DINT', 'LTime_Of_Day', 'DINT_TO_LTOD');
     export const DINT_TO_TIME = BuiltInsUtils.createConvertFunction('DINT', 'TIME');
-    export const DINT_TO_TOD = BuiltInsUtils.createConvertFunction('DINT', 'TOD');
+    export const DINT_TO_TOD = BuiltInsUtils.createConvertFunction('DINT', 'Time_Of_Day');
     
-    export const DT_TO_DATE = BuiltInsUtils.createConvertFunction('DT', 'DATE');
-    export const DT_TO_DTL = BuiltInsUtils.createConvertFunction('DT', 'DTL');
-    export const DT_TO_LDT = BuiltInsUtils.createConvertFunction('DT', 'LDT');
-    export const DT_TO_LTOD = BuiltInsUtils.createConvertFunction('DT', 'LTOD');
-    export const DT_TO_TOD = BuiltInsUtils.createConvertFunction('DT', 'TOD');
+    export const DT_TO_DATE = BuiltInsUtils.createConvertFunction('Date_And_Time', 'DATE', 'DT_TO_DATE');
+    export const DT_TO_DTL = BuiltInsUtils.createConvertFunction('Date_And_Time', 'DTL', 'DT_TO_DTL');
+    export const DT_TO_LDT = BuiltInsUtils.createConvertFunction('Date_And_Time', 'LDT', 'DT_TO_LDT');
+    export const DT_TO_LTOD = BuiltInsUtils.createConvertFunction('Date_And_Time', 'LTime_Of_Day', 'DT_TO_LTOD');
+    export const DT_TO_TOD = BuiltInsUtils.createConvertFunction('Date_And_Time', 'Time_Of_Day', 'DT_TO_TOD');
     
     export const DTL_TO_DATE = BuiltInsUtils.createConvertFunction('DTL', 'DATE');
-    export const DTL_TO_DTL = BuiltInsUtils.createConvertFunction('DTL', 'DT');
+    export const DTL_TO_DTL = BuiltInsUtils.createConvertFunction('DTL', 'Date_And_Time', 'DTL_TO_DTL');
     export const DTL_TO_LDT = BuiltInsUtils.createConvertFunction('DTL', 'LDT');
-    export const DTL_TO_LTOD = BuiltInsUtils.createConvertFunction('DTL', 'LTOD');
-    export const DTL_TO_TOD = BuiltInsUtils.createConvertFunction('DTL', 'TOD');
+    export const DTL_TO_LTOD = BuiltInsUtils.createConvertFunction('DTL', 'LTime_Of_Day', 'DTL_TO_LTOD');
+    export const DTL_TO_TOD = BuiltInsUtils.createConvertFunction('DTL', 'Time_Of_Day', 'DTL_TO_TOD');
     
     export const DWORD_TO_DATE = BuiltInsUtils.createConvertFunction('DWORD', 'DATE');
     export const DWORD_TO_LDT = BuiltInsUtils.createConvertFunction('DWORD', 'LDT');
     export const DWORD_TO_LTIME = BuiltInsUtils.createConvertFunction('DWORD', 'LTIME');
-    export const DWORD_TO_LTOD = BuiltInsUtils.createConvertFunction('DWORD', 'LTOD');
+    export const DWORD_TO_LTOD = BuiltInsUtils.createConvertFunction('DWORD', 'LTime_Of_Day', 'DWORD_TO_LTOD');
     export const DWORD_TO_TIME = BuiltInsUtils.createConvertFunction('DWORD', 'TIME');
-    export const DWORD_TO_TOD = BuiltInsUtils.createConvertFunction('DWORD', 'TOD');
+    export const DWORD_TO_TOD = BuiltInsUtils.createConvertFunction('DWORD', 'Time_Of_Day', 'DWORD_TO_TOD');
     
     export const INT_TO_DATE = BuiltInsUtils.createConvertFunction('INT', 'DATE');
     export const INT_TO_LDT = BuiltInsUtils.createConvertFunction('INT', 'LDT');
     export const INT_TO_LTIME = BuiltInsUtils.createConvertFunction('INT', 'LTIME');
-    export const INT_TO_LTOD = BuiltInsUtils.createConvertFunction('INT', 'LTOD');
+    export const INT_TO_LTOD = BuiltInsUtils.createConvertFunction('INT', 'LTime_Of_Day', 'INT_TO_LTOD');
     export const INT_TO_TIME = BuiltInsUtils.createConvertFunction('INT', 'TIME');
-    export const INT_TO_TOD = BuiltInsUtils.createConvertFunction('INT', 'TOD');
+    export const INT_TO_TOD = BuiltInsUtils.createConvertFunction('INT', 'Time_Of_Day', 'INT_TO_TOD');
     
     export const LDT_TO_BYTE = BuiltInsUtils.createConvertFunction('LDT', 'BYTE');
     export const LDT_TO_DATE = BuiltInsUtils.createConvertFunction('LDT', 'DATE');
     export const LDT_TO_DINT = BuiltInsUtils.createConvertFunction('LDT', 'DINT');
-    export const LDT_TO_DT = BuiltInsUtils.createConvertFunction('LDT', 'DT');
+    export const LDT_TO_DT = BuiltInsUtils.createConvertFunction('LDT', 'Date_And_Time', 'LDT_TO_DT');
     export const LDT_TO_DTL = BuiltInsUtils.createConvertFunction('LDT', 'DTL');
     export const LDT_TO_DWORD = BuiltInsUtils.createConvertFunction('LDT', 'DWORD');
     export const LDT_TO_INT = BuiltInsUtils.createConvertFunction('LDT', 'INT');
     export const LDT_TO_LINT = BuiltInsUtils.createConvertFunction('LDT', 'LINT');
     export const LDT_TO_LTIME = BuiltInsUtils.createConvertFunction('LDT', 'LTIME');
-    export const LDT_TO_LTOD = BuiltInsUtils.createConvertFunction('LDT', 'LTOD');
+    export const LDT_TO_LTOD = BuiltInsUtils.createConvertFunction('LDT', 'LTime_Of_Day', 'LDT_TO_LTOD');
     export const LDT_TO_LWORD = BuiltInsUtils.createConvertFunction('LDT', 'LWORD');
     export const LDT_TO_SINT = BuiltInsUtils.createConvertFunction('LDT', 'SINT');
-    export const LDT_TO_TOD = BuiltInsUtils.createConvertFunction('LDT', 'TOD');
+    export const LDT_TO_TOD = BuiltInsUtils.createConvertFunction('LDT', 'Time_Of_Day', 'LDT_TO_TOD');
     export const LDT_TO_UDINT = BuiltInsUtils.createConvertFunction('LDT', 'UDINT');
     export const LDT_TO_UINT = BuiltInsUtils.createConvertFunction('LDT', 'UINT');
     export const LDT_TO_ULINT = BuiltInsUtils.createConvertFunction('LDT', 'ULINT');
@@ -82,9 +82,9 @@ export module DataAndTimeBuiltIns {
     export const LINT_TO_DATE = BuiltInsUtils.createConvertFunction('LINT', 'DATE');
     export const LINT_TO_LDT = BuiltInsUtils.createConvertFunction('LINT', 'LDT');
     export const LINT_TO_LTIME = BuiltInsUtils.createConvertFunction('LINT', 'LTIME');
-    export const LINT_TO_LTOD = BuiltInsUtils.createConvertFunction('LINT', 'LTOD');
+    export const LINT_TO_LTOD = BuiltInsUtils.createConvertFunction('LINT', 'LTime_Of_Day', 'LINT_TO_LTOD');
     export const LINT_TO_TIME = BuiltInsUtils.createConvertFunction('LINT', 'TIME');
-    export const LINT_TO_TOD = BuiltInsUtils.createConvertFunction('LINT', 'TOD');
+    export const LINT_TO_TOD = BuiltInsUtils.createConvertFunction('LINT', 'Time_Of_Day', 'LINT_TO_TOD');
     
     export const LTIME_TO_BYTE = BuiltInsUtils.createConvertFunction('LTIME', 'BYTE');
     export const LTIME_TO_DINT = BuiltInsUtils.createConvertFunction('LTIME', 'DINT');
@@ -92,7 +92,7 @@ export module DataAndTimeBuiltIns {
     export const LTIME_TO_INT = BuiltInsUtils.createConvertFunction('LTIME', 'INT');
     export const LTIME_TO_LDT = BuiltInsUtils.createConvertFunction('LTIME', 'LDT');
     export const LTIME_TO_LINT = BuiltInsUtils.createConvertFunction('LTIME', 'LINT');
-    export const LTIME_TO_LTOD = BuiltInsUtils.createConvertFunction('LTIME', 'LTOD');
+    export const LTIME_TO_LTOD = BuiltInsUtils.createConvertFunction('LTIME', 'LTime_Of_Day', 'LTIME_TO_LTOD');
     export const LTIME_TO_LWORD = BuiltInsUtils.createConvertFunction('LTIME', 'LWORD');
     export const LTIME_TO_S5TIME = BuiltInsUtils.createConvertFunction('LTIME', 'S5TIME');
     export const LTIME_TO_SINT = BuiltInsUtils.createConvertFunction('LTIME', 'SINT');
@@ -103,30 +103,30 @@ export module DataAndTimeBuiltIns {
     export const LTIME_TO_USINT = BuiltInsUtils.createConvertFunction('LTIME', 'USINT');
     export const LTIME_TO_WORD = BuiltInsUtils.createConvertFunction('LTIME', 'WORD');
     
-    export const LTOD_TO_BYTE = BuiltInsUtils.createConvertFunction('LTOD', 'BYTE');
-    export const LTOD_TO_DINT = BuiltInsUtils.createConvertFunction('LTOD', 'DINT');
-    export const LTOD_TO_DT = BuiltInsUtils.createConvertFunction('LTOD', 'DT');
-    export const LTOD_TO_DTL = BuiltInsUtils.createConvertFunction('LTOD', 'DTL');
-    export const LTOD_TO_DWORD = BuiltInsUtils.createConvertFunction('LTOD', 'DWORD');
-    export const LTOD_TO_INT = BuiltInsUtils.createConvertFunction('LTOD', 'INT');
-    export const LTOD_TO_LDT = BuiltInsUtils.createConvertFunction('LTOD', 'LDT');
-    export const LTOD_TO_LINT = BuiltInsUtils.createConvertFunction('LTOD', 'LINT');
-    export const LTOD_TO_LTIME = BuiltInsUtils.createConvertFunction('LTOD', 'LTIME');
-    export const LTOD_TO_LWORD = BuiltInsUtils.createConvertFunction('LTOD', 'LWORD');
-    export const LTOD_TO_SINT = BuiltInsUtils.createConvertFunction('LTOD', 'SINT');
-    export const LTOD_TO_TOD = BuiltInsUtils.createConvertFunction('LTOD', 'TOD');
-    export const LTOD_TO_UDINT = BuiltInsUtils.createConvertFunction('LTOD', 'UDINT');
-    export const LTOD_TO_UINT = BuiltInsUtils.createConvertFunction('LTOD', 'UINT');
-    export const LTOD_TO_ULINT = BuiltInsUtils.createConvertFunction('LTOD', 'ULINT');
-    export const LTOD_TO_USINT = BuiltInsUtils.createConvertFunction('LTOD', 'USINT');
-    export const LTOD_TO_WORD = BuiltInsUtils.createConvertFunction('LTOD', 'WORD');
+    export const LTOD_TO_BYTE = BuiltInsUtils.createConvertFunction('LTime_Of_Day', 'BYTE', 'LTOD_TO_BYTE');
+    export const LTOD_TO_DINT = BuiltInsUtils.createConvertFunction('LTime_Of_Day', 'DINT', 'LTOD_TO_DINT');
+    export const LTOD_TO_DT = BuiltInsUtils.createConvertFunction('LTime_Of_Day', 'Date_And_Time', 'LTOD_TO_DT');
+    export const LTOD_TO_DTL = BuiltInsUtils.createConvertFunction('LTime_Of_Day', 'DTL', 'LTOD_TO_DTL');
+    export const LTOD_TO_DWORD = BuiltInsUtils.createConvertFunction('LTime_Of_Day', 'DWORD', 'LTOD_TO_DWORD');
+    export const LTOD_TO_INT = BuiltInsUtils.createConvertFunction('LTime_Of_Day', 'INT', 'LTOD_TO_INT');
+    export const LTOD_TO_LDT = BuiltInsUtils.createConvertFunction('LTime_Of_Day', 'LDT', 'LTOD_TO_LDT');
+    export const LTOD_TO_LINT = BuiltInsUtils.createConvertFunction('LTime_Of_Day', 'LINT', 'LTOD_TO_LINT');
+    export const LTOD_TO_LTIME = BuiltInsUtils.createConvertFunction('LTime_Of_Day', 'LTIME', 'LTOD_TO_LTIME');
+    export const LTOD_TO_LWORD = BuiltInsUtils.createConvertFunction('LTime_Of_Day', 'LWORD', 'LTOD_TO_LWORD');
+    export const LTOD_TO_SINT = BuiltInsUtils.createConvertFunction('LTime_Of_Day', 'SINT', 'LTOD_TO_SINT');
+    export const LTOD_TO_TOD = BuiltInsUtils.createConvertFunction('LTime_Of_Day', 'Time_Of_Day', 'LTOD_TO_TOD');
+    export const LTOD_TO_UDINT = BuiltInsUtils.createConvertFunction('LTime_Of_Day', 'UDINT', 'LTOD_TO_UDINT');
+    export const LTOD_TO_UINT = BuiltInsUtils.createConvertFunction('LTime_Of_Day', 'UINT', 'LTOD_TO_UINT');
+    export const LTOD_TO_ULINT = BuiltInsUtils.createConvertFunction('LTime_Of_Day', 'ULINT', 'LTOD_TO_ULINT');
+    export const LTOD_TO_USINT = BuiltInsUtils.createConvertFunction('LTime_Of_Day', 'USINT', 'LTOD_TO_USINT');
+    export const LTOD_TO_WORD = BuiltInsUtils.createConvertFunction('LTime_Of_Day', 'WORD', 'LTOD_TO_WORD');
     
     export const LWORD_TO_DATE = BuiltInsUtils.createConvertFunction('LWORD', 'DATE');
     export const LWORD_TO_LDT = BuiltInsUtils.createConvertFunction('LWORD', 'LDT');
     export const LWORD_TO_LTIME = BuiltInsUtils.createConvertFunction('LWORD', 'LTIME');
-    export const LWORD_TO_LTOD = BuiltInsUtils.createConvertFunction('LWORD', 'LTOD');
+    export const LWORD_TO_LTOD = BuiltInsUtils.createConvertFunction('LWORD', 'LTime_Of_Day', 'LWORD_TO_LTOD');
     export const LWORD_TO_TIME = BuiltInsUtils.createConvertFunction('LWORD', 'TIME');
-    export const LWORD_TO_TOD = BuiltInsUtils.createConvertFunction('LWORD', 'TOD');
+    export const LWORD_TO_TOD = BuiltInsUtils.createConvertFunction('LWORD', 'Time_Of_Day', 'LWORD_TO_TOD');
     
     export const S5TIME_TO_LTIME = BuiltInsUtils.createConvertFunction('S5TIME', 'LTIME');
     export const S5TIME_TO_TIME = BuiltInsUtils.createConvertFunction('S5TIME', 'TIME');
@@ -135,9 +135,9 @@ export module DataAndTimeBuiltIns {
     export const SINT_TO_DATE = BuiltInsUtils.createConvertFunction('SINT', 'DATE');
     export const SINT_TO_LDT = BuiltInsUtils.createConvertFunction('SINT', 'LDT');
     export const SINT_TO_LTIME = BuiltInsUtils.createConvertFunction('SINT', 'LTIME');
-    export const SINT_TO_LTOD = BuiltInsUtils.createConvertFunction('SINT', 'LTOD');
+    export const SINT_TO_LTOD = BuiltInsUtils.createConvertFunction('SINT', 'LTime_Of_Day', 'SINT_TO_LTOD');
     export const SINT_TO_TIME = BuiltInsUtils.createConvertFunction('SINT', 'TIME');
-    export const SINT_TO_TOD = BuiltInsUtils.createConvertFunction('SINT', 'TOD');
+    export const SINT_TO_TOD = BuiltInsUtils.createConvertFunction('SINT', 'Time_Of_Day', 'SINT_TO_TOD');
     
     export const TIME_TO_BYTE = BuiltInsUtils.createConvertFunction('TIME', 'BYTE');
     export const TIME_TO_DINT = BuiltInsUtils.createConvertFunction('TIME', 'DINT');
@@ -148,69 +148,69 @@ export module DataAndTimeBuiltIns {
     export const TIME_TO_LWORD = BuiltInsUtils.createConvertFunction('TIME', 'LWORD');
     export const TIME_TO_S5TIME = BuiltInsUtils.createConvertFunction('TIME', 'S5TIME');
     export const TIME_TO_SINT = BuiltInsUtils.createConvertFunction('TIME', 'SINT');
-    export const TIME_TO_TOD = BuiltInsUtils.createConvertFunction('TIME', 'TOD');
+    export const TIME_TO_TOD = BuiltInsUtils.createConvertFunction('TIME', 'Time_Of_Day', 'TIME_TO_TOD');
     export const TIME_TO_UDINT = BuiltInsUtils.createConvertFunction('TIME', 'UDINT');
     export const TIME_TO_UINT = BuiltInsUtils.createConvertFunction('TIME', 'UINT');
     export const TIME_TO_ULINT = BuiltInsUtils.createConvertFunction('TIME', 'ULINT');
     export const TIME_TO_USINT = BuiltInsUtils.createConvertFunction('TIME', 'USINT');
     export const TIME_TO_WORD = BuiltInsUtils.createConvertFunction('TIME', 'WORD');
     
-    export const TOD_TO_BYTE = BuiltInsUtils.createConvertFunction('TOD', 'BYTE');
-    export const TOD_TO_DINT = BuiltInsUtils.createConvertFunction('TOD', 'DINT');
-    export const TOD_TO_DT = BuiltInsUtils.createConvertFunction('TOD', 'DT');
-    export const TOD_TO_DTL = BuiltInsUtils.createConvertFunction('TOD', 'DTL');
-    export const TOD_TO_DWORD = BuiltInsUtils.createConvertFunction('TOD', 'DWORD');
-    export const TOD_TO_INT = BuiltInsUtils.createConvertFunction('TOD', 'INT');
-    export const TOD_TO_LDT = BuiltInsUtils.createConvertFunction('TOD', 'LDT');
-    export const TOD_TO_LINT = BuiltInsUtils.createConvertFunction('TOD', 'LINT');
-    export const TOD_TO_LTOD = BuiltInsUtils.createConvertFunction('TOD', 'LTOD');
-    export const TOD_TO_LWORD = BuiltInsUtils.createConvertFunction('TOD', 'LWORD');
-    export const TOD_TO_SINT = BuiltInsUtils.createConvertFunction('TOD', 'SINT');
-    export const TOD_TO_TIME = BuiltInsUtils.createConvertFunction('TOD', 'TIME');
-    export const TOD_TO_UDINT = BuiltInsUtils.createConvertFunction('TOD', 'UDINT');
-    export const TOD_TO_UINT = BuiltInsUtils.createConvertFunction('TOD', 'UINT');
-    export const TOD_TO_ULINT = BuiltInsUtils.createConvertFunction('TOD', 'ULINT');
-    export const TOD_TO_USINT = BuiltInsUtils.createConvertFunction('TOD', 'USINT');
-    export const TOD_TO_WORD = BuiltInsUtils.createConvertFunction('TOD', 'WORD');
+    export const TOD_TO_BYTE = BuiltInsUtils.createConvertFunction('Time_Of_Day', 'BYTE', 'TOD_TO_BYTE');
+    export const TOD_TO_DINT = BuiltInsUtils.createConvertFunction('Time_Of_Day', 'DINT', 'TOD_TO_DINT');
+    export const TOD_TO_DT = BuiltInsUtils.createConvertFunction('Time_Of_Day', 'Date_And_Time', 'TOD_TO_DT');
+    export const TOD_TO_DTL = BuiltInsUtils.createConvertFunction('Time_Of_Day', 'DTL', 'TOD_TO_DTL');
+    export const TOD_TO_DWORD = BuiltInsUtils.createConvertFunction('Time_Of_Day', 'DWORD', 'TOD_TO_DWORD');
+    export const TOD_TO_INT = BuiltInsUtils.createConvertFunction('Time_Of_Day', 'INT', 'TOD_TO_INT');
+    export const TOD_TO_LDT = BuiltInsUtils.createConvertFunction('Time_Of_Day', 'LDT', 'TOD_TO_LDT');
+    export const TOD_TO_LINT = BuiltInsUtils.createConvertFunction('Time_Of_Day', 'LINT', 'TOD_TO_LINT');
+    export const TOD_TO_LTOD = BuiltInsUtils.createConvertFunction('Time_Of_Day', 'LTime_Of_Day', 'TOD_TO_LTOD');
+    export const TOD_TO_LWORD = BuiltInsUtils.createConvertFunction('Time_Of_Day', 'LWORD', 'TOD_TO_LWORD');
+    export const TOD_TO_SINT = BuiltInsUtils.createConvertFunction('Time_Of_Day', 'SINT', 'TOD_TO_SINT');
+    export const TOD_TO_TIME = BuiltInsUtils.createConvertFunction('Time_Of_Day', 'TIME', 'TOD_TO_TIME');
+    export const TOD_TO_UDINT = BuiltInsUtils.createConvertFunction('Time_Of_Day', 'UDINT', 'TOD_TO_UDINT');
+    export const TOD_TO_UINT = BuiltInsUtils.createConvertFunction('Time_Of_Day', 'UINT', 'TOD_TO_UINT');
+    export const TOD_TO_ULINT = BuiltInsUtils.createConvertFunction('Time_Of_Day', 'ULINT', 'TOD_TO_ULINT');
+    export const TOD_TO_USINT = BuiltInsUtils.createConvertFunction('Time_Of_Day', 'USINT', 'TOD_TO_USINT');
+    export const TOD_TO_WORD = BuiltInsUtils.createConvertFunction('Time_Of_Day', 'WORD', 'TOD_TO_WORD');
     
     export const UDINT_TO_DATE = BuiltInsUtils.createConvertFunction('UDINT', 'DATE');
     export const UDINT_TO_LDT = BuiltInsUtils.createConvertFunction('UDINT', 'LDT');
     export const UDINT_TO_LTIME = BuiltInsUtils.createConvertFunction('UDINT', 'LTIME');
-    export const UDINT_TO_LTOD = BuiltInsUtils.createConvertFunction('UDINT', 'LTOD');
+    export const UDINT_TO_LTOD = BuiltInsUtils.createConvertFunction('UDINT', 'LTime_Of_Day', 'UDINT_TO_LTOD');
     export const UDINT_TO_TIME = BuiltInsUtils.createConvertFunction('UDINT', 'TIME');
-    export const UDINT_TO_TOD = BuiltInsUtils.createConvertFunction('UDINT', 'TOD');
+    export const UDINT_TO_TOD = BuiltInsUtils.createConvertFunction('UDINT', 'Time_Of_Day', 'UDINT_TO_TOD');
     
     export const UINT_TO_DATE = BuiltInsUtils.createConvertFunction('UINT', 'DATE');
     export const UINT_TO_LDT = BuiltInsUtils.createConvertFunction('UINT', 'LDT');
     export const UINT_TO_LTIME = BuiltInsUtils.createConvertFunction('UINT', 'LTIME');
-    export const UINT_TO_LTOD = BuiltInsUtils.createConvertFunction('UINT', 'LTOD');
+    export const UINT_TO_LTOD = BuiltInsUtils.createConvertFunction('UINT', 'LTime_Of_Day', 'UINT_TO_LTOD');
     export const UINT_TO_TIME = BuiltInsUtils.createConvertFunction('UINT', 'TIME');
-    export const UINT_TO_TOD = BuiltInsUtils.createConvertFunction('UINT', 'TOD');
+    export const UINT_TO_TOD = BuiltInsUtils.createConvertFunction('UINT', 'Time_Of_Day', 'UINT_TO_TOD');
     
     export const ULINT_TO_DATE = BuiltInsUtils.createConvertFunction('ULINT', 'DATE');
     export const ULINT_TO_LDT = BuiltInsUtils.createConvertFunction('ULINT', 'LDT');
     export const ULINT_TO_LTIME = BuiltInsUtils.createConvertFunction('ULINT', 'LTIME');
-    export const ULINT_TO_LTOD = BuiltInsUtils.createConvertFunction('ULINT', 'LTOD');
+    export const ULINT_TO_LTOD = BuiltInsUtils.createConvertFunction('ULINT', 'LTime_Of_Day', 'ULINT_TO_LTOD');
     export const ULINT_TO_TIME = BuiltInsUtils.createConvertFunction('ULINT', 'TIME');
-    export const ULINT_TO_TOD = BuiltInsUtils.createConvertFunction('ULINT', 'TOD');
+    export const ULINT_TO_TOD = BuiltInsUtils.createConvertFunction('ULINT', 'Time_Of_Day', 'ULINT_TO_TOD');
     
     export const USINT_TO_DATE = BuiltInsUtils.createConvertFunction('USINT', 'DATE');
     export const USINT_TO_LDT = BuiltInsUtils.createConvertFunction('USINT', 'LDT');
     export const USINT_TO_LTIME = BuiltInsUtils.createConvertFunction('USINT', 'LTIME');
-    export const USINT_TO_LTOD = BuiltInsUtils.createConvertFunction('USINT', 'LTOD');
+    export const USINT_TO_LTOD = BuiltInsUtils.createConvertFunction('USINT', 'LTime_Of_Day', 'USINT_TO_LTOD');
     export const USINT_TO_TIME = BuiltInsUtils.createConvertFunction('USINT', 'TIME');
-    export const USINT_TO_TOD = BuiltInsUtils.createConvertFunction('USINT', 'TOD');
+    export const USINT_TO_TOD = BuiltInsUtils.createConvertFunction('USINT', 'Time_Of_Day', 'USINT_TO_TOD');
     
     export const WORD_TO_DATE = BuiltInsUtils.createConvertFunction('WORD', 'DATE');
     export const WORD_TO_LDT = BuiltInsUtils.createConvertFunction('WORD', 'LDT');
     export const WORD_TO_LTIME = BuiltInsUtils.createConvertFunction('WORD', 'LTIME');
-    export const WORD_TO_LTOD = BuiltInsUtils.createConvertFunction('WORD', 'LTOD');
+    export const WORD_TO_LTOD = BuiltInsUtils.createConvertFunction('WORD', 'LTime_Of_Day', 'WORD_TO_LTOD');
     export const WORD_TO_TIME = BuiltInsUtils.createConvertFunction('WORD', 'TIME');
-    export const WORD_TO_TOD = BuiltInsUtils.createConvertFunction('WORD', 'TOD');
+    export const WORD_TO_TOD = BuiltInsUtils.createConvertFunction('WORD', 'Time_Of_Day', 'WORD_TO_TOD');
     
     // Other
     
-    export const RD_SYS_T = BuiltInsUtils.createInOutFunction('RD_SYS_T', undefined, 'DT', 'INT')
+    export const RD_SYS_T = BuiltInsUtils.createInOutFunction('RD_SYS_T', undefined, 'Date_And_Time', 'INT')
     export const TIME_TCK = BuiltInsUtils.createInOutFunction('TIME_TCK', undefined, undefined, 'TIME')
 
     export const uriMap: { [K: string]: string } = {

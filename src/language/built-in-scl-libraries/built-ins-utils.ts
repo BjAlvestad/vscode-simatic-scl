@@ -1,9 +1,9 @@
 
 export module BuiltInsUtils {
 
-    export function createConvertFunction(from: string, to: string): string {
+    export function createConvertFunction(from: string, to: string, functionName?: string): string {
         return `
-        FUNCTION ${from}_TO_${to} : ${to}
+        FUNCTION ${functionName ?? `${from}_TO_${to}`} : ${to}
         VERSION : 0.1
 
         VAR_INPUT
