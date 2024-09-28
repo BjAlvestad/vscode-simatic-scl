@@ -11,9 +11,10 @@ BEGIN
 
 #myLocalVar;
 #myArray;
-#myFbRef.xMyInput;
+#myFbRef.xMyInput1;
 #myArray[#myLocalVar];
-#myArray[#myLocalVar].xMyInput;
-#myArray[#myLocalVar](#xMyInput := 3);
+#myArray[#myLocalVar].xMyInput1;
+#myArray[#myLocalVar](xMyInput1 := 3);
+#myArray[#myLocalVar](xMyInput1 := 1, xMyInput2 := 2);
 
 END_FUNCTION_BLOCK

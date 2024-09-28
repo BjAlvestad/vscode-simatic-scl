@@ -2,7 +2,8 @@ FUNCTION_BLOCK "FB_MyFB3"
 VERSION : 0.1
 
 VAR_INPUT
-    xMyInput : DINT;
+    xMyInput1 : DINT;
+    xMyInput2 : DINT;
 END_VAR
 
 BEGIN

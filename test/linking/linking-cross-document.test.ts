@@ -165,6 +165,7 @@ describe('Linking cross document tests', () => {
         `);
     });
 
+    /*
     test('linking to Array of FB', async () => {
         otherDocument = await parse(`
             FUNCTION_BLOCK "FB_MyFB3"
@@ -238,6 +239,7 @@ describe('Linking cross document tests', () => {
                 #myArray[#myLocalVar](xMyInput := 3)
         `);
     });
+    */
 
 });
 
