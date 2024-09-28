@@ -44,7 +44,7 @@ export function inferType(node: AstNode | undefined, cache: Map<AstNode, TypeDes
         type = inferDbMemberCall(node, cache);
     } else if (isMemberCall(node)) {
         type = inferMemberCall(node, cache);
-        if (node.explicitOperationCall) {
+        if (node.functionCall) {
             if (isFunctionType(type)) {
                 type = type.returnType;
             }
@@ -130,7 +130,7 @@ function inferMemberCall(node: MemberCall, cache: Map<AstNode, TypeDescription>)
     const element = node.element?.ref;
     if (element) {
         return inferType(element, cache);
-    } else if (node.explicitOperationCall && node.previous) {
+    } else if (node.functionCall && node.previous) {
         const previousType = inferType(node.previous, cache);
         if (isFunctionType(previousType)) {
             return previousType.returnType;

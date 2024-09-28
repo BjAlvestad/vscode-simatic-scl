@@ -1,7 +1,7 @@
 import { DocumentCache, MapScope, ReferenceInfo, Scope } from 'langium';
 import { AstUtils, EMPTY_SCOPE } from 'langium';
 import { DefaultScopeProvider } from 'langium';
-import { isDbBlock, isMemberCall, isSclBlock, isUdtRef, isVariableDeclaration, MemberCall, Model, SclBlock, Struct, UdtRef, XmlModel } from './generated/ast.js';
+import { FunctionCall, isDbBlock, isFunctionCall, isMemberCall, isSclBlock, isUdtRef, isVariableDeclaration, MemberCall, Model, SclBlock, Struct, UdtRef, XmlModel } from './generated/ast.js';
 import { inferType } from './type-system/infer.js';
 import { isGlobalDbBlockType, isInstanceDbBlockType, isStructType } from './type-system/descriptions.js';
 import { GetAllVarDecsFromModel } from './utils.js';
@@ -9,7 +9,7 @@ import { BuiltIns } from './built-in-scl-libraries/built-ins.js';
 import { SclServices } from './scl-module.js';
 
 export class SclScopeProvider extends DefaultScopeProvider {
-    skipConsoleLog = true;
+    skipConsoleLog = false;
     services;
 
     protected readonly scopeCache: DocumentCache<
@@ -66,31 +66,57 @@ export class SclScopeProvider extends DefaultScopeProvider {
     override getScope(context: ReferenceInfo): Scope {
         this.logContextInfo(context, this.skipConsoleLog)
 
+        if (context.property !== 'element') {
+            console.log("Contest property is not 'element':")
+            console.log(context.property)
+        }
+
+        if (context.property === 'functionCall') {
+            console.log("Context property is 'functionCall':")
+            console.log(context)
+        }
+
         if (context.property === 'element') {
+            const functionCall = context.container as FunctionCall;
             const memberCall = context.container as MemberCall;
             const previous = memberCall.previous;
             this.logTypeInfo(memberCall, this.skipConsoleLog)
+            
+            if (functionCall.explicitOperationCall) {
+                console.log("\nHAS EXPLICIT OPERATION CALL:\n")
+                console.log(memberCall);
+            }
+            
+            if (memberCall.previous?.functionCall) {
+                console.log("\nPrevious HAS EXPLICIT OPERATION CALL:\n")
+                console.log(memberCall);
+            }
 
              /** RETURNS normal scope if it has no previous (i.e. is top level ref) */
             if (!previous) {
                 // This makes auto complete work for formal parameter in function call. But still get red underline for linking error
                 let memberCallContainer = memberCall.$container;
+
                 //BUG: When we have a call [](), the elements inside [] also get scoped to the parameters of the function, and not the local variables
-                if(isMemberCall(memberCallContainer)
-                    && memberCall.$containerProperty === 'explicitOperationCall'  // To prevent this getting applied when inside array
-                    && !BuiltIns.isBuiltInFunctionWithoutParameters(memberCallContainer.element.$refText)
-                    && memberCallContainer.element.ref?.name
+                if (isMemberCall(memberCallContainer)
+                    // && memberCallContainer.element
+                    && memberCall.functionCall || (isMemberCall(memberCallContainer) && memberCallContainer.functionCall)
+                    // && !BuiltIns.isBuiltInFunctionWithoutParameters(memberCallContainer.element.$refText)
+                    // && isMemberCall(memberCallContainer.previous)
+                    // && memberCallContainer.previous.element?.ref?.name
                 ) {
-                    const uri = AstUtils.findRootNode(memberCallContainer).$document!.uri.toString();
-                    const scope = this.scopeCache.get(memberCallContainer.element.ref?.name, uri, () => this.scopeFormalParameters(memberCallContainer as MemberCall));
-                    if (scope !== EMPTY_SCOPE) { return scope}
+                    console.log('\nINSIDE FUNCTION ARG AREA:\n');
+                    // console.log(memberCall);
+                    // const uri = AstUtils.findRootNode(memberCallContainer).$document!.uri.toString();
+                    // const scope = this.scopeCache.get(memberCallContainer.previous.element.ref?.name, uri, () => this.scopeFormalParameters(memberCallContainer as MemberCall));
+                    // if (scope !== EMPTY_SCOPE) { return scope}
                 }
                 // This fixes linking for formal parameter in function call.
                 memberCallContainer = memberCall.$container?.$container;
                 if(isMemberCall(memberCallContainer)
-                    && memberCallContainer.explicitOperationCall
+                    && memberCallContainer.functionCall
                     && memberCall.$containerProperty === 'left'
-                    && memberCallContainer.element.ref?.name
+                    && memberCallContainer.element?.ref?.name
                 ) {
                     const uri = AstUtils.findRootNode(memberCallContainer).$document!.uri.toString();
                     const scope = this.scopeCache.get(memberCallContainer.element.ref?.name, uri, () => this.scopeFormalParameters(memberCallContainer as MemberCall));
@@ -193,13 +219,13 @@ export class SclScopeProvider extends DefaultScopeProvider {
         if (!memberCallContainer) {
             return EMPTY_SCOPE;
         }
-        if (isVariableDeclaration(memberCallContainer.element.ref)) {
+        if (memberCallContainer.element && isVariableDeclaration(memberCallContainer.element.ref)) {
             const decBlocks = memberCallContainer.element.ref.type.udtRef?.udtRef.ref?.decBlocks;
             if (decBlocks) {
                 return this.createScopeForNodes(decBlocks.flatMap(c => c.varDecs))
             }
         }
-        if (isSclBlock(memberCallContainer.element.ref)) {
+        if (memberCallContainer.element && isSclBlock(memberCallContainer.element.ref)) {
             const functionRef = memberCallContainer.element.ref;
             if (isDbBlock(functionRef) && functionRef.dbFromUdt?.ref) {
                 return this.createScopeForNodes(functionRef.dbFromUdt.ref.decBlocks.flatMap(c => c.varDecs))

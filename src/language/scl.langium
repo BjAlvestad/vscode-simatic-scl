@@ -225,10 +225,14 @@ MemberCall infers Expression:
         '^'?
         (arrayAccessCall?='[' ( indexes+=Expression (',' indexes+=Expression)* )?']')?
     )
-    | (explicitOperationCall?=PARAN_OPEN(arguments+=Expression (',' arguments+=Expression)*)?')')
-    // Alternatively memory area access, where `.` is part of terminal.
-    | (memoryArea=MEMORY_AREA)
     )*
+    (functionCall=FunctionCall
+    // Alternatively memory area access, where `.` is part of terminal.
+    | (memoryArea=MEMORY_AREA))?
+;
+
+FunctionCall:
+    (explicitOperationCall?=PARAN_OPEN(arguments+=Expression (',' arguments+=Expression)*)?')')
 ;
 
 Primary infers Expression:
