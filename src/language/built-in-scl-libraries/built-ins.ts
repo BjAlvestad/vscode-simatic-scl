@@ -11,6 +11,9 @@ import { CounterBuiltIns } from "./basic-instructions/counter-built-ins.js";
 import { WordLogicBuiltIns } from "./basic-instructions/word-logic-built-ins.js";
 import { ShiftAndRotateBuiltIns } from "./basic-instructions/shift-and-rotate-built-ins.js";
 import { LegacyBuiltIns } from "./basic-instructions/legacy-built-ins.js";
+import { TypeBuiltIns } from "./types/type-built-ins.js";
+import { DiagnosticsBuiltIns } from "./extended-instructions/diagnostics-built-ins.js";
+import { PidControlBuiltIns } from "./technology/pid-control-built-ins.js";
 
 export module BuiltIns {
     
@@ -38,19 +41,21 @@ export module BuiltIns {
     
         // ** Extended instructions **
         ...DataAndTimeBuiltIns.uriMap,
+        ...DiagnosticsBuiltIns.uriMap,
         ...StringAndCharBuiltIns.uriMap,
         // ...xox
         ...AlarmingBuiltIns.uriMap,
     
         // ** Technology **
-    
+        ...PidControlBuiltIns.uriMap,
     
         // ** Communication **
     
     
         // ** Optional packages **
     
-        
+        // ** Types **
+        ...TypeBuiltIns.uriMap,
      };
     
     // List of functions that does not use formal parameters, so that e.g. scope calculation
