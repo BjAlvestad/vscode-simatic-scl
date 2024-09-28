@@ -299,7 +299,7 @@ DbFeatureCall infers DbMemberCall:
 		']')?
 ;
 
-NumberExpressionWithUnit returns string: (TypeName '#')? '-'? NUMBER;
+NumberExpressionWithUnit returns string: (DataType '#')? '-'? NUMBER;
 
 UnaryExpression:
     operator=('NOT' | '-' | '+') value=Expression
