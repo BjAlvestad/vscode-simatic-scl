@@ -1,0 +1,19 @@
+FUNCTION_BLOCK "FB_MyFB2"
+VERSION : 0.1
+
+VAR 
+    myLocalVar : DINT;
+    myArray : Array [1..10] of "FB_MyFB3";
+    myFbRef : "FB_MyFB3";
+END_VAR
+
+BEGIN
+
+#myLocalVar;
+#myArray;
+#myFbRef.xMyInput;
+#myArray[#myLocalVar];
+#myArray[#myLocalVar].xMyInput;
+#myArray[#myLocalVar](#xMyInput := 3);
+
+END_FUNCTION_BLOCK
