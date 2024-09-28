@@ -386,7 +386,7 @@ fragment ElementaryType returns string:
 ;
 
 fragment DateAndTime returns string:
-    'DT' | 'DATE_AND_TIME' | 'LDT' | 'DATE_AND_LTIME' | 'DTL'
+    'DT' | 'DATE_AND_TIME' | 'LDT' | 'DATE_AND_LTIME'
 ;
 
 RetainKeywordName returns string: 'Retain';

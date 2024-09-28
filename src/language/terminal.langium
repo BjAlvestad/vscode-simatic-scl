@@ -32,7 +32,7 @@ DataType returns string:
     | 'DATE'   | 'TIME_OF_DAY' | 'TOD' | 'LTOD' | 'LTIME_OF_DAY'
     | 'CHAR'  | 'WCHAR'
     // Complex - Data and time
-    | 'DT' | 'DATE_AND_TIME' | 'LDT' | 'DATE_AND_LTIME' | 'DTL'
+    | 'DT' | 'DATE_AND_TIME' | 'LDT' | 'DATE_AND_LTIME'
     // Misc
     | 'NULL'
     | 'DB_ANY'
