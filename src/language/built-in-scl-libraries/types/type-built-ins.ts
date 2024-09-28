@@ -3,47 +3,6 @@ import { VariableDeclarationLine } from "../variable-declaration-line.js";
 
 export module TypeBuiltIns {
 
-    //  The following are just a hex word
-    // - AOM_IDENT
-    // - CONN_ANY
-    // - CONN_OUC
-    // - CONN_PRG
-    // - EVENT_ANY
-    // - EVENT_ATT
-    // - EVENT_HWINT
-    // - OPC_UA_LocalizedTextEncodingMask
-    // The following are just an integer
-    // - DB_ANY
-    // - DB_DYN
-    // - DB_WWW
-    // - HW_ANY
-    // - HW_DEVICE
-    // - HW_DPMASTER
-    // - HW_DPSLAVE
-    // - HW_... (not verified the ones listed below, but assumed also as integers)
-    //   - HW_HSC, HW_IEPORT, HW_INTERFACE, HW_IO, HW_IOSYSTEM, HW_MODULE, HW_PTO
-    // - HW_PWM
-    // - HW_SUBMODULE
-    // - OB_ANY
-    // - OB_ATT
-    // - OB_CYCLIC
-    // - OB_DELAY
-    // - OB_DIAG
-    // - OB_HWINT
-    // - OB_PCYCLE
-    // - OB_STARTUP
-    // - OB_TIMEERROR
-    // - OB_TOD
-    // - OPC_UA_ByteStringActualLength
-    // - PIP
-    // - PORT
-    // - RTM
-    // The following has no default value or elements under it
-    // - PID_GradientEstimation
-    // - PID_GradientParams
-    // - PID_StandardDeviation
-    // - Program_Alarm
-
     function createAuxFct_CycleTime() {
         return new BuiltInType(
             'AuxFct_CycleTime',
