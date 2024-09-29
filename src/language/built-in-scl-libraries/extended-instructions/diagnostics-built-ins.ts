@@ -4,26 +4,24 @@ import { VariableDeclarationLine } from "../variable-declaration-line.js";
 export module DiagnosticsBuiltIns {
 
     function createGet_IM_Data() {
-        return new BuiltInFunction(
-            'Get_IM_Data',  // Title
-            'FunctionBlock',  // BlockType
-            '1.3',  // Version
-            '',  // ReturnType
-            //'Reading identification and maintenance data',  // Title/description
-            [
+        return new BuiltInFunction({
+            name: 'Get_IM_Data',  // FunctionBlock
+            title: 'Reading identification and maintenance data',
+            version: '1.3',  // Version
+            varInput: [
                 new VariableDeclarationLine('LADDR', 'HW_IO', '0', '',),
                 new VariableDeclarationLine('IM_TYPE', 'UInt', '0', '',),
             ],
-            [
+            varOutput: [
                 new VariableDeclarationLine('DONE', 'Bool', 'false', ''),
                 new VariableDeclarationLine('BUSY', 'Bool', 'false', ''),
                 new VariableDeclarationLine('ERROR', 'Bool', 'false', ''),
                 new VariableDeclarationLine('STATUS', 'Word', '16#0', ''),
             ],
-            [
+            varInOut: [
                 new VariableDeclarationLine('DATA', 'Variant', '', ''),
             ],
-            [
+            varStatic: [
                 new VariableDeclarationLine('sdw_GetAttrID', 'DWord', '16#0', ''),
                 new VariableDeclarationLine('sdw_GetAttrAID', 'DWord', '16#0', ''),
                 new VariableDeclarationLine('sdi_SfcLen', 'DInt', '0', ''),
@@ -50,34 +48,32 @@ export module DiagnosticsBuiltIns {
                 new VariableDeclarationLine('p_DataUDT', 'IM0_Data', '', ''),
 
             ]
-        ).toString();
+        }).toString();
     }
 
     function createGet_Name() {
-        return new BuiltInFunction(
-            'Get_Name',  // Title
-            'FunctionBlock',  // BlockType
-            '1.3',  // Version
-            '',  // ReturnType
-            //'Reading the name of a module',  // Title/description
-            [
+        return new BuiltInFunction({
+            name: 'Get_Name',  // FunctionBlock
+            title: 'Reading the name of a module',
+            version: '1.3',  // Version
+            varInput: [
                 new VariableDeclarationLine('LADDR', 'HW_IOSYSTEM', '0', '',),
                 new VariableDeclarationLine('STATION_NR', 'UInt', '0', '',),
             ],
-            [
+            varOutput: [
                 new VariableDeclarationLine('DONE', 'Bool', 'false', ''),
                 new VariableDeclarationLine('BUSY', 'Bool', 'false', ''),
                 new VariableDeclarationLine('ERROR', 'Bool', 'false', ''),
                 new VariableDeclarationLine('LEN', 'DInt', '0', ''),
                 new VariableDeclarationLine('STATUS', 'Word', '16#0', ''),
             ],
-            [
+            varInOut: [
                 new VariableDeclarationLine('DATA', 'Variant'),
             ],
-            [
+            varStatic: [
                 new VariableDeclarationLine('BusyState', 'Word', '16#0'),
             ],
-        ).toString();
+        }).toString();
     }
 
     export const uriMap: { [K: string]: string } = {

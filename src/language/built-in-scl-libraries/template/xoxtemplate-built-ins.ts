@@ -5,26 +5,25 @@ import { BuiltInsUtils } from "../built-ins-utils.js";
 
 export module BuiltIns {
 
-    function create() {
-        return new BuiltInFunction(
-            '',  // Title
-            '',  // BlockType
-            '',  // Version
-            '',  // ReturnType
-            //'',  // Title/description
-            [
+    function XOX() {
+        return new BuiltInFunction({
+            name: 'XOX',
+            returnType: 'Void',
+            title: '',
+            version:  '',
+            varInput: [
                 new VariableDeclarationLine('', '',),
             ],
-            [
+            varOutput: [
                 new VariableDeclarationLine('', '',),
             ],
-            [
+            varInOut: [
                 new VariableDeclarationLine('', '',),
             ],
-            [
+            varStatic: [
                 new VariableDeclarationLine('', '',),
             ],
-        ).toString();
+        }).toString();
     }
 
     export const uriMap: { [K: string]: string } = {

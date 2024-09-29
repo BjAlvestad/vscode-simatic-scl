@@ -1,10 +1,21 @@
 import { VariableDeclarationLine } from "./variable-declaration-line.js";
 import { expandToString as s } from "langium/generate";
 
+export interface BuiltInFunctionParams {
+    name: string,
+    returnType?: string,
+    title?: string,
+    version?: string,
+    varInput?: VariableDeclarationLine[],
+    varOutput?: VariableDeclarationLine[],
+    varInOut?: VariableDeclarationLine[],
+    varStatic?: VariableDeclarationLine[],
+}
+
 export class BuiltInFunction{
     name: string;
-    functionType: 'FunctionCall' | 'FunctionBlock';
     returnType: string;
+    title: string;
     version: string;
     varInput: VariableDeclarationLine[];
     varOutput: VariableDeclarationLine[];
@@ -12,29 +23,23 @@ export class BuiltInFunction{
     varStatic: VariableDeclarationLine[];
 
     constructor(
-        name: string,
-        functionType: 'FunctionCall' | 'FunctionBlock',
-        version?: string,
-        returnType?: string,
-        varInput?: VariableDeclarationLine[],
-        varOutput?: VariableDeclarationLine[],
-        varInOut?: VariableDeclarationLine[],
-        varStatic?: VariableDeclarationLine[],
+        params: BuiltInFunctionParams,
     ) {
-        this.name = name;
-        this.functionType = functionType;
-        this.version = version ?? '0.1';
-        this.returnType = returnType ?? '';
-        this.varInput = varInput ?? [];
-        this.varOutput = varOutput ?? [];
-        this.varInOut = varInOut ?? [];
-        this.varStatic = varStatic ?? [];
+        this.name = params.name;
+        this.returnType = params.returnType ?? '';
+        this.title = params.title ?? '';
+        this.version = params.version ?? '0.1';
+        this.varInput = params.varInput ?? [];
+        this.varOutput = params.varOutput ?? [];
+        this.varInOut = params.varInOut ?? [];
+        this.varStatic = params.varStatic ?? [];
     }
 
     public toString(): string {
         return (
             s`
             ${this.getFunctionStart()}
+            ${this.title ? `TITLE = ${this.title}` : ''}
             VERSION : ${this.version ?? '0.1'}
             ${this.getVarDecSection('VAR_INPUT', this.varInput)}
             ${this.getVarDecSection('VAR_OUTPUT', this.varOutput)}
@@ -47,22 +52,9 @@ export class BuiltInFunction{
         );
     }
 
-    public isInvalidBlockConfig() {
-        const invalidFunctionCall = (
-            this.functionType === "FunctionCall"
-            && this.varStatic.length > 0
-        );
-        const invalidFunctionBlock = (
-            this.functionType === "FunctionBlock"
-            && this.returnType
-        );
-
-        return invalidFunctionCall || invalidFunctionBlock;
-    }
-
     private getFunctionStart() {
-        if (this.functionType === "FunctionCall") {
-            return `FUNCTION ${this.name} : ${this.returnType.length > 0 ? this.returnType : 'Void'}`
+        if (this.returnType) {
+            return `FUNCTION ${this.name} : ${this.returnType}`
         }
 
         return `FUNCTION_BLOCK ${this.name}`
@@ -83,6 +75,6 @@ export class BuiltInFunction{
     }
 
     private getFunctionEnd() {
-        return this.functionType === "FunctionCall" ? 'END_FUNCTION' : 'END_FUNCTION_BLOCK';
+        return this.returnType ? 'END_FUNCTION' : 'END_FUNCTION_BLOCK';
     }
 }

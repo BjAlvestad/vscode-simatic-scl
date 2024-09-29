@@ -7,13 +7,11 @@ export module PidControlBuiltIns {
     // ** SUB FOLDER: Compact PID
 
     function createPID_Compact() {
-        return new BuiltInFunction(
-            'PID_Compact',  // Title
-            'FunctionBlock',  // BlockType
-            '2.4',  // Version
-            '',  // ReturnType
-            //'Universal PID controller with integrated tuning',  // Title/description
-            [
+        return new BuiltInFunction({
+            name: 'PID_Compact',  // FunctionBlock
+            title: 'Universal PID controller with integrated tuning',
+            version: '2.4',
+            varInput: [
                 new VariableDeclarationLine('Setpoint', 'Real', '0.0', 'controller setpoint input'),
                 new VariableDeclarationLine('Input', 'Real', '0.0', 'current value from process in REAL format'),
                 new VariableDeclarationLine('Input_PER', 'Int', '0', 'current value from peripheral input'),
@@ -24,8 +22,7 @@ export module PidControlBuiltIns {
                 new VariableDeclarationLine('Reset', 'Bool', 'false', 'reset the controller'),
                 new VariableDeclarationLine('ModeActivate', 'Bool', 'false', 'enable mode'),
             ],
-            [
-                
+            varOutput: [
                 new VariableDeclarationLine('ScaledInput', 'Real', '0.0', 'current value after scaling'),
                 new VariableDeclarationLine('Output', 'Real', '0.0', 'output value in REAL format'),
                 new VariableDeclarationLine('Output_PER', 'Int', '0', 'analog output value'),
@@ -39,10 +36,10 @@ export module PidControlBuiltIns {
                 new VariableDeclarationLine('ErrorBits', 'DWord', '16#0', 'error message'),
 
             ],
-            [
+            varInOut: [
                 new VariableDeclarationLine('Mode', 'Int', '4', 'mode selection'),
             ],
-            [
+            varStatic: [
                 new VariableDeclarationLine('InternalDiagnostic', 'DWord', '0', 'internal diagnostic and version handling'),
                 new VariableDeclarationLine('InternalVersion', 'DWord', 'DW#16#02040001', 'version of controller'),
                 new VariableDeclarationLine('InternalRTVersion', 'DWord', '0', 'version of runtime'),
@@ -67,24 +64,23 @@ export module PidControlBuiltIns {
                 new VariableDeclarationLine('PIDCtrl', 'PID_CompactControl', '', 'data for controlling part'),
                 new VariableDeclarationLine('Retain', 'PID_CompactRetain', '', 'retain data'),
             ],
-        ).toString();
+        }).toString();
     }
 
     // ** SUB FOLDER: Auxillary functions
 
     function createRampFunction() {
-        return new BuiltInFunction(
-            'RampFunction',
-            'FunctionBlock',
-            '1.0',
-            '',
-            [
+        return new BuiltInFunction({
+            name: 'RampFunction',  // FunctionBlock
+            title: '',
+            version: '1.0',
+            varInput: [
                 new VariableDeclarationLine('Input', 'Real', '0.0', 'input value'),
                 new VariableDeclarationLine('SubstituteOutput', 'Real', '0.0', 'output value when Reset = TRUE or in case of error with ErrorMode = 1'),
                 new VariableDeclarationLine('ErrorAck', 'Bool', 'false', 'reset error message'),
                 new VariableDeclarationLine('Reset', 'Bool', 'false', 'reset instruction and Output = SubstituteOutput'),
             ],
-            [
+            varOutput: [
                 new VariableDeclarationLine('Output', 'Real', '0.0', 'output value'),
                 new VariableDeclarationLine('PositiveRisingSlewRate_Active', 'Bool', 'false', 'output value is currently limited by PositiveRisingSlewRate'),
                 new VariableDeclarationLine('PositiveFallingSlewRate_Active', 'Bool', 'false', 'output value is currently limited by PositiveFallingSlewRate'),
@@ -95,8 +91,8 @@ export module PidControlBuiltIns {
                 new VariableDeclarationLine('ErrorBits', 'DWord', '16#0', 'error message'),
                 new VariableDeclarationLine('Error', 'Bool', 'false', 'error flag'),
             ],
-            [],
-            [
+            varInOut: [],
+            varStatic: [
                 new VariableDeclarationLine('PositiveRisingSlewRate', 'Real', '10.0', 'limit value for the rising slew rate per second in positive range'),
                 new VariableDeclarationLine('PositiveFallingSlewRate', 'Real', '10.0', 'limit value for the falling slew rate per second in positive range'),
                 new VariableDeclarationLine('NegativeRisingSlewRate', 'Real', '10.0', 'limit value for the rising slew rate per second in negative range'),
@@ -107,7 +103,7 @@ export module PidControlBuiltIns {
                 new VariableDeclarationLine('StartMode', 'Int', '2', 'selection of first output value (0 = Input, 1 = SubstituteOutput, 2 = last output value, 3 = 0.0, 4 = LowerLimit, 5 = UpperLimit)'),
                 new VariableDeclarationLine('CycleTime', 'AuxFct_CycleTime', '', 'cycle time data'),
             ]
-        ).toString();
+        }).toString();
     }
 
     export const uriMap: { [K: string]: string } = {

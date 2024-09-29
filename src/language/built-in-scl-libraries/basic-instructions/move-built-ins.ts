@@ -28,26 +28,24 @@ export module MoveBuiltIns {
     // Missing: WriteToArrayDB
     function createReadFromArrayDBL() {
 
-        return new BuiltInFunction(
-            'ReadFromArrayDBL',
-            'FunctionBlock',
-            '1.2',
-            '',
-            // 'Read from ARRAY data block in load memory',
-            [
+        return new BuiltInFunction({
+            name: 'ReadFromArrayDBL', // FunctionBlock
+            title: 'Read from ARRAY data block in load memory',
+            version: '1.2',
+            varInput: [
                 new VariableDeclarationLine('req', 'Bool', 'false', ''),
                 new VariableDeclarationLine('db', 'DB_ANY', '0', ''),
                 new VariableDeclarationLine('index', 'DInt', '0', ''),
             ],
-            [
+            varOutput: [
                 new VariableDeclarationLine('busy', 'Bool', 'false', ''),
                 new VariableDeclarationLine('done', 'Bool', 'false', ''),
                 new VariableDeclarationLine('error', 'Int', '0', ''),
             ],
-            [
+            varInOut: [
                 new VariableDeclarationLine('value', 'Variant'),
             ],
-            [
+            varStatic: [
                 new VariableDeclarationLine('header', 'DBHeader', ''),
                 new VariableDeclarationLine('state', 'USInt', '0'),
                 new VariableDeclarationLine('internal_req', 'Bool', 'false'),
@@ -55,9 +53,8 @@ export module MoveBuiltIns {
                 new VariableDeclarationLine('index_copy', 'DInt', '0'),
                 new VariableDeclarationLine('dbref', 'VAREF', ''),
                 new VariableDeclarationLine('dstref', 'VAREF', ''),
-
             ]
-        ).toString();
+        }).toString();
     }
     // Missing: WriteToArrayDBL
     

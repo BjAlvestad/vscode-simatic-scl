@@ -4,32 +4,30 @@ import { VariableDeclarationLine } from "../variable-declaration-line.js";
 export module OpenUserCommunicationBuiltIns {
 
     function createTRCV_C() {
-        return new BuiltInFunction(
-            'TRCV_C',  // Name
-            'FunctionBlock',  // BlockType
-            '3.2',  // Version
-            '',  // ReturnType
-            // 'Establish a connection and receive data',  // Title/description
-            [
+        return new BuiltInFunction({
+            name: 'TRCV_C',  // FunctionBlock
+            title: 'Establish a connection and receive data',
+            version: '3.2',
+            varInput: [
                 new VariableDeclarationLine('EN_R', 'Bool', 'false', 'EN_R=1: receive function enabled'),
                 new VariableDeclarationLine('CONT', 'Bool', 'false', 'CONT=1: start connection'),
                 new VariableDeclarationLine('LEN', 'UDInt', '0', 'Data length to receive'),
                 new VariableDeclarationLine('ADHOC', 'Bool', 'false', 'Request adhoc mode'),
             ],
-            [
+            varOutput: [
                 new VariableDeclarationLine('DONE', 'Bool', 'false', 'Data received'),
                 new VariableDeclarationLine('BUSY', 'Bool', 'false', 'Receive function busy'),
                 new VariableDeclarationLine('ERROR', 'Bool', 'false', 'Error detected'),
                 new VariableDeclarationLine('STATUS', 'Word', '16#7000', 'Function result/error message'),
                 new VariableDeclarationLine('RCVD_LEN', 'UDInt', '0', 'Length of received data'),
             ],
-            [
+            varInOut: [
                 new VariableDeclarationLine('CONNECT', 'Variant', '', 'Pointer to the connection description'),
                 new VariableDeclarationLine('DATA', 'Variant', '', 'Buffer for received data'),
                 new VariableDeclarationLine('ADDR', 'Variant', '', 'Address of sender'),
                 new VariableDeclarationLine('COM_RST', 'Bool', 'false', 'Restart of the instruction'),
             ],
-            [
+            varStatic: [
                 new VariableDeclarationLine('s_state', 'Int', '0', ''),
                 new VariableDeclarationLine('s_locked', 'Bool', 'false', ''),
                 new VariableDeclarationLine('s_udp', 'Bool', 'false', ''),
@@ -45,34 +43,32 @@ export module OpenUserCommunicationBuiltIns {
                 new VariableDeclarationLine('s_TRESET', 'T_RESET', '', ''),
 
             ],
-        ).toString();
+        }).toString();
     }
 
     function createTSEND_C() {
-        return new BuiltInFunction(
-            'TSEND_C',  // Name
-            'FunctionBlock',  // BlockType
-            '3.2',  // Version
-            '',  // ReturnType
-            // 'Establish a connection and send data',  // Title/description
-            [
+        return new BuiltInFunction({
+            name: 'TSEND_C',  // FunctionBlock
+            title: 'Establish a connection and send data',
+            version: '3.2',
+            varInput: [
                 new VariableDeclarationLine('REQ', 'Bool', 'false', 'Send function to be executed on rising edge'),
                 new VariableDeclarationLine('CONT', 'Bool', 'false', 'CONT=1: start connection'),
                 new VariableDeclarationLine('LEN', 'UDInt', '0', 'Data length to send'),
             ],
-            [
+            varOutput: [
                 new VariableDeclarationLine('DONE', 'Bool', 'false', 'Send performed'),
                 new VariableDeclarationLine('BUSY', 'Bool', 'false', 'Send function busy'),
                 new VariableDeclarationLine('ERROR', 'Bool', 'false', 'Error detected'),
                 new VariableDeclarationLine('STATUS', 'Word', '16#7000', 'Function result/error message'),
             ],
-            [
+            varInOut: [
                 new VariableDeclarationLine('CONNECT', 'Variant', '', 'Pointer to the connection description'),
                 new VariableDeclarationLine('DATA', 'Variant', '', 'Buffer for data to be sent'),
                 new VariableDeclarationLine('ADDR', 'Variant', '', 'Address of receiver'),
                 new VariableDeclarationLine('COM_RST', 'Bool', 'false', 'Restart of the instruction'),
             ],
-            [
+            varStatic: [
                 new VariableDeclarationLine('s_state', 'Int', '0', ''),
                 new VariableDeclarationLine('s_locked', 'Bool', 'false', ''),
                 new VariableDeclarationLine('s_udp', 'Bool', 'false', ''),
@@ -89,7 +85,7 @@ export module OpenUserCommunicationBuiltIns {
                 new VariableDeclarationLine('s_TRESET', 'T_RESET', '', ''),
 
             ],
-        ).toString();
+        }).toString();
     }
 
     export const uriMap: { [K: string]: string } = {

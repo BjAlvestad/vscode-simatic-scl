@@ -5,14 +5,11 @@ import { VariableDeclarationLine } from "../variable-declaration-line.js";
 export module AlarmingBuiltIns {
     
     function create_Program_Alarm() {
-        return new BuiltInFunction(
-            'Program_Alarm',
-            'FunctionBlock', // Note: Program_Alarm is not a normal FB. You cannot see the members in the "Data type" section of FB you call it from
-
-            '1.0',
-            '',
-            // 'Generate program alarm with associated values',
-            [
+        return new BuiltInFunction({
+            name: 'Program_Alarm', // Note: Program_Alarm is not a normal FB. You cannot see the members in the "Data type" section of FB you call it from
+            title: 'Generate program alarm with associated values',
+            version: '1.0',
+            varInput: [
                 new VariableDeclarationLine('SIG', 'BOOL'),
                 new VariableDeclarationLine('TIMESTAMP', 'LDT'),
                 new VariableDeclarationLine('SD_1', 'Variant'),
@@ -26,17 +23,17 @@ export module AlarmingBuiltIns {
                 new VariableDeclarationLine('SD_9', 'Variant'),
                 new VariableDeclarationLine('SD_10', 'Variant'),
             ],
-            [
+            varOutput: [
                 new VariableDeclarationLine('Error', 'BOOL'),
                 new VariableDeclarationLine('Status', 'WORD'),
             ],
-            [],
-            [
+            varInOut: [],
+            varStatic: [
                 new VariableDeclarationLine('Alarm_ID', 'EVENT_ANY', '', 'Note that type is actually `Event_ID`. But this extension does not support that type as of now.'),
                 new VariableDeclarationLine('HANDLE', 'DWord'),
                 new VariableDeclarationLine('SIG_Edge_History', 'Bool'),
             ]
-        ).toString();
+        }).toString();
     }
 
     //MISSING: Get_AlarmState

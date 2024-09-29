@@ -6,23 +6,24 @@ import { VariableDeclarationLine } from "../../src/language/built-in-scl-librari
 describe('Built in function framework tests', () => {
 
     test('Test BuiltInFunction toString()', async () => {
-        const myFunc = new BuiltInFunction(
-            'FC_MyTest',
-            "FunctionCall",
-            '1.0',
-            '',
-            [
+        const myFunc = new BuiltInFunction({
+            name: 'FC_MyTest',  // FC
+            returnType: 'Void',
+            title: 'My test FC',
+            version: '1.0',
+            varInput: [
                 new VariableDeclarationLine('IN1', 'Bool'),
                 new VariableDeclarationLine('IN2', 'Bool', '', "Some bool comment"),
                 new VariableDeclarationLine('IN3', 'DINT', '100', "Some dint comment")
             ],
-            [
+            varOutput: [
                 new VariableDeclarationLine('OUT1', 'Bool'),
             ],
-        )
+        })
 
         expect(myFunc.toString()).toEqual(s`
             FUNCTION FC_MyTest : Void
+            TITLE = My test FC
             VERSION : 1.0
 
             VAR_INPUT
