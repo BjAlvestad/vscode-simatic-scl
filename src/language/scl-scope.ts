@@ -5,7 +5,7 @@ import { isDbBlock, isMemberCall, isSclBlock, isUdtRef, isVariableDeclaration, M
 import { inferType } from './type-system/infer.js';
 import { isGlobalDbBlockType, isInstanceDbBlockType, isStructType } from './type-system/descriptions.js';
 import { GetAllVarDecsFromModel } from './utils.js';
-import { BuiltIns } from './built-in-scl-libraries/built-ins.js';
+// import { BuiltIns } from './built-in-scl-libraries/built-ins.js';
 import { SclServices } from './scl-module.js';
 
 export class SclScopeProvider extends DefaultScopeProvider {
@@ -75,15 +75,17 @@ export class SclScopeProvider extends DefaultScopeProvider {
             if (!previous) {
                 // This makes auto complete work for formal parameter in function call. But still get red underline for linking error
                 let memberCallContainer = memberCall.$container;
-                if(isMemberCall(memberCallContainer)
-                    && memberCallContainer.explicitOperationCall
-                    && !BuiltIns.isBuiltInFunctionWithoutParameters(memberCallContainer.element.$refText)
-                    && memberCallContainer.element.ref?.name
-                ) {
-                    const uri = AstUtils.findRootNode(memberCallContainer).$document!.uri.toString();
-                    const scope = this.scopeCache.get(memberCallContainer.element.ref?.name, uri, () => this.scopeFormalParameters(memberCallContainer as MemberCall));
-                    if (scope !== EMPTY_SCOPE) { return scope}
-                }
+                //BUG: Commented out code below gives auto complete support for parameters by limiting scope inside there, but also breaks scope for arrays.
+                //     Commented out for now, since linking works properly once they have written the parameters, and that is more important to remove linking errors at this stage
+                // if(isMemberCall(memberCallContainer)
+                //     && memberCallContainer.explicitOperationCall
+                //     && !BuiltIns.isBuiltInFunctionWithoutParameters(memberCallContainer.element.$refText)
+                //     && memberCallContainer.element.ref?.name
+                // ) {
+                //     const uri = AstUtils.findRootNode(memberCallContainer).$document!.uri.toString();
+                //     const scope = this.scopeCache.get(memberCallContainer.element.ref?.name, uri, () => this.scopeFormalParameters(memberCallContainer as MemberCall));
+                //     if (scope !== EMPTY_SCOPE) { return scope}
+                // }
                 // This fixes linking for formal parameter in function call.
                 memberCallContainer = memberCall.$container?.$container;
                 if(isMemberCall(memberCallContainer)
