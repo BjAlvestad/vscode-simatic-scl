@@ -240,6 +240,82 @@ export module TypeBuiltIns {
         ).toString();
     }
 
+    // ** SUB TYPES - not available direct in Data type list, but is used in other built-ins **
+
+    function DBHeader() {
+        return new BuiltInType(
+            'DBHeader',
+            [
+                new VariableDeclarationLine('general', 'GeneralDBHeader'),
+                new VariableDeclarationLine('arrayDB', 'ArrayDBHeader'),
+            ]
+        ).toString();
+    }
+
+    function GeneralDBHeader() {
+        return new BuiltInType(
+            'GeneralDBHeader',
+            [
+                new VariableDeclarationLine('TypeCode', 'DWord', '16#0'),
+                new VariableDeclarationLine('OriginalNumber', 'DWord', '16#0'),
+            ]
+        ).toString();
+    }
+
+    function ArrayDBHeader() {
+        return new BuiltInType(
+            'ArrayDBHeader',
+            [
+                new VariableDeclarationLine('PayLoadOffset', 'UDInt', '40'),
+                new VariableDeclarationLine('Version', 'DWord', '16#01000000'),
+                new VariableDeclarationLine('LowerBound', 'DInt', '0'),
+                new VariableDeclarationLine('UpperBound', 'DInt', '0'),
+                new VariableDeclarationLine('Elements', 'UDInt', '0'),
+                new VariableDeclarationLine('PaddedSize', 'UDInt', '0'),
+                new VariableDeclarationLine('ElementSize', 'UDInt', '0'),
+                new VariableDeclarationLine('Reserved', 'UDInt', '0'),
+            ]
+        ).toString();
+    }
+
+    function VAREF() {
+        return new BuiltInType(
+            'VAREF',
+            [
+                new VariableDeclarationLine('RID', 'DWord', '16#0'),
+                new VariableDeclarationLine('AREA', 'Byte', '16#0'),
+                new VariableDeclarationLine('DB_NUMBER', 'UInt', '0'),
+                new VariableDeclarationLine('OFFSET', 'UDInt', '0'),
+                new VariableDeclarationLine('LENGTH', 'UDInt', '0'),
+            ]
+        ).toString();
+    }
+
+    function TDiag_Status() {
+        return new BuiltInType(
+            'TDiag_Status',
+            [
+                new VariableDeclarationLine('InterfaceId', 'HW_ANY', '0', 'HW-identifier of IE-interface submodule'),
+                new VariableDeclarationLine('ID', 'CONN_OUC', '16#0', 'connection reference / identifier of monitored connection'),
+                new VariableDeclarationLine('ConnectionType', 'Byte', '16#00', 'type of monitored connetion'),
+                new VariableDeclarationLine('ActiveEstablished', 'Bool', 'false', 'active/passive connection establishment'),
+                new VariableDeclarationLine('State', 'Byte', '16#00', 'state of monitored connection'),
+                new VariableDeclarationLine('Kind', 'Byte', '16#00', 'kind of monitored connection'),
+                new VariableDeclarationLine('SentBytes', 'UDInt', '16#00', 'bytes sent via monitored connection'),
+                new VariableDeclarationLine('ReceivedBytes', 'UDInt', '16#00', 'bytes received on monitored connection'),
+            ]
+        ).toString();
+    }
+
+    // function XOX() {
+    //     return new BuiltInType(
+    //         'XOX',
+    //         [
+    //             new VariableDeclarationLine('', '', ''),
+    //         ]
+    //     ).toString();
+    // }
+
     export const uriMap: { [K: string]: string } = {
         '/builtinLibrary.AuxFct_CycleTime.udt': createAuxFct_CycleTime(),
         '/builtinLibrary.CREF.udt': createCREF(),
@@ -267,6 +343,13 @@ export module TypeBuiltIns {
         '/builtinLibrary.PID_Compact_TIR.udt': createPID_Compact_TIR(),
         '/builtinLibrary.PID_CycleTime.udt': createPID_CycleTime(),
         '/builtinLibrary.PID_Scaling.udt': createPID_Scaling(),
+        // ** SUB TYPES - not available direct in Data type list, but is used in other built-ins **
+        '/builtinLibrary.DBHeader.udt': DBHeader(),
+        '/builtinLibrary.GeneralDBHeader.udt': GeneralDBHeader(),
+        '/builtinLibrary.ArrayDBHeader.udt': ArrayDBHeader(),
+        '/builtinLibrary.VAREF.udt': VAREF(),
+        '/builtinLibrary.TDiag_Status.udt': TDiag_Status(),
+        
     }
 
     /* TODO:
