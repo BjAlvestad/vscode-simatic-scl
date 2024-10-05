@@ -1,13 +1,13 @@
-import { VariableDeclarationLine } from "./variable-declaration-line.js";
+import { DeclarationLine } from "./declaration-line.js";
 import { expandToString as s } from "langium/generate";
 
 export class BuiltInType{
     name: string;
-    varDecLines: VariableDeclarationLine[];
+    varDecLines: DeclarationLine[];
 
     constructor(
         name: string,
-        varDecLines?: VariableDeclarationLine[],
+        varDecLines?: DeclarationLine[],
     ) {
         this.name = name;
         this.varDecLines = varDecLines ?? [];

@@ -1,4 +1,4 @@
-import { VariableDeclarationLine } from "./variable-declaration-line.js";
+import { DeclarationLine } from "./declaration-line.js";
 import { expandToString as s } from "langium/generate";
 
 export interface BuiltInFunctionParams {
@@ -6,10 +6,10 @@ export interface BuiltInFunctionParams {
     returnType?: string,
     title?: string,
     version?: string,
-    varInput?: VariableDeclarationLine[],
-    varOutput?: VariableDeclarationLine[],
-    varInOut?: VariableDeclarationLine[],
-    varStatic?: VariableDeclarationLine[],
+    varInput?: DeclarationLine[],
+    varOutput?: DeclarationLine[],
+    varInOut?: DeclarationLine[],
+    varStatic?: DeclarationLine[],
 }
 
 export class BuiltInFunction{
@@ -17,10 +17,10 @@ export class BuiltInFunction{
     returnType: string;
     title: string;
     version: string;
-    varInput: VariableDeclarationLine[];
-    varOutput: VariableDeclarationLine[];
-    varInOut: VariableDeclarationLine[];
-    varStatic: VariableDeclarationLine[];
+    varInput: DeclarationLine[];
+    varOutput: DeclarationLine[];
+    varInOut: DeclarationLine[];
+    varStatic: DeclarationLine[];
 
     constructor(
         params: BuiltInFunctionParams,
@@ -62,7 +62,7 @@ export class BuiltInFunction{
 
     private getVarDecSection(
         sectionName: 'VAR_INPUT' | 'VAR_OUTPUT' | 'VAR_IN_OUT' | 'VAR',
-        varDecLines: VariableDeclarationLine[]
+        varDecLines: DeclarationLine[],
     ) {
         return (
             varDecLines.length > 0 ? s`
