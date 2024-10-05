@@ -1,4 +1,5 @@
 import { BuiltInFunction } from "../built-in-function.js";
+import { StructDeclaration } from "../struct-declaration.js";
 import { VariableDeclarationLine } from "../variable-declaration-line.js";
 
 export module OpenUserCommunicationBuiltIns {
@@ -125,8 +126,14 @@ export module OpenUserCommunicationBuiltIns {
                 new VariableDeclarationLine('s_RDREC', 'RDREC', '', ''),
                 new VariableDeclarationLine('s_WRREC', 'WRREC', '', ''),
                 new VariableDeclarationLine('s_T_CONFIG', 'T_CONFIG', '', ''),
-                new VariableDeclarationLine('s_ConfigDataNTP', 'Struct', '', ''),
-                new VariableDeclarationLine('s_ConfigDataIP', 'Struct', '', ''),
+                new StructDeclaration('s_ConfigDataNTP', '', [
+                    new VariableDeclarationLine('Header', 'IF_CONF_Header', '', ''),
+                    new VariableDeclarationLine('ntp', 'IF_CONF_NTP', '', ''),
+                ]),
+                new StructDeclaration('s_ConfigDataIP', '', [
+                    new VariableDeclarationLine('Header', 'IF_CONF_Header', '', ''),
+                    new VariableDeclarationLine('deviceIP', 'IF_CONF_v4', '', ''),
+                ]),
                 new VariableDeclarationLine('s_previousREQ', 'Bool', 'false', ''),
             ],
         }).toString();
