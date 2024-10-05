@@ -69,7 +69,7 @@ BlockMetadata:
     ('AUTHOR' ':' author=(SINGLE_QUOTE_STRING | ID))?
     ('FAMILY' ':' family=(SINGLE_QUOTE_STRING | ID))?
     ('NAME' ':' name=(SINGLE_QUOTE_STRING | ID))?
-    ('VERSION' ':' version=NUMBER)?
+    (VersionKeywordName ':' version=NUMBER)?
 ;
 
 CompilerDirective:
@@ -363,10 +363,12 @@ CaseStatement:
 KeywordsAllowedElsewhere returns string:
     RetainKeywordName
     | TypeKeywordName
+    | VersionKeywordName
 ;
 
 RetainKeywordName returns string: 'Retain';
 TypeKeywordName returns string: 'TYPE';
+VersionKeywordName returns string: 'VERSION';
 
 hidden terminal ML_COMMENT_START: '(*';
 hidden terminal ML_COMMENT_CONTENT: /(?<=((\(\*)|(\*\))))[\s\S]+?(?=((\(\*)|(\*\))))/;
