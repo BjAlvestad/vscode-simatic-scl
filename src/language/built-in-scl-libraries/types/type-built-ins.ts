@@ -307,14 +307,76 @@ export module TypeBuiltIns {
         ).toString();
     }
 
-    // function XOX() {
-    //     return new BuiltInType(
-    //         'XOX',
-    //         [
-    //             new VariableDeclarationLine('', '', ''),
-    //         ]
-    //     ).toString();
-    // }
+    function GEOADDR() {
+        return new BuiltInType(
+            'GEOADDR',
+            [
+                new VariableDeclarationLine('HWTYPE', 'UInt', '0', 'HW type out of DTI_type of the HW object'),
+                new VariableDeclarationLine('AREA', 'UInt', '0', 'Format and area: 0=central, 1= PNIO, 2= DP, 3= AS-i'),
+                new VariableDeclarationLine('IOSYSTEM', 'UInt', '0', 'Master system ID: 0=central'),
+                new VariableDeclarationLine('STATION', 'UInt', '0', 'Station number, central: rack 0; RedundancyID in R/H-CPUs'),
+                new VariableDeclarationLine('SLOT', 'UInt', '0', 'Slot number'),
+                new VariableDeclarationLine('SUBSLOT', 'UInt', '0', 'Subslot number, 0= no subslot'),
+            ]
+        ).toString();
+    }
+
+    function IF_CONF_Header() {
+        return new BuiltInType(
+            'IF_CONF_Header',
+            [
+                new VariableDeclarationLine('FieldType', 'UInt', '0'),
+                new VariableDeclarationLine('FieldId', 'UInt', '0'),
+                new VariableDeclarationLine('SubfieldCount', 'UInt', '0'),
+            ]
+        ).toString();
+    }
+    
+    function IF_CONF_NTP() {
+        return new BuiltInType(
+            'IF_CONF_NTP',
+            [
+                new VariableDeclarationLine('Id', 'UInt', '17'),
+                new VariableDeclarationLine('Length', 'UInt', '22'),
+                new VariableDeclarationLine('Mode', 'UInt', '0'),
+                new VariableDeclarationLine('NTP_IP', 'Array[1..4] of IP_V4', ''),
+            ]
+        ).toString();
+    }
+
+    function IF_CONF_v4() {
+        return new BuiltInType(
+            'IF_CONF_v4',
+            [
+                new VariableDeclarationLine('Id', 'UInt', '30'),
+                new VariableDeclarationLine('Length', 'UInt', '18'),
+                new VariableDeclarationLine('Mode', 'UInt', '0'),
+                new VariableDeclarationLine('InterfaceAddress', 'IP_V4', ''),
+                new VariableDeclarationLine('SubnetMask', 'IP_V4', ''),
+                new VariableDeclarationLine('DefaultRouter', 'IP_V4', ''),
+            ]
+        ).toString();
+    }
+
+    function IP_V4() {
+        return new BuiltInType(
+            'IP_V4',
+            [
+                new VariableDeclarationLine('ADDR', 'Array[1..4] of Byte', '', 'IPv4 address'),
+            ]
+        ).toString();
+    }
+
+    `
+    function XOX() {
+        return new BuiltInType(
+            'XOX',
+            [
+                new VariableDeclarationLine('', '', ''),
+            ]
+        ).toString();
+    }
+    `
 
     export const uriMap: { [K: string]: string } = {
         '/builtinLibrary.AuxFct_CycleTime.udt': createAuxFct_CycleTime(),
@@ -349,7 +411,11 @@ export module TypeBuiltIns {
         '/builtinLibrary.ArrayDBHeader.udt': ArrayDBHeader(),
         '/builtinLibrary.VAREF.udt': VAREF(),
         '/builtinLibrary.TDiag_Status.udt': TDiag_Status(),
-        
+        '/builtinLibrary.GEOADDR.udt': GEOADDR(),
+        '/builtinLibrary.IF_CONF_Header.udt': IF_CONF_Header(),
+        '/builtinLibrary.IF_CONF_NTP.udt': IF_CONF_NTP(),
+        '/builtinLibrary.IF_CONF_v4.udt': IF_CONF_v4(),
+        '/builtinLibrary.IP_V4.udt': IP_V4(),
     }
 
     /* TODO:

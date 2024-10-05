@@ -15,6 +15,7 @@ import { TypeBuiltIns } from "./types/type-built-ins.js";
 import { DiagnosticsBuiltIns } from "./extended-instructions/diagnostics-built-ins.js";
 import { PidControlBuiltIns } from "./technology/pid-control-built-ins.js";
 import { OpenUserCommunicationBuiltIns } from "./communication/open-user-communication-built-ins.js";
+import { DistributedIoBuiltIns } from "./extended-instructions/distributed-io-built-ins.js";
 
 export module BuiltIns {
     
@@ -42,6 +43,7 @@ export module BuiltIns {
     
         // ** Extended instructions **
         ...DataAndTimeBuiltIns.uriMap,
+        ...DistributedIoBuiltIns.uriMap,
         ...DiagnosticsBuiltIns.uriMap,
         ...StringAndCharBuiltIns.uriMap,
         // ...xox
@@ -81,6 +83,7 @@ export module BuiltIns {
         // ** Extended instructions **
         ...DataAndTimeBuiltIns.functionsWithoutFormalParameter_T_CONV,
         ...DataAndTimeBuiltIns.functionsWithoutFormalParameter_other,
+        ...DistributedIoBuiltIns.functionsWithoutFormalParameter,
         ...StringAndCharBuiltIns.functionsWithoutFormalParameter,
         // ...xox.functionsWithoutFormalParameter,
         ...AlarmingBuiltIns.functionsWithoutFormalParameter,
