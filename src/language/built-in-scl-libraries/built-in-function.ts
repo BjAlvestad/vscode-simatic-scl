@@ -28,7 +28,7 @@ export class BuiltInFunction{
         this.name = params.name;
         this.returnType = params.returnType ?? '';
         this.title = params.title ?? '';
-        this.version = params.version ?? '0.1';
+        this.version = params.version || '0.1';
         this.varInput = params.varInput ?? [];
         this.varOutput = params.varOutput ?? [];
         this.varInOut = params.varInOut ?? [];
@@ -40,7 +40,7 @@ export class BuiltInFunction{
             s`
             ${this.getFunctionStart()}
             ${this.title ? `TITLE = ${this.title}` : ''}
-            VERSION : ${this.version ?? '0.1'}
+            VERSION : ${this.version}
             ${this.getVarDecSection('VAR_INPUT', this.varInput)}
             ${this.getVarDecSection('VAR_OUTPUT', this.varOutput)}
             ${this.getVarDecSection('VAR_IN_OUT', this.varInOut)}
