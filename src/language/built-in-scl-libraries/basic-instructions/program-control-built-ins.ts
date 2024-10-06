@@ -1,9 +1,9 @@
-`
-import { BuiltInFunction } from "../built-in-function.js";
-import { VariableDeclarationLine } from "../variable-declaration-line.js";
+// import { BuiltInFunction } from "../built-in-function.js";
+// import { VariableDeclarationLine } from "../variable-declaration-line.js";
 
 export module BuiltIns {
 
+    `
     function XOX() {
         return new BuiltInFunction({
             name: 'XOX',
@@ -24,9 +24,22 @@ export module BuiltIns {
             ],
         }).toString();
     }
+    `
+
+    export const builtInsNotYetImplemented: string[] = [
+        'ENDIS_PW',
+        'SHUT_DOWN',
+        'RE_TRIGR',
+        'STP',
+        'GET_ERROR',
+        'GET_ERR_ID',
+        'INIT_RD',
+        'WAIT',
+        'RUNTIME',
+    ]
 
     export const uriMap: { [K: string]: string } = {
-        '/builtinLibrary.XOX.udt': XOX(),
+        // '/builtinLibrary.XOX.udt': XOX(),
     }
 
     /* List of other functions that have max 1 formal parameter */
@@ -34,5 +47,3 @@ export module BuiltIns {
         
     ]);
 }
-
-`
