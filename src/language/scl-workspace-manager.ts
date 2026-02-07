@@ -13,7 +13,6 @@ import { LangiumSharedServices } from "langium/lsp";
 import { InitializeParams } from "vscode-languageclient";
 import fs from 'fs';
 import path from 'path';
-import { SclUriUtils } from "./scl-uri-utils.js";
 
 export class SclWorkspaceManager extends DefaultWorkspaceManager {
 
@@ -42,7 +41,7 @@ export class SclWorkspaceManager extends DefaultWorkspaceManager {
         }
     }
 
-    protected override includeEntry(_workspaceFolder: WorkspaceFolder, entry: FileSystemNode, fileExtensions: string[]): boolean {
+    public override shouldIncludeEntry(entry: FileSystemNode): boolean {
         // console.log(`Inside includeEntry: ${this.includeFolders.length} - [${this.includeFolders.join(', ')}]`);
 
         const name = UriUtils.basename(entry.uri);
@@ -65,8 +64,7 @@ export class SclWorkspaceManager extends DefaultWorkspaceManager {
             }
             return name !== 'node_modules' && name !== 'out';
         } else if (entry.isFile) {
-            const extname = SclUriUtils.extname(entry.uri);
-            return fileExtensions.includes(extname);
+            return this.serviceRegistry.hasServices(entry.uri);
         }
         return false;
     }

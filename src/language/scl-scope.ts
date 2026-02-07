@@ -30,7 +30,7 @@ export class SclScopeProvider extends DefaultScopeProvider {
                 return this.globalScopeCache.get(
                     referenceType,
                     () => new MapScope(
-                        this.indexManager.allElements(SclBlock).filter(e => e.type === 'UdtBlock' || e.type === 'FbBlock')
+                        this.indexManager.allElements(SclBlock.$type).filter(e => e.type === 'UdtBlock' || e.type === 'FbBlock')
                     )
                 );
             case 'MemberCall':
@@ -38,7 +38,7 @@ export class SclScopeProvider extends DefaultScopeProvider {
                 return this.globalScopeCache.get(
                     referenceType,
                     () => new MapScope(
-                        this.indexManager.allElements(SclBlock).filter(e => e.type === 'DbBlock' || e.type === 'FcBlock')
+                        this.indexManager.allElements(SclBlock.$type).filter(e => e.type === 'DbBlock' || e.type === 'FcBlock')
                             .concat(this.getTagsAsAstNodeDescriptions())
                     )
                 );

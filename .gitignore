@@ -7,3 +7,5 @@ out/
 src/language/generated/
 syntaxes/generated/
 syntaxes/temp/
+tsconfig.src.tsbuildinfo
+*.vsix

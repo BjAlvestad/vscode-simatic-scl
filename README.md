@@ -28,6 +28,19 @@ Due to not supporting all built-in functions yet, and not parsing tags yet, mult
 
 ## Changelog
 
+### v0.1.0
+
+Update packages so that all current vulnerabilities are fixed, and we are using latest Langium version.
+Any difference in functionality compared to v0.0.7 outside of that should be considered a regression.
+
+- Langium updated from 3.1.2 to 4.2.0.
+- Node updated from 18 to 24.
+- vitest updated from 1.4.0 to 4.0.18.
+- TypeScript updated from 5.1.6 to 5.8.3.
+
+Some changes done in SCL language files to adapt to the breaking changes in the Langium update.
+But no new functionality has been taken into use, other than what the Langium framework will provide on its own.
+
 ### v0.0.7
 
 **Built-ins:**

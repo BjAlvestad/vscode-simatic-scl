@@ -2,7 +2,7 @@
     "name": "vscode-simatic-scl",
     "publisher": "BjAlvestad",
     "description": "TIA Portal SCL language support",
-    "version": "0.0.7",
+    "version": "0.1.0",
     "repository": {
         "type": "git",
         "url": "https://github.com/BjAlvestad/vscode-simatic-scl.git"
@@ -24,24 +24,24 @@
         "test": "vitest run"
     },
     "dependencies": {
-        "langium": "~3.1.0",
+        "langium": "^4.2.0",
         "vscode-languageclient": "~9.0.1",
         "vscode-languageserver": "~9.0.1"
     },
     "devDependencies": {
-        "@types/node": "^18.0.0",
+        "@types/node": "^24.0.0",
         "@types/vscode": "~1.67.0",
         "@typescript-eslint/eslint-plugin": "~7.3.1",
         "@typescript-eslint/parser": "~7.3.1",
         "concurrently": "~8.2.1",
-        "esbuild": "^0.20.2",
+        "esbuild": "^0.27.3",
         "eslint": "~8.57.0",
-        "langium-cli": "~3.1.0",
-        "typescript": "~5.1.6",
-        "vitest": "~1.4.0"
+        "langium-cli": "^4.2.0",
+        "typescript": "~5.8.3",
+        "vitest": "^4.0.18"
     },
     "volta": {
-        "node": "18.19.1",
+        "node": "24.30.0",
         "npm": "10.2.4"
     },
     "displayName": "LSP for SCL v18",
