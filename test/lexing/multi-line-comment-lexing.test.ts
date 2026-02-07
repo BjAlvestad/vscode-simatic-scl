@@ -27,6 +27,17 @@ describe('Lexing tests for multi-line comments', () => {
         expect(checkLexerErrors(document)).toBeFalsy();
     });
 
+    test("lex nested multi-line comment without any content", async () => {
+      document = await parse(`
+            FUNCTION_BLOCK "FB_WithMultilineComment"
+            BEGIN
+            (*(**)*)
+            END_FUNCTION_BLOCK
+        `);
+
+        expect(checkLexerErrors(document)).toBeFalsy();
+    });
+
     test("lex multi-line comment on single line", async () => {
       document = await parse(`
             FUNCTION_BLOCK "FB_WithMultilineComment"
@@ -64,7 +75,46 @@ describe('Lexing tests for multi-line comments', () => {
 
       expect(checkLexerErrors(document)).toBeFalsy();
     });
+    test("lex multi-line comment on single line, no space before first or last letter", async () => {
+      document = await parse(`
+            FUNCTION_BLOCK "FB_WithMultilineComment"
+            BEGIN
+            (*My comment*)
+            END_FUNCTION_BLOCK
+        `);
 
+        expect(checkLexerErrors(document)).toBeFalsy();
+    });
+    test("lex multi-line comment on single line, no space before first letter", async () => {
+      document = await parse(`
+            FUNCTION_BLOCK "FB_WithMultilineComment"
+            BEGIN
+            (*My comment *)
+            END_FUNCTION_BLOCK
+        `);
+
+        expect(checkLexerErrors(document)).toBeFalsy();
+    });
+    test("lex multi-line comment on single line, no space before last letter", async () => {
+      document = await parse(`
+            FUNCTION_BLOCK "FB_WithMultilineComment"
+            BEGIN
+            (* My comment*)
+            END_FUNCTION_BLOCK
+        `);
+
+        expect(checkLexerErrors(document)).toBeFalsy();
+    });
+    test("lex nested multi-line comment on single line, no space before first or last letter", async () => {
+      document = await parse(`
+            FUNCTION_BLOCK "FB_WithMultilineComment"
+            BEGIN
+            (*(*My comment*)*)
+            END_FUNCTION_BLOCK
+        `);
+
+        expect(checkLexerErrors(document)).toBeFalsy();
+    });
 });
 
 
