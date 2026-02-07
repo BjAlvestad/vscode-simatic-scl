@@ -2,7 +2,7 @@
     "name": "vscode-simatic-scl",
     "publisher": "BjAlvestad",
     "description": "TIA Portal SCL language support",
-    "version": "0.0.6",
+    "version": "0.0.7",
     "repository": {
         "type": "git",
         "url": "https://github.com/BjAlvestad/vscode-simatic-scl.git"

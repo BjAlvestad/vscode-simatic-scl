@@ -28,6 +28,31 @@ Due to not supporting all built-in functions yet, and not parsing tags yet, mult
 
 ## Changelog
 
+### v0.0.7
+
+**Built-ins:**
+
+- Refactor built-ins out to separate file.
+- Add interface for several built-ins of TIA Portal. This way it knows which parameters can be expected from a built-in function or datatype, and perform linking / autosuggest for these.
+
+There are still several built in functions that has not been added. But you could add these yourself locally by simply creating an .SCL file which contains the declaration section mirroring that you would expect of the actual block.
+
+**Grammar:**
+
+- Remove return type from DB and UDT since only FCs can have return types defined.
+- Allow double quote string and ID in FC block return type.
+- Allow VERSION keyword as variable name.
+- Add `'TYPE'` terminal to `KeywordsAllowedElsewhere`
+- Narrow down prefix for `NumberExpressionWithUnit`. Use `DataType` prefix instead of `TypeName`.
+  - We are only interested in the number types, and `TypeName` included all `DataTypes` plus `StringTypeName` and `'Void'`.
+- Add non-struct DataTypes for DateAndTime
+- Add non-struct DataTypes using integer, hex, or no value
+
+**Linker / Scope / Auto-complete:**
+
+Temporarily removed auto complete support for parameters. The autocomplete worked by limiting scope inside there, but it also breaks scope for arrays.
+Removed that support for now, since linking works properly once they have written the parameters, and is more important to remove linking errors at this stage.
+
 ### v0.0.6
 
 - Add parsing of tag declarations (in xml file), and linking to them.
