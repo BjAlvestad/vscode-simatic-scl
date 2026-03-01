@@ -1,0 +1,70 @@
+FUNCTION_BLOCK "FB_NestedStructDuplicatedInnerName"
+{ S7_Optimized_Access := 'TRUE' }
+VERSION : 0.1
+   VAR
+   
+      myStruct1 : STRUCT
+         myInternalCommon : DINT;  // def from myStruct1
+         myInternalCommonName : DINT;  // def from myStruct1
+         myInternalUnique1 : DINT;
+      END_STRUCT;
+
+      myStruct2 : STRUCT
+         myInternalCommon : DINT;  // def from myStruct2
+         myInternalCommonName : REAL;  // def from myStruct2
+         myInternalUnique2 : DINT;
+      END_STRUCT;
+
+      myOuterNestedStruct1 : STRUCT
+         outerInternalCommon : DINT;
+         outerInternal1 : DINT;
+         myInnerNestedStruct : STRUCT
+            nestedInternalCommon : DINT;
+            nestedInternal1 : DINT;
+            inception : STRUCT
+               common : DINT;
+               l1 : DINT;
+            END_STRUCT;
+         END_STRUCT;
+      END_STRUCT;
+
+      myOuterNestedStruct2 : STRUCT
+         outerInternalCommon : DINT;
+         outerInternal2 : DINT;
+         myInnerNestedStruct : STRUCT
+            nestedInternalCommon : DINT;
+            nestedInternal2 : DINT;
+            inception : STRUCT
+               common : DINT;
+               l2 : DINT;
+            END_STRUCT;
+         END_STRUCT;
+      END_STRUCT;
+
+   END_VAR
+BEGIN
+
+#myStruct1.myInternalCommon;
+#myStruct1.myInternalCommonName;
+#myStruct1.myInternalUnique1;
+
+#myStruct2.myInternalCommon;
+#myStruct2.myInternalCommonName;
+#myStruct2.myInternalUnique2;
+
+#myOuterNestedStruct1.outerInternalCommon;
+#myOuterNestedStruct1.outerInternal1;
+#myOuterNestedStruct1.myInnerNestedStruct.nestedInternalCommon;
+#myOuterNestedStruct1.myInnerNestedStruct.nestedInternal1;
+#myOuterNestedStruct1.myInnerNestedStruct.inception.common;
+#myOuterNestedStruct1.myInnerNestedStruct.inception.l1;
+
+#myOuterNestedStruct2.outerInternalCommon;
+#myOuterNestedStruct2.outerInternal2;
+#myOuterNestedStruct2.myInnerNestedStruct.nestedInternalCommon;
+#myOuterNestedStruct2.myInnerNestedStruct.nestedInternal2;  // Error here on not able to resolve reference to `nestedInternal2`, due to the `myInnerNestedStruct` in 2 is using the entry from 1 instead
+#myOuterNestedStruct2.myInnerNestedStruct.inception.common;
+#myOuterNestedStruct2.myInnerNestedStruct.inception.l2;  // Error here on not able to resolve reference to `l2`, due to the `myInnerNestedStruct` (and presumably `inception`) in 2 is using the entry from 1 instead
+
+
+END_FUNCTION_BLOCK
